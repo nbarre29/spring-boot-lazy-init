@@ -1,4 +1,4 @@
-package com.techprimers.lazy;
+package com.naveen.lazy;
 
 import org.springframework.stereotype.Service;
 
