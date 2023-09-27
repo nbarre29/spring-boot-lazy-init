@@ -11,3 +11,5 @@
 - `http://localhost:8080/lazy` - Uses `LazyController` and `LazyService` which can be marked manually as `@Lazy` for specific Beans
 
 just an update in main branch
+
+update to nav branch
