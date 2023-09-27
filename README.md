@@ -10,6 +10,3 @@
 ## Alternatives
 - `http://localhost:8080/lazy` - Uses `LazyController` and `LazyService` which can be marked manually as `@Lazy` for specific Beans
 
-
-MAIN BRANCH UPDATED
-
