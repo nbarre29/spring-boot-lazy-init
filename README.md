@@ -14,8 +14,5 @@
 - `http://localhost:8080/lazy` - Uses `LazyController` and `LazyService` which can be marked manually as `@Lazy` for specific Beans
 
 
-Added Test0
-Added Test1
-
 
 
