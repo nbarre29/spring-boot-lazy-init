@@ -2,7 +2,10 @@
 
 ## Versions Used
 
+
 - Spring Boot - 2.2.0-M1
+
+
 - H2 Database - 1.4.197
 
 ## Configuration
@@ -13,6 +16,6 @@
 
 - `http://localhost:8080/lazy` - Uses `LazyController` and `LazyService` which can be marked manually as `@Lazy` for specific Beans
 
-Added Test branch
 
-updated readme
+
+
