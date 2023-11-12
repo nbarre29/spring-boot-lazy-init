@@ -2,7 +2,10 @@
 
 ## Versions Used
 
-- Spring Boott - 2.2.0-M1
+
+- Spring Boot - 2.2.0-M1
+
+
 - H2 Database - 1.4.197
 
 ## Configuration
