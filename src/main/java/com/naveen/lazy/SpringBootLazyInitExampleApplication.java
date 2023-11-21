@@ -7,9 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class SpringBootLazyInitExampleApplication {
 
 	public static void main(String[] args) {
-		//5
+		//1
 		SpringApplication.run(SpringBootLazyInitExampleApplication.class, args);
-		//6
+		//2
 	}
 
 }
