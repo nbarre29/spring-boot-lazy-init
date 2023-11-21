@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class LazyController {
 
 //    @Lazy
-    @Autowired  //3
+    @Autowired  //a
     LazyService lazyService;
 
-    @GetMapping  //4
+    @GetMapping  //b
     public String hello() {
         return lazyService.hello();
     }
