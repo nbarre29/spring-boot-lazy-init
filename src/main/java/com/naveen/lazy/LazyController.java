@@ -11,7 +11,7 @@ public class LazyController {
 
 //    @Lazy
     @Autowired  //c
-    LazyService lazyService;
+    LazyService lazyService  //removed semicolon
 
     @GetMapping  //d
     public String hello() {
