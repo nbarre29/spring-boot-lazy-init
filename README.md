@@ -1,13 +1,37 @@
-// Function to remove an item from the cart and update total price
-function removeCartItem(id) {
-  const itemIndex = shoppingCart.findIndex(item => item.id === id);
+-> Imagine you have a configuration object for a web application, and you want to allow users to customize their preferences while keeping the default settings intact.
 
-  if (itemIndex !== -1) {
-    // Item found, remove it and update total price
-    const removedItem = shoppingCart.splice(itemIndex, 1)[0]; // Get removed item details
-    totalPrice -= removedItem.quantity * removedItem.price; // Subtract removed item's price
-    console.log(`Item "${removedItem.name}" removed. Updated total price: ${totalPrice.toFixed(2)}`);
-  } else {
-    console.log(`Item with ID ${id} not found in cart.`);
-  }
+// Default configuration
+const defaultConfig = {
+  theme: 'light',
+  fontSize: 16,
+  language: 'en',
+  showNotifications: true,
+};
+
+// User-specific preferences
+const userPreferences = {
+  theme: 'dark',
+  fontSize: 18,
+  showNotifications: false,
+};
+
+// Combine default configuration with user preferences
+const mergedConfig = Object.assign({}, defaultConfig, userPreferences);
+
+console.log('Merged Configuration:', mergedConfig);
+
+
+Output:
+Merged Configuration: {
+  theme: 'dark',
+  fontSize: 18,
+  language: 'en',
+  showNotifications: false
 }
+
+In this example:
+
+defaultConfig represents the default settings for the web application.
+userPreferences contains the user's customized preferences.
+By using Object.assign({}, defaultConfig, userPreferences), we create a new object mergedConfig that combines the default configuration with the user preferences. This way, the user can customize specific settings while still inheriting the defaults for the ones they haven't changed.
+
