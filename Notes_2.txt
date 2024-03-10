@@ -1,0 +1,88 @@
+-> Imagine you have an online store and want to calculate the total quantity of a specific product across different warehouses.
+
+const inventory = [
+  {
+    name: 'Shirt',
+    warehouses: [
+      { location: 'New York', stock: 10 },
+      { location: 'Los Angeles', stock: 5 },
+    ],
+  },
+  {
+    name: 'Hat',
+    warehouses: [
+      { location: 'Chicago', stock: 8 },
+      { location: 'Seattle', stock: 3 },
+    ],
+  },
+];
+
+const totalShirtStock = inventory.reduce((acc, currentProduct) => {
+  // Check if current product is "Shirt"
+  if (currentProduct.name === 'Shirt') {
+    // If "Shirt", access and accumulate stock from warehouses
+    return (
+      acc +
+      currentProduct.warehouses.reduce(
+        (warehouseAcc, warehouse) => warehouseAcc + warehouse.stock,
+        0
+      )
+    );
+  }
+  // If not "Shirt", return current accumulator (unchanged)
+  return acc;
+}, 0);
+
+console.log(totalShirtStock); // Output: 15
+---------------------------------------------------------------
+
+//Typescript
+
+interface Warehouse {
+  location: string;
+  stock: number;
+}
+
+interface Product {
+  name: string;
+  warehouses: Warehouse[];
+}
+
+const inventory: Product[] = [
+  {
+    name: 'Shirt',
+    warehouses: [
+      { location: 'New York', stock: 10 },
+      { location: 'Los Angeles', stock: 5 },
+    ],
+  },
+  {
+    name: 'Hat',
+    warehouses: [
+      { location: 'Chicago', stock: 8 },
+      { location: 'Seattle', stock: 3 },
+    ],
+  },
+];
+
+const totalShirtStock = inventory.reduce(
+  (acc: number, currentProduct: Product) => {
+    // Check if current product is "Shirt"
+    if (currentProduct.name === 'Shirt') {
+      // If "Shirt", access and accumulate stock from warehouses
+      return (
+        acc +
+        currentProduct.warehouses.reduce(
+          (warehouseAcc: number, warehouse: Warehouse) =>
+            warehouseAcc + warehouse.stock,
+          0
+        )
+      );
+    }
+    // If not "Shirt", return current accumulator (unchanged)
+    return acc;
+  },
+  0
+);
+
+console.log(totalShirtStock); // Output: 15
