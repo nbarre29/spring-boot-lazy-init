@@ -1,36 +1,13 @@
+-> in this code we are overriding the toString method for the person object. In JavaScript, the toString method is a default method inherited by all objects from the Object prototype. By defining a toString method within the person object, you are providing a custom implementation for the toString method specific to instances of the person object.
 
-Adding return item && at the beginning of the isObjectNotArray function is a defensive measure to handle cases where item is falsy (e.g., null or undefined). This additional check ensures that the function won't throw an error when trying to access the typeof and Array.isArray properties of item.
+This kind of custom toString method can be useful for providing a human-readable representation of your object 
 
-In this version, if item is falsy (e.g., null or undefined), the function will immediately return false without attempting to check its type or array status. This helps prevent potential errors that might occur if you try to access properties or methods on a falsy value.
+const person = {
+  firstName: 'Alice',
+  lastName: 'Smith',
+  toString() {
+    return `Person(name: ${this.firstName} ${this.lastName})`;
+  },
+};
 
-
-function isObjectNotArray(item) {
-  return item && typeof item === 'object' && !Array.isArray(item);
-}
-
-// Example usage:
-const obj = { key: 'value' };
-const arr = [1, 2, 3];
-
-console.log(isObjectNotArray(obj)); // true
-console.log(isObjectNotArray(arr)); // false
-console.log(isObjectNotArray(null)); // null
-console.log(isObjectNotArray(undefined)); // undefined
-
-
-
-function isObjectNotArray(
-  item: number[] | object | null | undefined
-): boolean | null | undefined {
-  return item && typeof item === 'object' && !Array.isArray(item);
-}
-
-// Example usage:
-const obj = { key: 'value' };
-const arr = [1, 2, 3];
-
-console.log(isObjectNotArray(obj)); // true
-console.log(isObjectNotArray(arr)); // false
-console.log(isObjectNotArray(null)); // null
-console.log(isObjectNotArray(undefined)); // undefined
-
+console.log(person.toString()); // Person(name: Alice Smith)
