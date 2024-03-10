@@ -77,6 +77,48 @@ const totalSpentByCategory: Record<string, number> = expenses.reduce(
 console.log(totalSpentByCategory);  //{ Food: 80, Transportation: 80, Entertainment: 150 }
 
 -------------------------------------------------------------------------
+->  without using the Record type
+In this version, I've replaced the Record<string, number> type with a custom CategoryTotal interface, which serves the same purpose but provides a more explicit and readable definition for the data structure.
+interface Expense {
+  category: string;
+  amount: number;
+}
+
+interface CategoryTotal {
+  [category: string]: number;
+}
+
+const expenses: Expense[] = [
+  { category: 'Food', amount: 50 },
+  { category: 'Transportation', amount: 30 },
+  { category: 'Food', amount: 20 },
+  { category: 'Entertainment', amount: 100 },
+  { category: 'Transportation', amount: 50 },
+  { category: 'Food', amount: 10 },
+  { category: 'Entertainment', amount: 50 },
+];
+
+const totalSpentByCategory: CategoryTotal = expenses.reduce(
+  (accumulator: CategoryTotal, expense: Expense) => {
+    // Destructure properties from the current expense object
+    const { category, amount } = expense;
+
+    // Check if the category already exists in the accumulator
+    if (!accumulator[category]) {
+      // If not, initialize the category with the current amount
+      accumulator[category] = amount;
+    } else {
+      // If the category already exists, add the current amount to the existing total
+      accumulator[category] += amount;
+    }
+
+    // Return the updated accumulator for the next iteration
+    return accumulator;
+  },
+  {} as CategoryTotal
+);
+
+console.log(totalSpentByCategory); // { Food: 80, Transportation: 80, Entertainment: 150 }
 
 
 
