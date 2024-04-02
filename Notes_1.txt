@@ -11,3 +11,16 @@ where DataSource = @Schema
 The logic remains the same: it deletes from the etl.Document ToDboEntityXref table based on the conditions. The  exists clause ensures that only rows with a corresponding entry in the dbo table (identified by @Table) with a DeleteDttm that's not null are deleted.
 
 In essence, this refactored code combines the functionality of the original select query and the if-else statement into a single delete statement with a condition.
+
+
+DELETE FROM etl.DocumentToDboEntityXref
+WHERE DataSource = @Schema 
+  AND DataSourceEntityName = @Table
+  AND DataSourceEntityID = cast(@PrimaryKeyValue as varchar(10))
+  AND DboEntityID = (
+    SELECT TOP 1 DboEntityID
+    FROM dbo.@Table
+    WHERE (@Table + 'ID') = cast(@PrimaryKeyValue as varchar(10))
+    AND DeleteDttm IS NULL
+  );
+
