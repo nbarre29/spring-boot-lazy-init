@@ -1,125 +1,13 @@
--> Suppose we have an array of objects representing expenses, and we want to calculate the total amount spent on each category. Each expense object has properties like category and amount. We'll use Array.reduce() to transform the array into an object where keys are unique categories, and values are the total amounts spent in each category.
-
-const expenses = [
-  { category: 'Food', amount: 50 },
-  { category: 'Transportation', amount: 30 },
-  { category: 'Food', amount: 20 },
-  { category: 'Entertainment', amount: 100 },
-  { category: 'Transportation', amount: 50 },
-  { category: 'Food', amount: 10 },
-  { category: 'Entertainment', amount: 50 },
-];
-
-const totalSpentByCategory = expenses.reduce((accumulator, expense) => {
-  // Destructure properties from the current expense object
-  const { category, amount } = expense;
-
-  // Check if the category already exists in the accumulator
-  if (!accumulator[category]) {
-    // If not, initialize the category with the current amount
-    accumulator[category] = amount;
-  } else {
-    // If the category already exists, add the current amount to the existing total
-    accumulator[category] += amount;
-  }
-
-  // Return the updated accumulator for the next iteration
-  return accumulator;
-}, {});
-
-console.log(totalSpentByCategory);  //{ Food: 80, Transportation: 80, Entertainment: 150 }
-
-We start with an empty object as the initial value for reduce().
-The callback function takes two parameters: accumulator and expense.
-For each expense in the array, we check if the category already exists in the accumulator.
-If the category doesn't exist, we initialize it with the current amount. If it exists, we add the current amount to the existing total.
-The updated accumulator is returned in each iteration.
-Finally, we get an object where keys are unique categories, and values are the total amounts spent in each category.
--------------------------------------------------------------------------
-//Typescript
-In this TypeScript version, we've defined an interface Expense to represent the structure of expense objects. Additionally, we've specified the type of the expenses array and the totalSpentByCategory object. The Record<string, number> type is used to indicate that the keys are strings (categories) and the values are numbers (total amounts spent).
-
-interface Expense {
-  category: string;
-  amount: number;
-}
-
-const expenses: Expense[] = [
-  { category: 'Food', amount: 50 },
-  { category: 'Transportation', amount: 30 },
-  { category: 'Food', amount: 20 },
-  { category: 'Entertainment', amount: 100 },
-  { category: 'Transportation', amount: 50 },
-  { category: 'Food', amount: 10 },
-  { category: 'Entertainment', amount: 50 },
-];
-
-const totalSpentByCategory: Record<string, number> = expenses.reduce(
-  (accumulator: Record<string, number>, expense: Expense) => {
-    // Destructure properties from the current expense object
-    const { category, amount } = expense;
-
-    // Check if the category already exists in the accumulator
-    if (!accumulator[category]) {
-      // If not, initialize the category with the current amount
-      accumulator[category] = amount;
-    } else {
-      // If the category already exists, add the current amount to the existing total
-      accumulator[category] += amount;
-    }
-
-    // Return the updated accumulator for the next iteration
-    return accumulator;
-  },
-  {} as Record<string, number>
-); // Adding type for the initial value of accumulator
-
-console.log(totalSpentByCategory);  //{ Food: 80, Transportation: 80, Entertainment: 150 }
-
--------------------------------------------------------------------------
-->  without using the Record type
-In this version, I've replaced the Record<string, number> type with a custom CategoryTotal interface, which serves the same purpose but provides a more explicit and readable definition for the data structure.
-interface Expense {
-  category: string;
-  amount: number;
-}
-
-interface CategoryTotal {
-  [category: string]: number;
-}
-
-const expenses: Expense[] = [
-  { category: 'Food', amount: 50 },
-  { category: 'Transportation', amount: 30 },
-  { category: 'Food', amount: 20 },
-  { category: 'Entertainment', amount: 100 },
-  { category: 'Transportation', amount: 50 },
-  { category: 'Food', amount: 10 },
-  { category: 'Entertainment', amount: 50 },
-];
-
-const totalSpentByCategory: CategoryTotal = expenses.reduce(
-  (accumulator: CategoryTotal, expense: Expense) => {
-    // Destructure properties from the current expense object
-    const { category, amount } = expense;
-
-    // Check if the category already exists in the accumulator
-    if (!accumulator[category]) {
-      // If not, initialize the category with the current amount
-      accumulator[category] = amount;
-    } else {
-      // If the category already exists, add the current amount to the existing total
-      accumulator[category] += amount;
-    }
-
-    // Return the updated accumulator for the next iteration
-    return accumulator;
-  },
-  {} as CategoryTotal
-);
-
-console.log(totalSpentByCategory); // { Food: 80, Transportation: 80, Entertainment: 150 }
+The code snippet in the image retrieves a dboentityid using a select query and then checks if it's not null before building and executing a delete query. This can be refactored into a single statement using conditional logic within the delete statement.
 
 
+delete from etl.Document ToDboEntityXref
+where DataSource = @Schema 
+  and DataSourceEntityName = @Table
+  and DataSourceEntityID = cast(@PrimaryKeyValue as varchar(10))
+  and exists (select @Table + 'ID' from dbo.@Table where @Table + 'ID' = cast(@DboEntityID as varchar(10)) and DeleteDttm is not null);
+  
+  
+The logic remains the same: it deletes from the etl.Document ToDboEntityXref table based on the conditions. The  exists clause ensures that only rows with a corresponding entry in the dbo table (identified by @Table) with a DeleteDttm that's not null are deleted.
 
-
+In essence, this refactored code combines the functionality of the original select query and the if-else statement into a single delete statement with a condition.
