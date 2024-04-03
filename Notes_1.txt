@@ -24,3 +24,22 @@ WHERE DataSource = @Schema
     AND DeleteDttm IS NULL
   );
 
+DELETE: This clause specifies the table (etl.DocumentToDboEntityXref) from which rows will be deleted.
+WHERE: This clause defines the conditions for deleting rows:
+DataSource = @Schema: Filters based on the provided schema name.
+DataSourceEntityName = @Table: Filters based on the provided table name.
+DataSourceEntityID = cast(@PrimaryKeyValue as varchar(10)): Filters based on the primary key value from the source table.
+Conditional DboEntityID:
+(SELECT TOP 1 DboEntityID ...): This subquery retrieves the DboEntityID from the dbo table.
+TOP 1: Ensures only the first matching record is considered.
+FROM dbo.@Table: Selects from the dbo schema with the provided table name.
+WHERE (@Table + 'ID') = cast(@PrimaryKeyValue as varchar(10)): Filters based on the primary key value in the dbo table.
+AND DeleteDttm IS not NULL: Ensures the DeleteDttm in the dbo table is not null (meaning the record hasn't been marked for deletion).
+DboEntityID = ( ... ): The outer query checks if the retrieved DboEntityID from the subquery matches the existing DboEntityID in the etl.DocumentToDboEntityXref table.
+
+
+
+DeleteDttm IS NOT NULL: This condition in the subquery ensures it retrieves only records from the dbo table where the DeleteDttm is not null. This aligns with the logic from the image where you want to delete rows based on a non-null DeleteDttm.
+
+retrieves the DboEntityID only if the corresponding record in the dbo table has a DeleteDttm that's not null. The DboEntityID is then used to conditionally delete the row from the etl.DocumentToDboEntityXref table.
+
