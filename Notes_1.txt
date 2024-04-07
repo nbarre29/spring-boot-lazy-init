@@ -1,45 +1,54 @@
-The code snippet in the image retrieves a dboentityid using a select query and then checks if it's not null before building and executing a delete query. This can be refactored into a single statement using conditional logic within the delete statement.
+function getSchema(data: TaskDbEntity): string[] {
+  // Define an array of attributes to extract from the data
+  const attributes = ['dataSchemaName', 'exceptionTypeName'];
 
+  // Define an object 'conditions' where keys are attribute names
+  // and values are functions that take a value and return a string array
+  const conditions: { [key: string]: (value: any) => string[] } = {
+    dataSchemaName: (x) => [x], // For 'dataSchemaName', return it as a single-element array
+    exceptionTypeName: (x) => ( // For 'exceptionTypeName'
+      seedPattern.has(x) ? [DatabaseSchema.CustomerData] : // If x is in 'seedPattern', return 'CustomerData'
+      (dboSchemaPattern.has(x) ? [DatabaseSchema.DBO] : []) // If x is in 'dboSchemaPattern', return 'DBO', otherwise return an empty array
+    ),
+  };
 
-delete from etl.Document ToDboEntityXref
-where DataSource = @Schema 
-  and DataSourceEntityName = @Table
-  and DataSourceEntityID = cast(@PrimaryKeyValue as varchar(10))
-  and exists (select @Table + 'ID' from dbo.@Table where @Table + 'ID' = cast(@DboEntityID as varchar(10)) and DeleteDttm is not null);
-  
-  
-The logic remains the same: it deletes from the etl.Document ToDboEntityXref table based on the conditions. The  exists clause ensures that only rows with a corresponding entry in the dbo table (identified by @Table) with a DeleteDttm that's not null are deleted.
-
-In essence, this refactored code combines the functionality of the original select query and the if-else statement into a single delete statement with a condition.
-
-
-DELETE FROM etl.DocumentToDboEntityXref
-WHERE DataSource = @Schema 
-  AND DataSourceEntityName = @Table
-  AND DataSourceEntityID = cast(@PrimaryKeyValue as varchar(10))
-  AND DboEntityID = (
-    SELECT TOP 1 DboEntityID
-    FROM dbo.@Table
-    WHERE (@Table + 'ID') = cast(@PrimaryKeyValue as varchar(10))
-    AND DeleteDttm IS NULL
-  );
-
-DELETE: This clause specifies the table (etl.DocumentToDboEntityXref) from which rows will be deleted.
-WHERE: This clause defines the conditions for deleting rows:
-DataSource = @Schema: Filters based on the provided schema name.
-DataSourceEntityName = @Table: Filters based on the provided table name.
-DataSourceEntityID = cast(@PrimaryKeyValue as varchar(10)): Filters based on the primary key value from the source table.
-Conditional DboEntityID:
-(SELECT TOP 1 DboEntityID ...): This subquery retrieves the DboEntityID from the dbo table.
-TOP 1: Ensures only the first matching record is considered.
-FROM dbo.@Table: Selects from the dbo schema with the provided table name.
-WHERE (@Table + 'ID') = cast(@PrimaryKeyValue as varchar(10)): Filters based on the primary key value in the dbo table.
-AND DeleteDttm IS not NULL: Ensures the DeleteDttm in the dbo table is not null (meaning the record hasn't been marked for deletion).
-DboEntityID = ( ... ): The outer query checks if the retrieved DboEntityID from the subquery matches the existing DboEntityID in the etl.DocumentToDboEntityXref table.
+  // Call the 'getValues' function with 'data', 'attributes', and 'conditions'
+  return this.getValues(data, attributes, conditions);
+}
 
 
 
-DeleteDttm IS NOT NULL: This condition in the subquery ensures it retrieves only records from the dbo table where the DeleteDttm is not null. This aligns with the logic from the image where you want to delete rows based on a non-null DeleteDttm.
+Explanation: chatGPT
 
-retrieves the DboEntityID only if the corresponding record in the dbo table has a DeleteDttm that's not null. The DboEntityID is then used to conditionally delete the row from the etl.DocumentToDboEntityXref table.
+The getSchema function takes an argument data of type TaskDbEntity and returns an array of strings.
+It first defines an array attributes containing the names of attributes to extract from the data object.
+Then, it defines an object conditions where each key is an attribute name, and the value is a function that takes a value and returns an array of strings. These functions define how to process each attribute value.
+For the dataSchemaName attribute, it simply returns the value as a single-element array.
+For the exceptionTypeName attribute, it checks if the value (x) is in either seedPattern or dboSchemaPattern. Depending on the condition, it returns an array containing either DatabaseSchema.CustomerData or DatabaseSchema.DBO, or an empty array.
+Finally, it calls a function this.getValues with data, attributes, and conditions as arguments, presumably to extract values from the data object based on the specified attributes and conditions, and returns the result. However, the context (this) in which getValues is called is not defined in the provided code snippet.
 
+
+Explanation: Gemini
+1. Function Definition:
+
+The code defines a function named getSchema.
+It accepts a single argument named data of type TaskDbEntity.
+It returns a value of type string[] (an array of strings).
+2. Attributes to Extract:
+
+An array named attributes is created, containing two strings:
+"dataSchemaName"
+"exceptionTypeName"
+These represent the specific properties that the function wants to extract from the input data.
+3. Conditional Logic for Values:
+
+An object named conditions is created. It maps attribute names to functions that control how values are retrieved and transformed.
+For dataSchemaName:
+The function simply takes a value x and returns a single-element array containing x. This means it returns the value as is without any modifications.
+For exceptionTypeName:
+The function involves conditional logic:
+It first checks if the value x exists in an object named seedPattern.
+If it does, it returns an array containing the string "DatabaseSchema.CustomerData".
+If it doesn't exist in seedPattern, it checks if it exists in another object named dboSchemaPattern.
+If it's found in dboSchemaPattern, it returns an array containing the string "DatabaseSchema.DBO".
+If it's not found in either pattern, it returns an empty array [].
