@@ -1,28 +1,10 @@
-https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace
+// Define a string with spaces and tabs
+const originalString =
+  'This is a   sample   string     with       spaces and tabs.';
 
-const paragraph = "I think Ruth's dog is cuter than your dog!";
+// Apply the replace method to remove spaces and tabs
+const stringWithoutSpaces = originalString.replace(/\s+/g, '');
 
-console.log(paragraph.replace("Ruth's", 'my'));
-// Expected output: "I think my dog is cuter than your dog!"
-
-const regex = /Dog/i;
-console.log(paragraph.replace(regex, 'ferret'));
-// Expected output: "I think Ruth's ferret is cuter than your dog!"
-
-
-In the code provided, const regex = /Dog/i; is a regular expression (regex) declaration. Let's break it down:
-
-/Dog/: This is the actual regular expression pattern. It's enclosed between two slashes, which is a common way to denote regular expressions in JavaScript. In this case, it's looking for the exact string "Dog" in the text.
-
-/i: This is a flag that is added to the end of the regular expression. In JavaScript, the "i" flag stands for "case insensitive". This means that the regular expression will match "Dog" regardless of whether it's written in uppercase, lowercase, or a mix of both.
-
-So, const regex = /Dog/i; creates a regular expression that looks for the word "Dog" in a case-insensitive manner.
-
----------------------------------------------
-Explanation of the below regular expression:
-replace(/\s+/g, '');
-
-/\s+/: Here, \s represents any whitespace character (such as space, tab, newline, etc.), and + is a quantifier that matches one or more occurrences of the preceding whitespace character. So, /\s+/ matches one or more consecutive whitespace characters.
-/g: This is a flag that stands for "global". When used with replace(), it indicates that all occurrences of the pattern should be replaced, not just the first one.
-'': This is the replacement string. In this case, it's an empty string '', which means that any sequence of whitespace characters matched by the regex pattern will be replaced with nothing, effectively removing them.
-
+// Output the original and modified strings
+console.log('Original string:', originalString);
+console.log('String without spaces:', stringWithoutSpaces); //Thisisasamplestringwithspacesandtabs.
