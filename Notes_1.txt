@@ -1,10 +1,14 @@
-// Define a string with spaces and tabs
-const originalString =
-  'This is a   sample   string     with       spaces and tabs.';
+To return the DocumentName only if one of the field values a, b, c, or d exists in the FieldName column, you can use the EXISTS clause in SQL. Here's the rewritten query:
 
-// Apply the replace method to remove spaces and tabs
-const stringWithoutSpaces = originalString.replace(/\s+/g, '');
 
-// Output the original and modified strings
-console.log('Original string:', originalString);
-console.log('String without spaces:', stringWithoutSpaces); //Thisisasamplestringwithspacesandtabs.
+SELECT DISTINCT DocumentName
+FROM PDTExtracteddata
+WHERE EXISTS (
+    SELECT 1
+    FROM PDTExtracteddata
+    WHERE FieldName IN ('a', 'b', 'c', 'd')
+);
+
+
+
+This query selects distinct DocumentName values from the PDTExtracteddata table where there exists at least one row where the FieldName column has one of the values a, b, c, or d.
