@@ -1,14 +1,21 @@
-To return the DocumentName only if one of the field values a, b, c, or d exists in the FieldName column, you can use the EXISTS clause in SQL. Here's the rewritten query:
+In TypeScript, when you enable strict null checks, the compiler becomes more stringent about checking for null and undefined values. This is a safety feature designed to catch potential errors caused by using variables that might be null or undefined. However, there are scenarios where you as a developer know for certain that a variable won't be null or undefined at a particular point in your code. In such cases, you can use the non-null assertion operator (!) to override TypeScript's strict null checks and explicitly tell the compiler that you're certain a value is not null or undefined.
 
+Here's an example to illustrate how the non-null assertion operator works:
 
-SELECT DISTINCT DocumentName
-FROM PDTExtracteddata
-WHERE EXISTS (
-    SELECT 1
-    FROM PDTExtracteddata
-    WHERE FieldName IN ('a', 'b', 'c', 'd')
-);
+// Enabling strict null checks
+let myString: string | null = 'Hello';
+// myString can either be a string or null
 
+// Error: Object is possibly 'null'.
+console.log(myString.length);
 
+// Using non-null assertion operator to assert that myString is non-null
+console.log(myString!.length);
 
-This query selects distinct DocumentName values from the PDTExtracteddata table where there exists at least one row where the FieldName column has one of the values a, b, c, or d.
+In the above example:
+
+We declare a variable myString which can hold a string or null.
+If we try to access the length property of myString without using the non-null assertion operator, TypeScript will throw an error because myString could potentially be null.
+By appending ! after myString, we're telling TypeScript to trust us that myString won't be null at this point, so it should proceed without checking. This is known as asserting non-null.
+TypeScript will not raise any errors for the second console.log statement because of the non-null assertion operator.
+While using the non-null assertion operator can be useful in certain situations, it's essential to be cautious because it essentially tells TypeScript to trust your judgment. If you misuse it and incorrectly assert that a value is non-null when it could potentially be null or undefined, you might encounter runtime errors. So, it's advisable to use it only when you're absolutely certain about the non-null status of a variable.
