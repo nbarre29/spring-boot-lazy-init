@@ -1,21 +1,25 @@
-In TypeScript, when you enable strict null checks, the compiler becomes more stringent about checking for null and undefined values. This is a safety feature designed to catch potential errors caused by using variables that might be null or undefined. However, there are scenarios where you as a developer know for certain that a variable won't be null or undefined at a particular point in your code. In such cases, you can use the non-null assertion operator (!) to override TypeScript's strict null checks and explicitly tell the compiler that you're certain a value is not null or undefined.
+isNullOrUndefined function:
 
-Here's an example to illustrate how the non-null assertion operator works:
+This function takes a single argument value of any type T.
+It checks if the value is strictly equal to null or undefined using the === operator.
+If the value is null or undefined, the function returns true.
+Otherwise, the function returns false.
 
-// Enabling strict null checks
-let myString: string | null = 'Hello';
-// myString can either be a string or null
 
-// Error: Object is possibly 'null'.
-console.log(myString.length);
+isNullOrUndefinedReplace function:
 
-// Using non-null assertion operator to assert that myString is non-null
-console.log(myString!.length);
+This function takes two arguments a and b of the same type T.
+It calls the isNullOrUndefined function and passes a as the argument.
+If isNullOrUndefined returns true (meaning a is null or undefined), then the function returns b.
+Otherwise, the function returns a.
 
-In the above example:
 
-We declare a variable myString which can hold a string or null.
-If we try to access the length property of myString without using the non-null assertion operator, TypeScript will throw an error because myString could potentially be null.
-By appending ! after myString, we're telling TypeScript to trust us that myString won't be null at this point, so it should proceed without checking. This is known as asserting non-null.
-TypeScript will not raise any errors for the second console.log statement because of the non-null assertion operator.
-While using the non-null assertion operator can be useful in certain situations, it's essential to be cautious because it essentially tells TypeScript to trust your judgment. If you misuse it and incorrectly assert that a value is non-null when it could potentially be null or undefined, you might encounter runtime errors. So, it's advisable to use it only when you're absolutely certain about the non-null status of a variable.
+In simpler terms, the isNullOrUndefinedReplace function acts as a replacement function. It checks if the first argument (a) is null or undefined. If it is, the function replaces it with the second argument (b). Otherwise, it returns the original value (a).
+
+Here's an example of how you might use this function:
+
+let name = null;
+let defaultName = "John Doe";
+
+const replacedName = isNullOrUndefinedReplace(name, defaultName);
+console.log(replacedName); // Output: "John Doe"
