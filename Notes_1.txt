@@ -1,25 +1,2 @@
-isNullOrUndefined function:
-
-This function takes a single argument value of any type T.
-It checks if the value is strictly equal to null or undefined using the === operator.
-If the value is null or undefined, the function returns true.
-Otherwise, the function returns false.
-
-
-isNullOrUndefinedReplace function:
-
-This function takes two arguments a and b of the same type T.
-It calls the isNullOrUndefined function and passes a as the argument.
-If isNullOrUndefined returns true (meaning a is null or undefined), then the function returns b.
-Otherwise, the function returns a.
-
-
-In simpler terms, the isNullOrUndefinedReplace function acts as a replacement function. It checks if the first argument (a) is null or undefined. If it is, the function replaces it with the second argument (b). Otherwise, it returns the original value (a).
-
-Here's an example of how you might use this function:
-
-let name = null;
-let defaultName = "John Doe";
-
-const replacedName = isNullOrUndefinedReplace(name, defaultName);
-console.log(replacedName); // Output: "John Doe"
+{ ... }: The curly braces here denote an object literal being returned by the arrow function.
+({ ... }): The parentheses around the object literal ensure the arrow function returns the object directly. Without the parentheses, JavaScript would interpret the curly braces as the start of a function block, not an object literal.
