@@ -1,2 +1,9 @@
 { ... }: The curly braces here denote an object literal being returned by the arrow function.
 ({ ... }): The parentheses around the object literal ensure the arrow function returns the object directly. Without the parentheses, JavaScript would interpret the curly braces as the start of a function block, not an object literal.
+
+
+
+{ return { ... }; }: This block contains the body of the arrow function.
+
+The curly braces { ... } define the body of the function.
+The return { ... }; statement inside the function body specifies that the function should return an object.
