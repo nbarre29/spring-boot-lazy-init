@@ -1,48 +1,96 @@
--> an example of how to use the spread operator on a string
+import java.io.FileNotFoundException;
 
-We define a string str with the value "hello".
-We use the spread operator to spread the characters of str into individual elements of an array charArray.
+import org.json.simple.JSONObject;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
-const str = 'hello';
+@RestController
+public class ValidatePdfController {
 
-// Use spread operator to convert string into an array of characters
-const charArray = [...str];
+    private static final int MAX_TRANSACTION_ID_LENGTH = 50;
 
-console.log(charArray); // [ 'h', 'e', 'l', 'l', 'o' ]
+    @PostMapping(value = "/validate", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.BAD_REQUEST) // Set default response to 400 Bad Request
+    public String validatePdf(@RequestParam("file") String filePath,
+                             @RequestParam(value = "transactionId") String transactionId) throws Exception {
 
+        if (transactionId.length() > MAX_TRANSACTION_ID_LENGTH) {
+            throw new IllegalArgumentException("TransactionId cannot exceed " + MAX_TRANSACTION_ID_LENGTH + " characters.");
+        }
 
--> The spread operator (...) can also be used with objects to create a shallow copy of an object or to merge multiple objects into one. This is particularly useful for creating new objects with additional or updated properties based on existing ones.
+        JSONObject result = new JSONObject();
+        JSONObject status = new JSONObject();
 
-Here are a couple of examples to illustrate how to use the spread operator with objects.
+        result.put("Status", status);
+        result.put("TransactionId", transactionId);
 
-Example 1: Creating a Shallow Copy of an Object
+        try {
+            // logic to validate PDF goes here
+        } catch (Exception e) {
 
-const originalObject = { a: 1, b: 2, c: 3 };
+        } else if (e instanceof FileNotFoundException) {
+            status.put("Code", "Error");
+            status.put("Description", "FileNotFound");
+        }
 
-// Use spread operator to create a shallow copy of the object
-const copiedObject = { ...originalObject };
+        return result.toJSONString(); // Assuming successful validation returns the JSON
+    }
 
-console.log(copiedObject); // Output: { a: 1, b: 2, c: 3 }
+}
 
+_____________________________________________________________________
 
-Example 2: Merging Multiple Objects
+To validate that the transactionId has a maximum length of 50 characters and to return a 400 Bad Request response if it exceeds this length, you need to perform the validation at the beginning of the method and use the ResponseEntity class to set the HTTP status code and response body. Here is the updated code:
 
-const object1 = { a: 1, b: 2 };
-const object2 = { b: 3, c: 4 };
+import java.io.FileNotFoundException;
+import org.json.simple.JSONObject;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-// Use spread operator to merge objects
-const mergedObject = { ...object1, ...object2 };
+@RestController
+public class ValidatePdfController {
 
-console.log(mergedObject); // Output: { a: 1, b: 3, c: 4 }
+    @PostMapping(value = "/validate", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> validatePdf(@RequestParam("file") String filePath,
+                                              @RequestParam(value = "transactionId") String transactionId) throws Exception {
 
+        // Validate the transactionId length
+        if (transactionId.length() > 50) {
+            JSONObject errorResponse = new JSONObject();
+            JSONObject status = new JSONObject();
+            status.put("Code", "Error");
+            status.put("Description", "TransactionId length exceeds 50 characters");
+            errorResponse.put("Status", status);
+            return new ResponseEntity<>(errorResponse.toJSONString(), HttpStatus.BAD_REQUEST);
+        }
 
-Example 3: Adding or Updating Properties in an Object
+        JSONObject result = new JSONObject();
+        JSONObject status = new JSONObject();
 
-const user = { name: 'John', age: 30 };
+        result.put("Status", status);
+        result.put("TransactionId", transactionId);
 
-// Use spread operator to create a new object with additional properties
-const updatedUser = { ...user, age: 31, city: 'New York' };
+        try {
+            // logic to validate PDF goes here
+            // If PDF is valid
+            status.put("Code", "Success");
+            status.put("Description", "PDF is valid");
+        } catch (FileNotFoundException e) {
+            status.put("Code", "Error");
+            status.put("Description", "FileNotFound");
+        } catch (Exception e) {
+            status.put("Code", "Error");
+            status.put("Description", e.getMessage());
+        }
 
-console.log(updatedUser); // { name: 'John', age: 31, city: 'New York' }
-
+        return new ResponseEntity<>(result.toJSONString(), HttpStatus.OK);
+    }
+}
 
