@@ -1,96 +1,45 @@
-import java.io.FileNotFoundException;
+const error = {
+  message: 'error: 404-123',
+};
 
-import org.json.simple.JSONObject;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+const [errorCode, taskId] =
+  error.message.match(/error: (\d+)-(\d+|null|undefined)/)?.slice(1) ?? '';
 
-@RestController
-public class ValidatePdfController {
+console.log(errorCode); // Output: "404"
+console.log(taskId); // Output: "123"
 
-    private static final int MAX_TRANSACTION_ID_LENGTH = 50;
 
-    @PostMapping(value = "/validate", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.BAD_REQUEST) // Set default response to 400 Bad Request
-    public String validatePdf(@RequestParam("file") String filePath,
-                             @RequestParam(value = "transactionId") String transactionId) throws Exception {
 
-        if (transactionId.length() > MAX_TRANSACTION_ID_LENGTH) {
-            throw new IllegalArgumentException("TransactionId cannot exceed " + MAX_TRANSACTION_ID_LENGTH + " characters.");
-        }
+1) Regular Expression (/error: (\d+)-(\d+|null|undefined)/):
 
-        JSONObject result = new JSONObject();
-        JSONObject status = new JSONObject();
+/error: (\d+)-(\d+|null|undefined)/ is a regular expression used to match a specific pattern in a string.
+error: matches the literal string "error: ".
+(\d+) matches one or more digits and captures them in a group.
+- matches the literal character "-".
+(\d+|null|undefined) matches either one or more digits, the string "null", or the string "undefined", capturing it in a group.
 
-        result.put("Status", status);
-        result.put("TransactionId", transactionId);
 
-        try {
-            // logic to validate PDF goes here
-        } catch (Exception e) {
+2) .match() method
 
-        } else if (e instanceof FileNotFoundException) {
-            status.put("Code", "Error");
-            status.put("Description", "FileNotFound");
-        }
+If a match is found, .match() returns an array where the first element is the entire match, and subsequent elements are the captured groups.
+If no match is found, .match() returns null.
 
-        return result.toJSONString(); // Assuming successful validation returns the JSON
-    }
+3) Optional Chaining (?.):
+The optional chaining operator (?.) is used to safely access properties or methods that might not exist.
+In this case, ?.slice(1) is used to safely call the .slice(1) method on the result of .match().
+If .match() returns null, ?. ensures that .slice(1) is not called, and the expression evaluates to undefined.
 
-}
 
-_____________________________________________________________________
+4) .slice(1) method:  is used to remove the first element (the entire match) from the array, leaving only the captured groups.
 
-To validate that the transactionId has a maximum length of 50 characters and to return a 400 Bad Request response if it exceeds this length, you need to perform the validation at the beginning of the method and use the ResponseEntity class to set the HTTP status code and response body. Here is the updated code:
+5) Nullish Coalescing Operator (??):
+?? is the nullish coalescing operator, which returns its right-hand operand when its left-hand operand is null or undefined.
 
-import java.io.FileNotFoundException;
-import org.json.simple.JSONObject;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+6) Destructuring Assignment:
+ const [errorCode, taskId] = ... destructures the resulting array into errorCode and taskId variables.
 
-@RestController
-public class ValidatePdfController {
 
-    @PostMapping(value = "/validate", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> validatePdf(@RequestParam("file") String filePath,
-                                              @RequestParam(value = "transactionId") String transactionId) throws Exception {
 
-        // Validate the transactionId length
-        if (transactionId.length() > 50) {
-            JSONObject errorResponse = new JSONObject();
-            JSONObject status = new JSONObject();
-            status.put("Code", "Error");
-            status.put("Description", "TransactionId length exceeds 50 characters");
-            errorResponse.put("Status", status);
-            return new ResponseEntity<>(errorResponse.toJSONString(), HttpStatus.BAD_REQUEST);
-        }
 
-        JSONObject result = new JSONObject();
-        JSONObject status = new JSONObject();
 
-        result.put("Status", status);
-        result.put("TransactionId", transactionId);
-
-        try {
-            // logic to validate PDF goes here
-            // If PDF is valid
-            status.put("Code", "Success");
-            status.put("Description", "PDF is valid");
-        } catch (FileNotFoundException e) {
-            status.put("Code", "Error");
-            status.put("Description", "FileNotFound");
-        } catch (Exception e) {
-            status.put("Code", "Error");
-            status.put("Description", e.getMessage());
-        }
-
-        return new ResponseEntity<>(result.toJSONString(), HttpStatus.OK);
-    }
-}
 
