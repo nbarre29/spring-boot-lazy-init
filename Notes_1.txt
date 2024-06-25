@@ -1,45 +1,13 @@
-const error = {
-  message: 'error: 404-123',
-};
+function test() {
+  const ab = 0;
+  if (ab === 0) {
+    return;
+  }
+}
 
-const [errorCode, taskId] =
-  error.message.match(/error: (\d+)-(\d+|null|undefined)/)?.slice(1) ?? '';
-
-console.log(errorCode); // Output: "404"
-console.log(taskId); // Output: "123"
-
+console.log(test()); //undefined
 
 
-1) Regular Expression (/error: (\d+)-(\d+|null|undefined)/):
-
-/error: (\d+)-(\d+|null|undefined)/ is a regular expression used to match a specific pattern in a string.
-error: matches the literal string "error: ".
-(\d+) matches one or more digits and captures them in a group.
-- matches the literal character "-".
-(\d+|null|undefined) matches either one or more digits, the string "null", or the string "undefined", capturing it in a group.
-
-
-2) .match() method
-
-If a match is found, .match() returns an array where the first element is the entire match, and subsequent elements are the captured groups.
-If no match is found, .match() returns null.
-
-3) Optional Chaining (?.):
-The optional chaining operator (?.) is used to safely access properties or methods that might not exist.
-In this case, ?.slice(1) is used to safely call the .slice(1) method on the result of .match().
-If .match() returns null, ?. ensures that .slice(1) is not called, and the expression evaluates to undefined.
-
-
-4) .slice(1) method:  is used to remove the first element (the entire match) from the array, leaving only the captured groups.
-
-5) Nullish Coalescing Operator (??):
-?? is the nullish coalescing operator, which returns its right-hand operand when its left-hand operand is null or undefined.
-
-6) Destructuring Assignment:
- const [errorCode, taskId] = ... destructures the resulting array into errorCode and taskId variables.
-
-
-
-
-
+1) Return Statement:
+Because the condition is true, the return statement is executed. This return statement without a value effectively ends the function's execution and returns undefined by default.
 
