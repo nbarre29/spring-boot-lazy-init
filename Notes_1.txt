@@ -1,37 +1,57 @@
-static readonly updateTaskWithUserId = 'UPDATE dbo.Task SET TaskStatus = isnull(@taskStatus, TaskStatus),
-AssignedUserRoleID=(select UserRoleId from UserRoleAssignment where UserId=@assignedUserId
-and (UserRoleEndDt > GETDATE() OR UserRoleEndDt is null) and @taskStatus='PendingRerun'),
-AssignedUserID = isnull(@assignedUserId, AssignedUserID),
-UpdateDate = CURRENT_TIMESTAMP
-WHERE TaskID = @taskId;'
+UPDATE dbo.Task
+SET TaskStatus = ISNULL(@taskStatus, TaskStatus),
+  AssignedUserID = COALESCE(@assignedUserID, AssignedUserID),
+  AssignedUserRoleID = 
+    CASE 
+      WHEN @assignedUserID IS NOT NULL THEN
+        (SELECT UserRoleId FROM UserRoleAssignment 
+         WHERE UserId = @assignedUserID
+           AND (UserRoleEndDt > GETDATE() OR UserRoleEndDt IS NULL)
+           AND @taskStatus = 'PendingRerun')
+      ELSE NULL
+    END,
+  UpdateDate = CURRENT_TIMESTAMP
+WHERE TaskID = @taskId;
 
-static readonly updateTaskWithoutUserId = 'UPDATE dbo.Task SET TaskStatus = isnull(@taskStatus, TaskStatus),
-UpdateDate = CURRENT_TIMESTAMP
-WHERE TaskID = @taskId;'
 
 
-static readonly updateTask = 'UPDATE dbo.Task 
+This combined query achieves the desired behavior for both scenarios:
+
+updateTaskWithUserId:
+If @assignedUserID is provided (not null), it updates both AssignedUserID and AssignedUserRoleID as per the logic in the original updateTaskWithUserId query.
+updateTaskWithoutUserId:
+If @assignedUserID is not provided (null), it only updates TaskStatus and UpdateDate similar to the original updateTaskWithoutUserId query. This is achieved by using the following functions:
+COALESCE(@assignedUserID, AssignedUserID): This function checks if @assignedUserID is null. If null, it keeps the existing AssignedUserID value, otherwise, it uses the provided @assignedUserID.
+CASE statement: This statement checks if @assignedUserID is null. If not null, it retrieves the UserRoleID as in the original updateTaskWithUserId query. Otherwise, it sets AssignedUserRoleID to null.
+This combined query is more concise and efficient compared to running separate queries for each scenario.
+
+_________________________________
+
+static readonly updateTask = '
+UPDATE dbo.Task 
 SET 
     TaskStatus = ISNULL(@taskStatus, TaskStatus),
     AssignedUserRoleID = CASE 
-        WHEN @assignedUserId IS NOT NULL AND @taskStatus = 'PendingRerun' THEN 
+        WHEN @assignedUserId IS NOT NULL AND @taskStatus = ''PendingRerun'' THEN 
             (SELECT UserRoleId 
              FROM UserRoleAssignment 
              WHERE UserId = @assignedUserId 
              AND (UserRoleEndDt > GETDATE() OR UserRoleEndDt IS NULL))
         ELSE AssignedUserRoleID
     END,
-    AssignedUserID = ISNULL(@assignedUserId, AssignedUserID),
+    AssignedUserID = CASE
+        WHEN @assignedUserId IS NOT NULL THEN @assignedUserId
+        ELSE AssignedUserID
+    END,
     UpdateDate = CURRENT_TIMESTAMP
 WHERE TaskID = @taskId;
 ';
 
 
-In this combined query:
-
-The TaskStatus is updated using ISNULL as in the original queries.
-The AssignedUserRoleID is conditionally updated if @assignedUserId is not null and @taskStatus is 'PendingRerun'. Otherwise, it retains its existing value.
-The AssignedUserID is updated using ISNULL as in the original queries.
-The UpdateDate is updated to the current timestamp.
-The WHERE clause ensures the update only applies to the specified task.
-This way, you handle both cases (with and without @assignedUserId) in a single SQL statement.
+Explanation:
+TaskStatus: This field is always updated using ISNULL(@taskStatus, TaskStatus).
+AssignedUserRoleID: This field is conditionally updated only if @assignedUserId is provided and @taskStatus is 'PendingRerun'. If not, it retains its current value.
+AssignedUserID: This field is conditionally updated only if @assignedUserId is provided. If not, it retains its current value.
+UpdateDate: This field is always updated to the current timestamp.
+WHERE: Ensures that the update applies only to the specified task ID.
+This combined SQL statement handles both cases, updating AssignedUserRoleID and AssignedUserID only when @assignedUserId is provided, and otherwise just updating TaskStatus and UpdateDate.
