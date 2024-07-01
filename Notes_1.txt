@@ -1,32 +1,37 @@
-const animals = ['ant', 'bison', 'camel', 'duck', 'elephant'];
+static readonly updateTaskWithUserId = 'UPDATE dbo.Task SET TaskStatus = isnull(@taskStatus, TaskStatus),
+AssignedUserRoleID=(select UserRoleId from UserRoleAssignment where UserId=@assignedUserId
+and (UserRoleEndDt > GETDATE() OR UserRoleEndDt is null) and @taskStatus='PendingRerun'),
+AssignedUserID = isnull(@assignedUserId, AssignedUserID),
+UpdateDate = CURRENT_TIMESTAMP
+WHERE TaskID = @taskId;'
 
-console.log(animals.slice(2)); //[ 'camel', 'duck', 'elephant' ]
-
-console.log(animals.slice(2, 4)); //[ 'camel', 'duck' ]
-
-console.log(animals.slice(1, 5)); //[ 'bison', 'camel', 'duck', 'elephant' ]
-
-console.log(animals.slice(-2)); //[ 'duck', 'elephant' ]
-
-console.log(animals.slice(2, -1)); //[ 'camel', 'duck' ]
-
-console.log(animals.slice()); //[ 'ant', 'bison', 'camel', 'duck', 'elephant' ]
+static readonly updateTaskWithoutUserId = 'UPDATE dbo.Task SET TaskStatus = isnull(@taskStatus, TaskStatus),
+UpdateDate = CURRENT_TIMESTAMP
+WHERE TaskID = @taskId;'
 
 
-When a negative index is used, it indicates an offset from the end of the array.
+static readonly updateTask = 'UPDATE dbo.Task 
+SET 
+    TaskStatus = ISNULL(@taskStatus, TaskStatus),
+    AssignedUserRoleID = CASE 
+        WHEN @assignedUserId IS NOT NULL AND @taskStatus = 'PendingRerun' THEN 
+            (SELECT UserRoleId 
+             FROM UserRoleAssignment 
+             WHERE UserId = @assignedUserId 
+             AND (UserRoleEndDt > GETDATE() OR UserRoleEndDt IS NULL))
+        ELSE AssignedUserRoleID
+    END,
+    AssignedUserID = ISNULL(@assignedUserId, AssignedUserID),
+    UpdateDate = CURRENT_TIMESTAMP
+WHERE TaskID = @taskId;
+';
 
-In the code snippet animals.slice(-2):
-The animals array is ['ant', 'bison', 'camel', 'duck', 'elephant'].
-The slice(-2) method call means "start slicing from the second-to-last element and continue to the end of the array."
-Thus, animals.slice(-2) will extract the last two elements of the animals array. This results in a new array containing the elements ['duck', 'elephant'].
 
+In this combined query:
 
-In the case of animals.slice(-2, -1), here's what happens:
-The start index is -2, which refers to the second-to-last element in the array.
-The end index is -1, which refers to the last element in the array, but since the end index is not included in the slice, it will not be part of the resulting array.
-
-Using animals.slice(2, -1):
-The start index 2 refers to the element "camel".
-The end index -1 refers to the element "elephant", but since the end index is not included, "elephant" is excluded from the slice.
-So, animals.slice(2, -1) will extract elements starting from index 2 up to, but not including, the last element.
-Therefore, the result will be a new array containing the elements ['camel', 'duck'].
+The TaskStatus is updated using ISNULL as in the original queries.
+The AssignedUserRoleID is conditionally updated if @assignedUserId is not null and @taskStatus is 'PendingRerun'. Otherwise, it retains its existing value.
+The AssignedUserID is updated using ISNULL as in the original queries.
+The UpdateDate is updated to the current timestamp.
+The WHERE clause ensures the update only applies to the specified task.
+This way, you handle both cases (with and without @assignedUserId) in a single SQL statement.
