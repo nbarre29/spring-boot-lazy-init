@@ -78,3 +78,23 @@ WHERE TaskID = @taskId;
 
 
 
+static readonly updateTask = '
+UPDATE dbo.Task 
+SET 
+    TaskStatus = ISNULL(@taskStatus, TaskStatus),
+    AssignedUserRoleID = COALESCE(
+        CASE 
+            WHEN @assignedUserId IS NOT NULL AND @taskStatus = ''PendingRerun'' THEN 
+                (SELECT TOP 1 UserRoleId 
+                 FROM UserRoleAssignment 
+                 WHERE UserId = @assignedUserId 
+                 AND (UserRoleEndDt > GETDATE() OR UserRoleEndDt IS NULL))
+        END, AssignedUserRoleID),
+    AssignedUserID = COALESCE(@assignedUserId, AssignedUserID),
+    UpdateDate = CURRENT_TIMESTAMP
+WHERE TaskID = @taskId;
+';
+
+
+
+
