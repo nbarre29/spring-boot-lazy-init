@@ -1,57 +1,23 @@
-UPDATE dbo.Task
-SET TaskStatus = ISNULL(@taskStatus, TaskStatus),
-  AssignedUserID = COALESCE(@assignedUserID, AssignedUserID),
-  AssignedUserRoleID = 
-    CASE 
-      WHEN @assignedUserID IS NOT NULL THEN
-        (SELECT UserRoleId FROM UserRoleAssignment 
-         WHERE UserId = @assignedUserID
-           AND (UserRoleEndDt > GETDATE() OR UserRoleEndDt IS NULL)
-           AND @taskStatus = 'PendingRerun')
-      ELSE NULL
-    END,
-  UpdateDate = CURRENT_TIMESTAMP
-WHERE TaskID = @taskId;
+let str = 'Hello, World!';
+
+// Using substring
+console.log(str.substring(1, 5)); // "ello"
+console.log(str.substring(5, 1)); // "ello" (arguments are swapped)
+console.log(str.substring(7)); // "World!"
+
+// Using slice
+console.log(str.slice(1, 5)); // "ello"
+console.log(str.slice(5, 1)); // "" (no swapping of arguments)
+console.log(str.slice(-6)); // "World!"
 
 
+Key Differences b/w substring and slice
+1) Swapping of Arguments:
 
-This combined query achieves the desired behavior for both scenarios:
+substring swaps startIndex and endIndex if startIndex is greater.
+slice does not swap; it returns an empty string if startIndex is greater.
 
-updateTaskWithUserId:
-If @assignedUserID is provided (not null), it updates both AssignedUserID and AssignedUserRoleID as per the logic in the original updateTaskWithUserId query.
-updateTaskWithoutUserId:
-If @assignedUserID is not provided (null), it only updates TaskStatus and UpdateDate similar to the original updateTaskWithoutUserId query. This is achieved by using the following functions:
-COALESCE(@assignedUserID, AssignedUserID): This function checks if @assignedUserID is null. If null, it keeps the existing AssignedUserID value, otherwise, it uses the provided @assignedUserID.
-CASE statement: This statement checks if @assignedUserID is null. If not null, it retrieves the UserRoleID as in the original updateTaskWithUserId query. Otherwise, it sets AssignedUserRoleID to null.
-This combined query is more concise and efficient compared to running separate queries for each scenario.
+2) Negative Indices:
 
-_________________________________
-
-static readonly updateTask = '
-UPDATE dbo.Task 
-SET 
-    TaskStatus = ISNULL(@taskStatus, TaskStatus),
-    AssignedUserRoleID = CASE 
-        WHEN @assignedUserId IS NOT NULL AND @taskStatus = ''PendingRerun'' THEN 
-            (SELECT UserRoleId 
-             FROM UserRoleAssignment 
-             WHERE UserId = @assignedUserId 
-             AND (UserRoleEndDt > GETDATE() OR UserRoleEndDt IS NULL))
-        ELSE AssignedUserRoleID
-    END,
-    AssignedUserID = CASE
-        WHEN @assignedUserId IS NOT NULL THEN @assignedUserId
-        ELSE AssignedUserID
-    END,
-    UpdateDate = CURRENT_TIMESTAMP
-WHERE TaskID = @taskId;
-';
-
-
-Explanation:
-TaskStatus: This field is always updated using ISNULL(@taskStatus, TaskStatus).
-AssignedUserRoleID: This field is conditionally updated only if @assignedUserId is provided and @taskStatus is 'PendingRerun'. If not, it retains its current value.
-AssignedUserID: This field is conditionally updated only if @assignedUserId is provided. If not, it retains its current value.
-UpdateDate: This field is always updated to the current timestamp.
-WHERE: Ensures that the update applies only to the specified task ID.
-This combined SQL statement handles both cases, updating AssignedUserRoleID and AssignedUserID only when @assignedUserId is provided, and otherwise just updating TaskStatus and UpdateDate.
+substring does not support negative indices.
+slice supports negative indices, counting from the end of the string.
