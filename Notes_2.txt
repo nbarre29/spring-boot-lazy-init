@@ -1,13 +1,103 @@
-means that the TaskStatus column in the dbo.Task table is updated with the value of @taskStatus if @taskStatus is not NULL. If @taskStatus is NULL, the TaskStatus column retains its original value.
+-> MtuRequest
 
-In simpler terms:
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-If @taskStatus has a value, update TaskStatus to this value.
-If @taskStatus is NULL, keep the current value of TaskStatus.
-
-
-ISNULL: TaskStatus = ISNULL(@taskStatus, TaskStatus) checks if @taskStatus is NULL. If it is, it uses the current value of TaskStatus.
-COALESCE: AssignedUserID = COALESCE(@assignedUserID, AssignedUserID) checks if @assignedUserID is NULL. If it is, it uses the current value of AssignedUserID.
+public class MtuRequest {
+    @JsonProperty("mtu")
+    public Mtu mtu;
+}
 
 
-We could  use either ISNULL or COALESCE depending on the specific needs and readability. Since they are functionally similar in this context, either can be used to achieve the same result.
+This class is a simple wrapper for an instance of the Mtu class.
+
+@JsonProperty("mtu"): This Jackson annotation maps the mtu field to the JSON property named "mtu". During serialization (Java object to JSON) and deserialization (JSON to Java object), Jackson will use this annotation to correctly map the JSON structure.
+
+public Mtu mtu;: This field holds an instance of the Mtu class. It is public, so it can be accessed directly.
+
+-> Mtu Class
+
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+@JsonIgnoreProperties
+public class Mtu {
+    @JsonProperty("header")
+    public MtuHeader header;
+
+    @JsonProperty("loanMetrics")
+    public MtuLoanMetrics loanMetrics;
+
+    @JsonProperty("metadata")
+    public List<MtuMetadata> metadata;
+
+    @JsonProperty("exceptions")
+    public List<MtuException> exceptions;
+
+    @JsonProperty("status")
+    public MtuStatus status;
+}
+
+
+This class represents a more complex structure with multiple fields.
+
+@JsonIgnoreProperties: This Jackson annotation indicates that any properties not bound in this type should be ignored. This is useful for preventing exceptions when encountering unknown properties during deserialization.
+@JsonProperty("header"): This annotation maps the header field to the JSON property named "header". header is an instance of the MtuHeader class.
+@JsonProperty("loanMetrics"): This annotation maps the loanMetrics field to the JSON property named "loanMetrics". loanMetrics is an instance of the MtuLoanMetrics class.
+@JsonProperty("metadata"): This annotation maps the metadata field to the JSON property named "metadata". metadata is a list of MtuMetadata instances.
+@JsonProperty("exceptions"): This annotation maps the exceptions field to the JSON property named "exceptions". exceptions is a list of MtuException instances.
+@JsonProperty("status"): This annotation maps the status field to the JSON property named "status". status is an instance of the MtuStatus class.
+
+Detailed Breakdown of the Mtu Class Fields
+header:
+
+Type: MtuHeader
+JSON Property: "header"
+Purpose: Holds the header information of the Mtu object. The MtuHeader class is defined elsewhere and contains relevant header data.
+loanMetrics:
+
+Type: MtuLoanMetrics
+JSON Property: "loanMetrics"
+Purpose: Holds loan metrics information. The MtuLoanMetrics class is defined elsewhere and contains relevant loan metrics data.
+metadata:
+
+Type: List<MtuMetadata>
+JSON Property: "metadata"
+Purpose: Holds a list of metadata items. Each item is an instance of the MtuMetadata class, which is defined elsewhere.
+exceptions:
+
+Type: List<MtuException>
+JSON Property: "exceptions"
+Purpose: Holds a list of exception items. Each item is an instance of the MtuException class, which is defined elsewhere.
+status:
+
+Type: MtuStatus
+JSON Property: "status"
+Purpose: Holds status information. The MtuStatus class is defined elsewhere and contains relevant status data.
+
+
+Example JSON Structure
+Given these classes, an example JSON structure that could be deserialized into an MtuRequest object might look like this:
+
+{
+  "mtu": {
+    "header": {
+      // MtuHeader fields here
+    },
+    "loanMetrics": {
+      // MtuLoanMetrics fields here
+    },
+    "metadata": [
+      // Array of MtuMetadata objects here
+    ],
+    "exceptions": [
+      // Array of MtuException objects here
+    ],
+    "status": {
+      // MtuStatus fields here
+    }
+  }
+}
+
+Jackson will use the annotations to map each JSON property to the corresponding field in the Java objects, ensuring correct deserialization and serialization processes.
