@@ -1,103 +1,45 @@
--> MtuRequest
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-public class MtuRequest {
-    @JsonProperty("mtu")
-    public Mtu mtu;
-}
-
-
-This class is a simple wrapper for an instance of the Mtu class.
-
-@JsonProperty("mtu"): This Jackson annotation maps the mtu field to the JSON property named "mtu". During serialization (Java object to JSON) and deserialization (JSON to Java object), Jackson will use this annotation to correctly map the JSON structure.
-
-public Mtu mtu;: This field holds an instance of the Mtu class. It is public, so it can be accessed directly.
-
--> Mtu Class
-
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-@JsonIgnoreProperties
-public class Mtu {
-    @JsonProperty("header")
-    public MtuHeader header;
-
-    @JsonProperty("loanMetrics")
-    public MtuLoanMetrics loanMetrics;
-
-    @JsonProperty("metadata")
-    public List<MtuMetadata> metadata;
-
-    @JsonProperty("exceptions")
-    public List<MtuException> exceptions;
-
-    @JsonProperty("status")
-    public MtuStatus status;
-}
+String loanId = "";
+    String transactionId = "";
+    String service = "MTU" + " | Process=Controller";
+    String method = "Interrupt";
+    MtuRequest response = new MtuRequest();
+    response.mtu = new Mtu();
+    response.mtu.header = request.mtu.header;
+    response.mtu.status = new MtuStatus();
+	
+1)	
+String loanId = "";
+String transactionId = "";
+String service = "MTU" + " | Process=Controller";
+String method = "Interrupt";
 
 
-This class represents a more complex structure with multiple fields.
+String loanId = "";: Declares and initializes a String variable named loanId with an empty string.
+String transactionId = "";: Declares and initializes a String variable named transactionId with an empty string.
+String service = "MTU" + " | Process=Controller";: Declares and initializes a String variable named service with the concatenated value "MTU | Process=Controller".
+String method = "Interrupt";: Declares and initializes a String variable named method with the value "Interrupt".
 
-@JsonIgnoreProperties: This Jackson annotation indicates that any properties not bound in this type should be ignored. This is useful for preventing exceptions when encountering unknown properties during deserialization.
-@JsonProperty("header"): This annotation maps the header field to the JSON property named "header". header is an instance of the MtuHeader class.
-@JsonProperty("loanMetrics"): This annotation maps the loanMetrics field to the JSON property named "loanMetrics". loanMetrics is an instance of the MtuLoanMetrics class.
-@JsonProperty("metadata"): This annotation maps the metadata field to the JSON property named "metadata". metadata is a list of MtuMetadata instances.
-@JsonProperty("exceptions"): This annotation maps the exceptions field to the JSON property named "exceptions". exceptions is a list of MtuException instances.
-@JsonProperty("status"): This annotation maps the status field to the JSON property named "status". status is an instance of the MtuStatus class.
+2)
+Creating and Initializing MtuRequest and Mtu Objects:
 
-Detailed Breakdown of the Mtu Class Fields
-header:
+MtuRequest response = new MtuRequest();
+response.mtu = new Mtu();
 
-Type: MtuHeader
-JSON Property: "header"
-Purpose: Holds the header information of the Mtu object. The MtuHeader class is defined elsewhere and contains relevant header data.
-loanMetrics:
+MtuRequest response = new MtuRequest();: Creates a new instance of the MtuRequest class and assigns it to the variable response.
+response.mtu = new Mtu();: Creates a new instance of the Mtu class and assigns it to the mtu field of the response object.
 
-Type: MtuLoanMetrics
-JSON Property: "loanMetrics"
-Purpose: Holds loan metrics information. The MtuLoanMetrics class is defined elsewhere and contains relevant loan metrics data.
-metadata:
+3) Copying Data from request to response:
 
-Type: List<MtuMetadata>
-JSON Property: "metadata"
-Purpose: Holds a list of metadata items. Each item is an instance of the MtuMetadata class, which is defined elsewhere.
-exceptions:
+response.mtu.header = request.mtu.header;
 
-Type: List<MtuException>
-JSON Property: "exceptions"
-Purpose: Holds a list of exception items. Each item is an instance of the MtuException class, which is defined elsewhere.
-status:
+Copies the header field from the mtu object within an existing request object to the header field within the mtu object in response.
 
-Type: MtuStatus
-JSON Property: "status"
-Purpose: Holds status information. The MtuStatus class is defined elsewhere and contains relevant status data.
+4) Initializing the status Field:
+response.mtu.status = new MtuStatus();
+Creates a new instance of the MtuStatus class and assigns it to the status field of the mtu object within the response object.
 
 
-Example JSON Structure
-Given these classes, an example JSON structure that could be deserialized into an MtuRequest object might look like this:
+Purpose
+This code is preparing a response object by copying some data from an existing request object and initializing certain fields to be used later in the processing. Specifically, it initializes a new MtuRequest object, sets its mtu field, copies the header from an existing request, and initializes a new status field.
 
-{
-  "mtu": {
-    "header": {
-      // MtuHeader fields here
-    },
-    "loanMetrics": {
-      // MtuLoanMetrics fields here
-    },
-    "metadata": [
-      // Array of MtuMetadata objects here
-    ],
-    "exceptions": [
-      // Array of MtuException objects here
-    ],
-    "status": {
-      // MtuStatus fields here
-    }
-  }
-}
 
-Jackson will use the annotations to map each JSON property to the corresponding field in the Java objects, ensuring correct deserialization and serialization processes.
