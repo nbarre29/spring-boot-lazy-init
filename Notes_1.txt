@@ -1,39 +1,16 @@
-To test your Spring Boot application jar with Camunda Zeebe, Operate, Elasticsearch, and Tasklist running locally, you don't need to copy the jar file to a specific location. Instead, you can run the jar file directly using the Java command.
-
-Here’s a step-by-step guide to running your application jar and ensuring it interacts with your locally running services:
-
-
-Prerequisites
-Ensure that:
-
-ElasticSearch, Zeebe, Operate, and Tasklist are running locally.
-Your application is configured to connect to these services.
-
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webflux</artifactId>
+            <version>6.1.12</version>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
 
 
-1) Ensure your application.properties or application.yml in your Spring Boot application is correctly configured to connect to your local instances. For example:
 
-# Zeebe
-zeebe.client.broker.contactPoint=localhost:26500
-zeebe.client.security.plaintext=true
-
-# Operate and Tasklist settings, if needed
-# ...
-
-# Elasticsearch
-spring.elasticsearch.rest.uris=http://localhost:9200
+You can override the version of spring-webflux directly in your pom.xml while keeping the Spring Boot parent version as is. Add a <dependencyManagement> section to enforce the version you need.
 
 
-2) Run Your Application
-Navigate to the directory where your application.jar is located and run it using the following command:
-
-java -jar application.jar
-
-It will start your Spring Boot application and it will connect to the local instances of Zeebe, Operate, and Elasticsearch as configured.
-
-
-3)
-Access Camunda Operate and Tasklist
-Camunda Operate: Open a web browser and navigate to http://localhost:8080 to access Camunda Operate.
-Camunda Tasklist: Open a web browser and navigate to http://localhost:8081 to access the Tasklist (adjust the port if necessary).
-
+This ensures that Spring Boot uses the version of spring-webflux you specify rather than the one defined in the parent.
