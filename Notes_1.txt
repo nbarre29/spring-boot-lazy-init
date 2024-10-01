@@ -1,16 +1,50 @@
-<dependencyManagement>
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webflux</artifactId>
-            <version>6.1.12</version>
-        </dependency>
-    </dependencies>
-</dependencyManagement>
+Parse JSON Data
+If you have an array of JSON strings and need to convert them to JavaScript objects.
+const jsonStrings = [
+  '{"name": "Apple", "price": 1.2}',
+  '{"name": "Banana", "price": 0.8}',
+  '{"name": "Cherry", "price": 2.5}'
+];
 
+const products = jsonStrings.map(jsonStr => JSON.parse(jsonStr));
+console.log(products); // Output: [{name: "Apple", price: 1.2}, {name: "Banana", price: 0.8}, ...]
 
+7. Capitalize the First Letter of Each Word
+Given an array of strings, you can use Array.map() to capitalize the first letter of each word.
+const sentences = ['hello world', 'javascript is fun', 'map is useful'];
 
-You can override the version of spring-webflux directly in your pom.xml while keeping the Spring Boot parent version as is. Add a <dependencyManagement> section to enforce the version you need.
+const capitalizedSentences = sentences.map(sentence => 
+  sentence.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
+);
+console.log(capitalizedSentences); // Output: ['Hello World', 'Javascript Is Fun', 'Map Is Useful']
 
+8. Calculate Age from Birth Year
+Given an array of birth years, calculate each person’s current age.
+javascript
+Copy code
+const birthYears = [1990, 1985, 2000, 1975];
+const currentYear = new Date().getFullYear();
 
-This ensures that Spring Boot uses the version of spring-webflux you specify rather than the one defined in the parent.
+const ages = birthYears.map(year => currentYear - year);
+console.log(ages); // Output: [34, 39, 24, 49] (assuming the current year is 2024)
+
+9. Convert Objects to Query Parameters
+If you need to convert an array of objects into a URL query parameter format.
+javascript
+Copy code
+const params = [
+  { key: 'search', value: 'javascript' },
+  { key: 'limit', value: 10 },
+  { key: 'page', value: 2 }
+];
+
+const queryString = params.map(param => `${param.key}=${param.value}`).join('&');
+console.log(queryString); // Output: 'search=javascript&limit=10&page=2'
+
+10. Normalize Data
+If you have inconsistent data formats and need to normalize them. For instance, standardizing phone numbers to a specific format.
+
+const phoneNumbers = ['+1 123-456-7890', '123 456 7890', '(123) 456-7890'];
+
+const normalizedNumbers = phoneNumbers.map(num => num.replace(/\D/g, ''));
+console.log(normalizedNumbers); // Output: ['11234567890', '1234567890', '1234567890']
