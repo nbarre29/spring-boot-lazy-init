@@ -1,4 +1,4 @@
-Parse JSON Data
+Parse JSON Datas
 If you have an array of JSON strings and need to convert them to JavaScript objects.
 const jsonStrings = [
   '{"name": "Apple", "price": 1.2}',
