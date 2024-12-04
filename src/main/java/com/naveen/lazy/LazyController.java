@@ -15,6 +15,6 @@ public class LazyController {
 
     @GetMapping  //d
     public String hello() {
-        return lazyService.hello();    // added comment
+        return lazyService.hello(); 
     }
 }
