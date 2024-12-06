@@ -11,6 +11,7 @@ public class LazyController {
 
 //    @Lazy
     @Autowired  //old main comments1
+    //just a comment in naveen
     LazyService lazyService;
 
     @GetMapping  //initial_abcn
