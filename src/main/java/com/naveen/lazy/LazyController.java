@@ -13,7 +13,7 @@ public class LazyController {
     @Autowired  //c
     LazyService lazyService;
 
-    @GetMapping  //final
+    @GetMapping  //notfinal
     public String hello() {
         return lazyService.hello(); 
     }
