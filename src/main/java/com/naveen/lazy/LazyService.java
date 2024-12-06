@@ -2,7 +2,7 @@ package com.naveen.lazy;
 
 import org.springframework.stereotype.Service;
 
-
+//service naveen
 @Service
 public class LazyService {
 
