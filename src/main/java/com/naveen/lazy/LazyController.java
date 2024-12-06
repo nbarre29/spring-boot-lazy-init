@@ -10,9 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LazyController {
 
 //    @Lazy
-    @Autowired  //old main comments1
-    //just a comment in naveen
-    //just a comment in main
+    @Autowired  //old main comments1    
     LazyService lazyService;
 
     @GetMapping  //initial_abcn
