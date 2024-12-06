@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/lazy")
+//class comment main
 public class LazyController {
        
     @Autowired
