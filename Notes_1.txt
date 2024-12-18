@@ -1,59 +1,8 @@
-The editor being used in the image is Microsoft Visual Studio. Specifically:
+Software Vendor / Manufacturer: Microsoft
 
-    Visual Studio is a popular IDE (Integrated Development Environment) for .NET applications.
-    It is widely used for C#, ASP.NET Core, and other Microsoft-related technologies.
-	
-	
-Key Indicators from the Image:
+Software Version: .NET SDK 6.0 (Latest LTS version as of release)
 
-    Solution Explorer (right side):
-        Shows project structure with .cshtml files, C# files (.cs), and JSON configuration files.
-        Solution named IntakeWeb, typical for ASP.NET Core MVC projects.
+Website Link to Software Product:
+https://dotnet.microsoft.com/en-us/download/dotnet/6.0
 
-    Code Editor:
-        Syntax highlighting for HTML, C# Razor syntax, and CSS.
-        Line numbers, indentation, and styling consistent with Visual Studio.
-
-    Menus and Toolbars:
-        Classic Visual Studio toolbar options like Build, Debug, Tools, etc.
-        Icons and layout resemble Visual Studio 2019/2022.
-
-    Panels:
-        Bottom-left shows output, developer tools, and other panels commonly found in Visual Studio.
-		
-		
-Summary:
-
-The editor is Microsoft Visual Studio, likely Visual Studio 2019 or 2022, as it is commonly used for .NET Core projects.
-
-
-
-you can use Visual Studio Code (VS Code) instead of Visual Studio 2019/2022 to develop .NET Core applications. Visual Studio Code is a lightweight and flexible editor that supports C# and .NET development with the help of extensions. However, there are a few key differences and considerations to keep in mind.
-
-
-How to Use Visual Studio Code for .NET Core Development
-
-    Install Prerequisites:
-        .NET SDK: Ensure you have the .NET SDK installed. Download it from https://dotnet.microsoft.com/en-us/download.
-        Visual Studio Code: Download and install VS Code from code.visualstudio.com.
-
-    Install C# Extension:
-        Go to the Extensions Marketplace in VS Code (Ctrl+Shift+X or click the Extensions icon).
-        Search for the C# extension (provided by Microsoft) and install it.
-            This extension provides IntelliSense, debugging, and project templates for C# development.
-			
-	Build and Run the Project:
-	
-	    Use the integrated terminal to build and run your project:
-		dotnet build
-        dotnet run
-		
-		Your application will run, and you can access it via http://localhost:5000 (or a port specified in the terminal).
-		
-		
-	Debugging
-	    VS Code supports debugging for .NET Core applications:
-
-    Place breakpoints in your C# files.
-    Press F5 to start debugging.
-    The C# extension automatically configures the launch.json file for debugging.
+Software License Type: Free and Open Source (MIT License for runtime, proprietary extensions under Microsoft’s EULA)
