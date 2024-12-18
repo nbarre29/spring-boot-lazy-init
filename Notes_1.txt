@@ -1,8 +1,5 @@
-Software Vendor / Manufacturer: Microsoft
-
-Software Version: .NET SDK 6.0 (Latest LTS version as of release)
 
 Website Link to Software Product:
 https://dotnet.microsoft.com/en-us/download/dotnet/6.0
 
-Software License Type: Free and Open Source (MIT License for runtime, proprietary extensions under Microsoft’s EULA)
+Visual Studio 2022: https://visualstudio.microsoft.com/vs/
