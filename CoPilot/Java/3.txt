@@ -1,0 +1,102 @@
+-> This example demonstrates how to use interfaces in Java to define a contract and implement it in a class. It follows the principle of programming to an interface rather than an implementation.
+
+// Define an interface
+public interface GreetingService {
+    void greet(String name);
+}
+
+// Implement the interface in a class
+public class GreetingServiceImpl implements GreetingService {
+
+    @Override
+    public void greet(String name) {
+        System.out.println("Hello, " + name + "!");
+    }
+}
+
+
+public class Main {
+    public static void main(String[] args) {
+        
+        GreetingService greetingService = new GreetingServiceImpl();               
+        greetingService.greet("Alice");
+    }
+}
+
+Output: 
+Hello, Alice!
+-----------------------------------------------------------------------------------------------------
+-> We can rewrite the above example to use a lambda expression because GreetingService is a functional interface (it has a single abstract method).
+This approach reduces boilerplate code and leverages Java’s support for functional programming.
+
+@FunctionalInterface
+public interface GreetingService {
+    void greet(String name);
+}
+
+// Main class to use the interface with a lambda expression
+public class Main {
+    public static void main(String[] args) {
+        // Use a lambda expression to implement the GreetingService interface
+        GreetingService greetingService = (name) -> System.out.println("Hello, " + name + "!");
+
+        // Use the lambda to call the method
+        greetingService.greet("Alice");
+    }
+}
+______________________________________________________________________________________________________
+
+-> Lazy Evaluation in Java Streams
+
+Lazy evaluation is a programming concept where the evaluation of an expression is delayed until its value is actually needed. In the context of Java Streams, this means that intermediate operations (like filter, map, sorted, etc.) are not executed immediately when they are chained together. Instead, they are executed only when a terminal operation (like collect, forEach, reduce, etc.) is applied to the stream.   
+
+Key Points:
+
+Intermediate Operations: These operations create a new stream and store the transformation logic. They are not executed immediately.   
+Terminal Operations: These operations trigger the execution of the entire pipeline, starting from the source to the terminal operation.   
+Efficiency: Lazy evaluation can significantly improve performance, especially when dealing with large datasets, as only necessary elements are processed.   
+Short-Circuiting: Some intermediate operations, like limit and findFirst, can short-circuit the pipeline, further optimizing performance.
+
+Benefits of Lazy Evaluation:
+
+Performance Optimization: By processing only the necessary elements, lazy evaluation can significantly improve performance, especially for large datasets.   
+Memory Efficiency: Fewer intermediate results are stored in memory.   
+Flexibility: We can chain multiple intermediate operations without worrying about performance overhead.   
+Understanding
+
+
+import java.util.Arrays;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
+
+        List<Integer> evenNumbersDoubled = numbers.stream()
+                .filter(n -> n % 2 == 0)
+                .map(n -> n * 2)
+                .toList();
+
+        System.out.println(evenNumbersDoubled);  // Output: [4, 8]
+    }
+}
+
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+public class Main {
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6);
+        Optional<Integer> firstEvenSquare = numbers.stream()
+                .filter(n -> n % 2 == 0)
+                .map(n -> n * n)
+                .findFirst(); // Stops processing as soon as the first match is found
+
+        firstEvenSquare.ifPresent(System.out::println);  // Output: 4
+    }
+}
+
+______________________________________________________________________________________________________
+

@@ -1,0 +1,104 @@
+-> demonstrates reading values from a List
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ListIterationExample {
+
+    public static void main(String[] args) {
+        List<String> fruits = new ArrayList<>();
+        fruits.add("Apple");
+        fruits.add("Banana");
+        fruits.add("Mango");
+
+        // Iterating using traditional for loop
+        System.out.println("Iterating using for loop");
+        for (int i = 0; i < fruits.size(); i++) {
+            System.out.println(fruits.get(i));
+        }
+
+        // Iterating using enhanced for loop
+        for(String fruit : fruits) {
+            System.out.println(fruit);
+        }
+
+        // Iterating using forEach method
+        System.out.println("Iterating using forEach method");
+        fruits.forEach(fruit -> System.out.println(fruit));
+
+        // Iterating using forEach method with method reference
+        System.out.println("Iterating using forEach method with method reference");
+        fruits.forEach(System.out::println);
+    }
+}
+_________________________________________________________________________________
+-> create a Map and iterate through its keys and values using different methods.
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class MapIterationExample {
+    public static void main(String[] args) {
+        // Create and initialize a Map
+        Map<Integer, String> map = new HashMap<>();
+        map.put(1, "Apple");
+        map.put(2, "Banana");
+        map.put(3, "Cherry");
+        map.put(4, "Date");
+
+        System.out.println("Iterating through values using for-each and values():");
+        // Method 1: Iterating through values directly
+        for (String value : map.values()) {
+            System.out.println("Value: " + value);
+        }
+		
+		// Iterate through the keys of the map and print each key
+		for (Integer key : map.keySet()) {
+           System.out.println("Key: " + key);
+        }
+
+        System.out.println("\nIterating through entries and accessing values:");
+        // Method 2: Iterating through entrySet and accessing values
+        for (Map.Entry<Integer, String> entry : map.entrySet()) {
+            System.out.println("Key: " + entry.getKey() + ", Value: " + entry.getValue());
+        }
+
+        System.out.println("\nIterating through keys and accessing values:");
+        // Method 3: Iterating through keys and accessing values
+        for (Integer key : map.keySet()) {
+            System.out.println("Key: " + key + ", Value: " + map.get(key));
+        }
+
+        System.out.println("\nIterating through keys and values using forEach method:");
+        // Method 4: Iterating through keys and values using forEach method
+        map.forEach((key, value) -> System.out.println("Key: " + key + ", Value: " + value));
+
+        System.out.println("\nIterating through keys and values using forEach method with lambda expression:");
+        // Method 5: Iterating through keys and values using forEach method with lambda expression
+        map.forEach((key, value) -> System.out.println("Key: " + key + ", Value: " + value));
+
+        System.out.println("\nIterating through keys using forEach method with method reference:");
+        // Method 6: Iterating through keys using forEach method with method reference
+        map.keySet().forEach(System.out::println);
+
+        System.out.println("\nIterating through values using forEach method with method reference:");
+        // Method 7: Iterating through values using forEach method with method reference
+        map.values().forEach(System.out::println);
+
+        System.out.println("\nIterating through entries using forEach method with method reference:");
+        // Method 8: Iterating through entries using forEach method with method reference
+        map.entrySet().forEach(System.out::println);
+
+
+    }
+}
+_________________________________________________________________________________
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------------------
