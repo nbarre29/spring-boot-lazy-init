@@ -3,3 +3,34 @@ Website Link to Software Product:
 https://dotnet.microsoft.com/en-us/download/dotnet/6.0
 
 Visual Studio 2022: https://visualstudio.microsoft.com/vs/
+
+
+
+1. Trust the Development Certificate
+
+Visual Studio provides a development certificate to support HTTPS in local development. Follow these steps to ensure the certificate is installed and trusted:
+
+    Open a terminal (Command Prompt or PowerShell).
+
+    Run the following command:
+	dotnet dev-certs https --trust
+	
+	You may see a prompt to confirm the installation. Accept the prompt to trust the certificate.
+
+    On Windows, this command configures the certificate as trusted for your system.
+	
+2. Check Certificate Installation
+
+If the certificate installation didn't work or you still face issues:
+
+    Open Manage User Certificates:
+        Press Win + R, type certmgr.msc, and press Enter.
+    Navigate to Personal > Certificates and look for a certificate named localhost issued by ASP.NET Core HTTPS development certificate.
+    If it’s missing or invalid, delete it (if present) and repeat the dotnet dev-certs https --trust command.
+
+
+https://www.youtube.com/watch?v=REG-p_eFNIw (Learn Visual Studio 2022 in 45 minutes | Amit Thinks)
+Setup and Run ASP.NET on VS 2022 17:59
+
+    
+
