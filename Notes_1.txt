@@ -48,3 +48,19 @@ fi
 echo "INFO: Service mtu.service stopped and disabled successfully"
 exit 0
 
+# Delete the JAR file
+JAR_FILE="/opt/app/mtu/123/app.jar"
+if [ -f "$JAR_FILE" ]; then
+    sudo rm -f "$JAR_FILE"
+    if [ $? -ne 0 ]; then
+        echo "ERROR: Failed to delete $JAR_FILE"
+        exit 103
+    else
+        echo "INFO: Deleted $JAR_FILE successfully"
+    fi
+else
+    echo "WARNING: JAR file $JAR_FILE does not exist"
+fi
+
+echo "INFO: Service mtu.service stopped, disabled, and JAR file deleted successfully"
+exit 0
