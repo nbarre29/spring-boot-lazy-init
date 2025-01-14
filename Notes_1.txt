@@ -25,3 +25,26 @@ else
     echo "WARN: Did not disable processes. Make sure the START_SERVICES variable = True"
 fi
 echo "INFO: Completed disable process"
+
+
+_______________________________________________
+
+#!/bin/bash
+
+# Stop the service
+sudo systemctl stop mtu.service
+if [ $? -ne 0 ]; then
+    echo "ERROR: Failed to stop mtu.service"
+    exit 101
+fi
+
+# Disable the service
+sudo systemctl disable mtu.service
+if [ $? -ne 0 ]; then
+    echo "ERROR: Failed to disable mtu.service"
+    exit 102
+fi
+
+echo "INFO: Service mtu.service stopped and disabled successfully"
+exit 0
+
