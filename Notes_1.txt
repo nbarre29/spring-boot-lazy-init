@@ -1,36 +1,27 @@
-
-Website Link to Software Product:
-https://dotnet.microsoft.com/en-us/download/dotnet/6.0
-
-Visual Studio 2022: https://visualstudio.microsoft.com/vs/
-
-
-
-1. Trust the Development Certificate
-
-Visual Studio provides a development certificate to support HTTPS in local development. Follow these steps to ensure the certificate is installed and trusted:
-
-    Open a terminal (Command Prompt or PowerShell).
-
-    Run the following command:
-	dotnet dev-certs https --trust
-	
-	You may see a prompt to confirm the installation. Accept the prompt to trust the certificate.
-
-    On Windows, this command configures the certificate as trusted for your system.
-	
-2. Check Certificate Installation
-
-If the certificate installation didn't work or you still face issues:
-
-    Open Manage User Certificates:
-        Press Win + R, type certmgr.msc, and press Enter.
-    Navigate to Personal > Certificates and look for a certificate named localhost issued by ASP.NET Core HTTPS development certificate.
-    If it’s missing or invalid, delete it (if present) and repeat the dotnet dev-certs https --trust command.
-
-
-https://www.youtube.com/watch?v=REG-p_eFNIw (Learn Visual Studio 2022 in 45 minutes | Amit Thinks)
-Setup and Run ASP.NET on VS 2022 17:59
-
+if [ "$(get_octopusvariable "START_SERVICES")" = "True" ]; then
+    echo "Disabling service..."
     
-
+    # Stop the service/app
+    sudo su - $(get_octopusvariable "USER_ACCT") -c "pm2 stop MTU-Backend || :"
+    if [ $? -ne 0 ]; then
+        echo "ERROR: pm2 stop MTU-Backend failed"
+        exit 100
+    fi
+    
+    # Remove the service from the PM2 startup configuration
+    sudo su - $(get_octopusvariable "USER_ACCT") -c "pm2 save --no-autorestart || :"
+    if [ $? -ne 0 ]; then
+        echo "ERROR: pm2 save --no-autorestart failed"
+        exit 101
+    fi
+    
+    # Unset the PM2 startup script
+    sudo su - $(get_octopusvariable "USER_ACCT") -c "pm2 unstartup || :"
+    if [ $? -ne 0 ]; then
+        echo "ERROR: pm2 unstartup failed"
+        exit 102
+    fi
+else
+    echo "WARN: Did not disable processes. Make sure the START_SERVICES variable = True"
+fi
+echo "INFO: Completed disable process"
