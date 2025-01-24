@@ -1,66 +1,78 @@
-if [ "$(get_octopusvariable "START_SERVICES")" = "True" ]; then
-    echo "Disabling service..."
-    
-    # Stop the service/app
-    sudo su - $(get_octopusvariable "USER_ACCT") -c "pm2 stop MTU-Backend || :"
-    if [ $? -ne 0 ]; then
-        echo "ERROR: pm2 stop MTU-Backend failed"
-        exit 100
-    fi
-    
-    # Remove the service from the PM2 startup configuration
-    sudo su - $(get_octopusvariable "USER_ACCT") -c "pm2 save --no-autorestart || :"
-    if [ $? -ne 0 ]; then
-        echo "ERROR: pm2 save --no-autorestart failed"
-        exit 101
-    fi
-    
-    # Unset the PM2 startup script
-    sudo su - $(get_octopusvariable "USER_ACCT") -c "pm2 unstartup || :"
-    if [ $? -ne 0 ]; then
-        echo "ERROR: pm2 unstartup failed"
-        exit 102
-    fi
-else
-    echo "WARN: Did not disable processes. Make sure the START_SERVICES variable = True"
-fi
-echo "INFO: Completed disable process"
+->
+In IBM Operational Decision Manager (ODM), a Condition and a Conditional Precondition play key roles in defining when a rule should be executed.
+
+1. Condition in ODM Ruleset
+
+A condition is part of the rule that evaluates to true or false. If the condition is true, the rule's actions are executed. Conditions are usually written in Business Action Language (BAL) or Decision Table format.
+
+Example of a Condition in a Rule
+
+if the customer age is greater than 18
+then approve the loan application;
+
+Here, the condition is:
+
+customer age is greater than 18
+
+If this evaluates to true, the action (approve the loan application) is executed.
 
 
-_______________________________________________
+2. Conditional Precondition in ODM
 
-#!/bin/bash
+A Conditional Precondition is used to ensure that certain data or conditions exist before the rule is even considered for evaluation. If the precondition is not met, the rule is not even checked.
 
-# Stop the service
-sudo systemctl stop mtu.service
-if [ $? -ne 0 ]; then
-    echo "ERROR: Failed to stop mtu.service"
-    exit 101
-fi
+Example of a Conditional Precondition
 
-# Disable the service
-sudo systemctl disable mtu.service
-if [ $? -ne 0 ]; then
-    echo "ERROR: Failed to disable mtu.service"
-    exit 102
-fi
+Let's say we have a rule that applies only if a customer object exists. The precondition ensures that the rule does not execute if the customer is null.
 
-echo "INFO: Service mtu.service stopped and disabled successfully"
-exit 0
 
-# Delete the JAR file
-JAR_FILE="/opt/app/mtu/123/app.jar"
-if [ -f "$JAR_FILE" ]; then
-    sudo rm -f "$JAR_FILE"
-    if [ $? -ne 0 ]; then
-        echo "ERROR: Failed to delete $JAR_FILE"
-        exit 103
-    else
-        echo "INFO: Deleted $JAR_FILE successfully"
-    fi
-else
-    echo "WARNING: JAR file $JAR_FILE does not exist"
-fi
 
-echo "INFO: Service mtu.service stopped, disabled, and JAR file deleted successfully"
-exit 0
+definitions:
+   set 'customer' to 'the customer record';
+
+preconditions:
+   the customer is not null;
+
+if the customer age is greater than 18
+then approve the loan application;
+
+
+Here, the precondition ensures that the rule only executes if the customer is not null. If customer is null, the rule is not even evaluated.
+
+
+When to Use What?
+
+    Use conditions to specify when a rule should execute.
+    Use conditional preconditions to filter out irrelevant cases before rule execution, reducing unnecessary processing.
+	
+___________________________________________________________________________________________
+	
+-> 	
+Scenario: A rule determines loan eligibility based on credit score and income.
+Rule:  If creditScore > 750 AND income > 50000, then approve the loan.
+
+
+Condition
+
+    creditScore > 750
+    income > 50000
+    These conditions are combined using an AND operator to evaluate loan approval.
+
+Conditional Precondition
+
+    Ensures that the rule applies only to applicants from the USA.
+    Precondition: applicantCountry == "USA"
+
+Interpretation
+
+    If applicantCountry == "USA", the rule engine evaluates credit score and income.
+    If applicantCountry != "USA", the rule is skipped, and the loan application is ignored for this rule.
+
+Key Takeaways
+
+    Condition: Controls when the rule executes.
+    Conditional Precondition: Controls whether the rule should be evaluated at all.
+
+This approach optimizes rule execution by filtering out unnecessary evaluations early.
+
+___________________________________________________________________________________________
