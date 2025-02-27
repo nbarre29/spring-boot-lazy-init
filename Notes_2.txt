@@ -1,1 +1,87 @@
 
+flowchart LR
+    %% Wrap everything in one main subgraph (optional)
+    subgraph "Rule Flow Set Flow | RMC POC"
+
+        %% A pseudo-start node for the activity diagram
+        A((Start)) --> B[Seed Data Validation]
+        B --> C[Seller Data Validation]
+        C --> CR((CREDIT))
+        C --> AP((APPSL))
+
+        %% LOAN RISK CATEGORY
+        subgraph "Loan Risk Category"
+            NDV[Note Document Validation]
+            UDV[URLA Document Validation]
+            CDV[CD Document Validation]
+            AUS[AUS Document Selection]
+
+            NDV --> UDV
+            UDV --> CDV
+            CDV --> AUS
+
+            BCCC[Borrower Count Calculation]
+            AUS --> BCCC
+
+            NData[Note Data Validation]
+            UData[URLA Data Validation]
+            CData[CD Data Validation]
+            DUDoc[DU Document Validation]
+            LPADoc[LPA Document Validation]
+
+            NData --> UData
+            UData --> CData
+            CData --> DUDoc
+            DUDoc --> LPADoc
+
+            %% Both DU and LPA outputs connect to CREDIT and APPSL
+            DUDoc --> CR
+            DUDoc --> AP
+            LPADoc --> CR
+            LPADoc --> AP
+        end
+
+        %% GUIDELINES
+        subgraph "Guidelines"
+            direction TB
+            G1[Occupancy Guideline]
+            G2[Loan Purpose Guideline]
+            G3[Ineligible Product Guideline]
+            G4[DTI Guideline]
+            G5[LTV Guideline]
+            G6[Property Type Guideline]
+            G7[Borrower Count Guideline]
+        end
+
+        %% CREDIT & APPSL each connect to all guidelines
+        CR --> G1
+        CR --> G2
+        CR --> G3
+        CR --> G4
+        CR --> G5
+        CR --> G6
+        CR --> G7
+
+        AP --> G1
+        AP --> G2
+        AP --> G3
+        AP --> G4
+        AP --> G5
+        AP --> G6
+        AP --> G7
+
+        %% PROPERTY RISK CATEGORY
+        subgraph "Property Risk Category"
+            %% (Add property-related flows here)
+        end
+
+        %% A pseudo-end node to wrap things up
+        G1 --> Z((End))
+        G2 --> Z
+        G3 --> Z
+        G4 --> Z
+        G5 --> Z
+        G6 --> Z
+        G7 --> Z
+
+    end
