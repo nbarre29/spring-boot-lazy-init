@@ -85,3 +85,22 @@ flowchart LR
         G7 --> Z
 
     end
+
+_______________________________________________________________________
+
+Whether it’s “worth it” depends on your project’s priorities:
+
+    Mermaid’s strengths:
+        Version Control & Collaboration: Because Mermaid is text-based, diagrams are easier to store in Git and merge changes without overwriting each other’s work.
+        Automation: You can generate or update diagrams automatically from data, or embed them in docs (like Markdown wikis), so they remain “live” and consistent.
+        Lightweight & Portable: Mermaid diagrams render in most modern browsers, GitHub, GitLab, etc. You don’t need specialized software to view or edit them.
+
+    Visio (or similar graphical tools) strengths:
+        Ease of Use: Drag-and-drop interfaces can be much faster for building one-off or especially complex visuals—no code required.
+        Rich Formatting & Customization: It’s generally simpler to control spacing, alignment, color themes, shapes, etc.
+        WYSIWYG: You see the layout in real time, so there’s less guesswork compared to text-based definitions.
+
+So, if you need to quickly produce very detailed diagrams with custom positioning and minimal friction, Visio (or similar) can be faster. However, if you want your diagrams in source control, automatically updated, or embedded in documentation that’s rendered on-the-fly, Mermaid is powerful and efficient over the long run.
+
+Many teams end up mixing both approaches:
+_______________________________________________________________________
