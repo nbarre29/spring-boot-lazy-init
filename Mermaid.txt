@@ -26,9 +26,7 @@ flowchart LR
     B --> W(Borrower Count Calculation)
     
     %% After all data validations, evaluate guidelines
-    F --> X(Evaluate Guidelines)
-    H --> X
-    J --> X
+    F --> X(Evaluate Guidelines)    
     M --> X
     O --> X
     
