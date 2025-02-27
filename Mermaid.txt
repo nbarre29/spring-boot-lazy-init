@@ -1,0 +1,42 @@
+flowchart LR
+    
+    %% Specify left-to-right layout
+    A(Seed Data Validation) --> B(Seller Data Validation)
+    
+    %% From Seller Data Validation, branch to credit checks and doc validations
+    B --> C((CREDIT))
+    B --> D((APPSL))
+   
+    
+    %% Parallel document validations
+    B --> E(Note Document Validation) --> F(Note Data Validation)
+    B --> G(URLA Document Validation) --> H(URLA Data Validation)
+    B --> I(CD Document Validation) --> J(CD Data Validation)
+    
+    %% AUS document selection leads to DU & LPA validations
+    B --> K(AUS Document Selection)
+    K --> L(DU Document Validation) --> M(DU Data Validation)
+    K --> N(LPA Document Validation) --> O(LPA Data Validation)
+    
+    %% DU and LPA validations eventually feed back into CREDIT and APPSL
+    M --> C
+    O --> D
+    
+    %% Borrower Count Calculation
+    B --> W(Borrower Count Calculation)
+    
+    %% After all data validations, evaluate guidelines
+    F --> X(Evaluate Guidelines)
+    H --> X
+    J --> X
+    M --> X
+    O --> X
+    
+    %% The guidelines
+    X --> G1(Occupancy Guideline)
+    X --> G2(Loan Purpose Guideline)
+    X --> G3(Ineligible Product Guideline)
+    X --> G4(DTI Guideline)
+    X --> G5(LTV Guideline)
+    X --> G6(Property Type Guideline)
+    W --> G7(Borrower Count Guideline)
