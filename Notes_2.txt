@@ -102,5 +102,5 @@ Whether it’s “worth it” depends on your project’s priorities:
 
 So, if you need to quickly produce very detailed diagrams with custom positioning and minimal friction, Visio (or similar) can be faster. However, if you want your diagrams in source control, automatically updated, or embedded in documentation that’s rendered on-the-fly, Mermaid is powerful and efficient over the long run.
 
-Many teams end up mixing both approaches:
+Many teams end up mixing both approaches::
 _______________________________________________________________________
