@@ -1,0 +1,59 @@
+@startuml
+left to right direction
+
+A : Seed Data Validation
+B : Seller Data Validation
+C : CREDIT
+D : APPSL
+E : Note Document Validation
+F : Note Data Validation
+G : URLA Document Validation
+H : URLA Data Validation
+I : CD Document Validation
+J : CD Data Validation
+K : AUS Document Selection
+L : DU Document Validation
+M : DU Data Validation
+N : LPA Document Validation
+O : LPA Data Validation
+W : Borrower Count Calculation
+X : Evaluate Guidelines
+G1 : Occupancy Guideline
+G2 : Loan Purpose Guideline
+G3 : Ineligible Product Guideline
+G4 : DTI Guideline
+G5 : LTV Guideline
+G6 : Property Type Guideline
+G7 : Borrower Count Guideline
+
+A --> B
+
+B --> C
+B --> D
+
+B --> E --> F
+B --> G --> H
+B --> I --> J
+
+B --> K
+K --> L --> M
+K --> N --> O
+
+M --> C
+O --> D
+
+B --> W
+
+F --> X
+M --> X
+O --> X
+
+X --> G1
+X --> G2
+X --> G3
+X --> G4
+X --> G5
+X --> G6
+W --> G7
+
+@enduml
