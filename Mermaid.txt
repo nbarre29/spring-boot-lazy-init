@@ -58,12 +58,12 @@ sequenceDiagram
 
     MTU ->> Boomi: Create Task Rerun Event
     Boomi ->> Camunda: RerunEventID
-    Camunda ->> Boomi: success
-    Boomi ->> MTU: Check New Rerun Event
+    Camunda -->> Boomi: Success (Async)
+    Boomi -->> MTU: Check New Rerun Event (Async)
     Note right of Camunda: When Camunda is ready to pull, it checks the Rerun queue
 
-    MTU ->> Boomi: Process Rerun Event
-    MTU ->> MTU: Oldest Pending Rerun Event
+    MTU -->> Boomi: Process Rerun Event (Async)
+    MTU -->> MTU: Oldest Pending Rerun Event (Async)
 
     alt Ready Rule Sets Scenario
         MTU ->> MTU: Pending Review Activity
@@ -74,4 +74,3 @@ sequenceDiagram
     else Loan Rejected Scenario
         MTU ->> MTU: Complete
     end
-
