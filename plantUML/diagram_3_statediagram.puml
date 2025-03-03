@@ -1,0 +1,46 @@
+@startuml
+
+' Arrange states left to right (optional)
+left to right direction
+
+' Style states to appear more oval (rounded corners, custom colors)
+skinparam state {
+  roundCorner 25
+  BackgroundColor #ffffcc
+  BorderColor #333333
+  FontColor #333333
+}
+
+' Initial pseudo-state
+[*] --> PendingItinerary : Documentation Received (Pulse Zero)
+
+' Define states (display name and an optional alias)
+state "Pending Itinerary" as PendingItinerary
+state "Pending Document Processing" as PendingDocProc
+state "Pending Seed Data" as PendingSeedData
+state "Pending Review Activities" as PendingReview
+state "Validation Complete" as ValidationComplete
+state "Suspended" as Suspended
+state "Canceled" as Canceled
+
+' Transitions
+PendingItinerary --> PendingDocProc : Itinerary Completed
+PendingDocProc --> PendingSeedData  : Documentation Processed
+
+PendingSeedData --> PendingReview : Completed
+PendingSeedData --> ValidationComplete : Exception Outcomes Processed\n(Loan Rejected)
+PendingSeedData --> Suspended : All Conditions Waived\n(Any Pending Exception or Precondition)
+PendingSeedData --> PendingSeedData : Exceptions Processed\n(Seed Document Uploaded)
+
+PendingReview --> ValidationComplete : Review Activity Change\n(All Complete / Not Required)
+PendingReview --> Suspended : Exception Processed\n(Pending Exception)
+PendingReview --> Canceled : Cancellation Received (Loan Rejected?)
+PendingReview --> ValidationComplete : Exception Processed\n(No Open Tasks & No Open Conditions)
+
+Suspended --> Canceled : Cancellation Received
+
+ValidationComplete --> [*]
+Canceled --> [*]
+Suspended --> [*]
+
+@enduml

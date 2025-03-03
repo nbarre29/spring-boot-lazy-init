@@ -1,0 +1,46 @@
+@startuml
+
+' Define participants (actors) in the sequence
+participant "User" as User
+participant "MTU Front End" as FE
+participant "MTU" as MTU
+participant "Boomi" as Boomi
+participant "Camunda" as Camunda
+
+' Message flow
+User ->> FE: Get Next Task
+FE ->> MTU: Get Next Task
+MTU ->> FE: Task Page
+
+rnote right of MTU
+  Logic to pick the next task
+end note
+
+FE ->> FE: Compose Page
+User ->> FE: Confirm Task
+FE ->> MTU: Submit Task
+
+MTU ->> Boomi: Create Task Rerun Event
+Boomi ->> Camunda: RerunEventID
+Camunda -->> Boomi: Success (Async)
+Boomi -->> MTU: Check New Rerun Event (Async)
+
+rnote right of Camunda
+  When Camunda is ready to pull,
+  it checks the Rerun queue
+end note
+
+MTU -->> Boomi: Process Rerun Event (Async)
+MTU -->> MTU: Oldest Pending Rerun Event (Async)
+
+alt Ready Rule Sets Scenario
+  MTU ->> MTU: Pending Review Activity
+else No New Ready Rule Sets Scenario
+  MTU ->> MTU: No action
+else All Activities Complete or Not Required
+  MTU ->> MTU: Complete
+else Loan Rejected Scenario
+  MTU ->> MTU: Complete
+end
+
+@enduml

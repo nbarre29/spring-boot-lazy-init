@@ -1,0 +1,84 @@
+@startuml
+' Force a left-to-right layout (similar to "flowchart LR" in Mermaid)
+left to right direction
+
+' Define each shape. You can use [Square Brackets] or (Parentheses).
+' For clarity, we'll mostly use [ ] for rectangle nodes and ( ) for ellipse-like nodes.
+
+[Seed Data Validation] as A
+[Seller Data Validation] as B
+
+(CREDIT) as C
+(APPSL) as D
+
+[Note Document Validation] as E
+[Note Data Validation] as F
+
+[URLA Document Validation] as G
+[URLA Data Validation] as H
+
+[CD Document Validation] as I
+[CD Data Validation] as J
+
+[AUS Document Selection] as K
+[DU Document Validation] as L
+[DU Data Validation] as M
+
+[LPA Document Validation] as N
+[LPA Data Validation] as O
+
+[Borrower Count Calculation] as W
+
+[Evaluate Guidelines] as X
+
+[Occupancy Guideline] as G1
+[Loan Purpose Guideline] as G2
+[Ineligible Product Guideline] as G3
+[DTI Guideline] as G4
+[LTV Guideline] as G5
+[Property Type Guideline] as G6
+[Borrower Count Guideline] as G7
+
+' Connections:
+A --> B
+
+B --> C
+B --> D
+
+B --> E
+E --> F
+
+B --> G
+G --> H
+
+B --> I
+I --> J
+
+B --> K
+K --> L
+L --> M
+
+K --> N
+N --> O
+
+M --> C
+O --> D
+
+B --> W
+
+F --> X
+H --> X
+J --> X
+M --> X
+O --> X
+
+X --> G1
+X --> G2
+X --> G3
+X --> G4
+X --> G5
+X --> G6
+
+W --> G7
+
+@enduml
