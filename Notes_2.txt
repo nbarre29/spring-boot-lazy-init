@@ -279,7 +279,17 @@ cd /mnt/c/Users/navee/OneDrive/Desktop/Cleanup/hello-spring/target
 
 ------------------------------------------------------------------------------------------------
 
+5. System Running in Legacy BIOS Mode Instead of UEFI
 
+    WSL 2 requires UEFI firmware mode with virtualization enabled.
+    If your system is running in Legacy BIOS mode, WSL 2 may not work.
+
+🔹 Fix: Check Your Boot Mode
+
+    Open Run (Win + R), type msinfo32, and hit Enter.
+    Look for BIOS Mode:
+        If it says UEFI, you're good.
+        If it says Legacy, you'll need to convert your system to UEFI (requires reinstalling Windows).
 
 
 
