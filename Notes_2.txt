@@ -1,106 +1,296 @@
+-> Terminal right click and run as administrator
 
-flowchart LR
-    %% Wrap everything in one main subgraph (optional)
-    subgraph "Rule Flow Set Flow | RMC POC"
+->
+PS C:\Users\navee> wsl --install
+Windows Subsystem for Linux is already installed.
+The following is a list of valid distributions that can be installed.
+Install using 'wsl --install -d <Distro>'.
 
-        %% A pseudo-start node for the activity diagram
-        A((Start)) --> B[Seed Data Validation]
-        B --> C[Seller Data Validation]
-        C --> CR((CREDIT))
-        C --> AP((APPSL))
+NAME                            FRIENDLY NAME
+Ubuntu                          Ubuntu
+Debian                          Debian GNU/Linux
+kali-linux                      Kali Linux Rolling
+Ubuntu-18.04                    Ubuntu 18.04 LTS
+Ubuntu-20.04                    Ubuntu 20.04 LTS
+Ubuntu-22.04                    Ubuntu 22.04 LTS
+Ubuntu-24.04                    Ubuntu 24.04 LTS
+OracleLinux_7_9                 Oracle Linux 7.9
+OracleLinux_8_7                 Oracle Linux 8.7
+OracleLinux_9_1                 Oracle Linux 9.1
+openSUSE-Leap-15.6              openSUSE Leap 15.6
+SUSE-Linux-Enterprise-15-SP5    SUSE Linux Enterprise 15 SP5
+SUSE-Linux-Enterprise-15-SP6    SUSE Linux Enterprise 15 SP6
+openSUSE-Tumbleweed             openSUSE Tumbleweed
 
-        %% LOAN RISK CATEGORY
-        subgraph "Loan Risk Category"
-            NDV[Note Document Validation]
-            UDV[URLA Document Validation]
-            CDV[CD Document Validation]
-            AUS[AUS Document Selection]
 
-            NDV --> UDV
-            UDV --> CDV
-            CDV --> AUS
 
-            BCCC[Borrower Count Calculation]
-            AUS --> BCCC
+-> PS C:\Users\navee> wsl --install -d Ubuntu-22.04
 
-            NData[Note Data Validation]
-            UData[URLA Data Validation]
-            CData[CD Data Validation]
-            DUDoc[DU Document Validation]
-            LPADoc[LPA Document Validation]
 
-            NData --> UData
-            UData --> CData
-            CData --> DUDoc
-            DUDoc --> LPADoc
 
-            %% Both DU and LPA outputs connect to CREDIT and APPSL
-            DUDoc --> CR
-            DUDoc --> AP
-            LPADoc --> CR
-            LPADoc --> AP
-        end
 
-        %% GUIDELINES
-        subgraph "Guidelines"
-            direction TB
-            G1[Occupancy Guideline]
-            G2[Loan Purpose Guideline]
-            G3[Ineligible Product Guideline]
-            G4[DTI Guideline]
-            G5[LTV Guideline]
-            G6[Property Type Guideline]
-            G7[Borrower Count Guideline]
-        end
+Check for Windows Updates
 
-        %% CREDIT & APPSL each connect to all guidelines
-        CR --> G1
-        CR --> G2
-        CR --> G3
-        CR --> G4
-        CR --> G5
-        CR --> G6
-        CR --> G7
+    Make sure your system is fully updated.
+    Open Settings → Windows Update and install any pending updates.
+    Restart your computer if there are updates requiring a reboot.
 
-        AP --> G1
-        AP --> G2
-        AP --> G3
-        AP --> G4
-        AP --> G5
-        AP --> G6
-        AP --> G7
+Update the WSL Kernel
 
-        %% PROPERTY RISK CATEGORY
-        subgraph "Property Risk Category"
-            %% (Add property-related flows here)
-        end
+    In an elevated PowerShell or Command Prompt window, run:
 
-        %% A pseudo-end node to wrap things up
-        G1 --> Z((End))
-        G2 --> Z
-        G3 --> Z
-        G4 --> Z
-        G5 --> Z
-        G6 --> Z
-        G7 --> Z
+wsl --update
 
-    end
 
-_______________________________________________________________________
 
-Whether it’s “worth it” depends on your project’s priorities:
+dism.exe /online /disable-feature /featurename:VirtualMachinePlatform /norestart
+dism.exe /online /disable-feature /featurename:Microsoft-Windows-Subsystem-Linux /norestart
 
-    Mermaid’s strengths:
-        Version Control & Collaboration: Because Mermaid is text-based, diagrams are easier to store in Git and merge changes without overwriting each other’s work.
-        Automation: You can generate or update diagrams automatically from data, or embed them in docs (like Markdown wikis), so they remain “live” and consistent.
-        Lightweight & Portable: Mermaid diagrams render in most modern browsers, GitHub, GitLab, etc. You don’t need specialized software to view or edit them.
 
-    Visio (or similar graphical tools) strengths:
-        Ease of Use: Drag-and-drop interfaces can be much faster for building one-off or especially complex visuals—no code required.
-        Rich Formatting & Customization: It’s generally simpler to control spacing, alignment, color themes, shapes, etc.
-        WYSIWYG: You see the layout in real time, so there’s less guesswork compared to text-based definitions.
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
 
-So, if you need to quickly produce very detailed diagrams with custom positioning and minimal friction, Visio (or similar) can be faster. However, if you want your diagrams in source control, automatically updated, or embedded in documentation that’s rendered on-the-fly, Mermaid is powerful and efficient over the long run.
 
-Many teams end up mixing both approaches::
-_______________________________________________________________________
+Manually install the WSL 2 kernel
+
+    Download the WSL 2 kernel package installer from Microsoft’s official link:
+    https://aka.ms/wsl2kernel
+    Double-click the downloaded .msi and follow the instructions. That will install the kernel onto your system.
+	
+	
+Retry your WSL commands
+
+    Once the kernel is installed (via updates or the MSI), commands like wsl --install -d Ubuntu-22.04 or simply launching a distro should work.
+	
+	
+PS C:\Users\navee> wsl --status
+Default Version: 2
+
+The Windows Subsystem for Linux kernel can be manually updated with 'wsl --update', but automatic updates cannot occur due to your system settings.
+To receive automatic kernel updates, please enable the Windows Update setting: 'Receive updates for other Microsoft products when you update Windows'.
+For more information please visit https://aka.ms/wsl2kernel.
+
+The WSL 2 kernel file is not found. To update or restore the kernel please run 'wsl --update'.
+
+1> Download the latest package:
+https://learn.microsoft.com/en-us/windows/wsl/install-manual#step-4---download-the-linux-kernel-update-package
+
+
+________________________________________________________________________________________
+
+-> 1. Make sure that required Windows features are enabled
+
+1)  Enable WSL
+        Open PowerShell as Administrator and run:
+
+    Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux -All
+
+    Let Windows finish installing the feature, and restart when prompted.
+
+2)  Enable Virtual Machine Platform
+
+    Again in an elevated PowerShell:
+
+    Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -All
+
+    Restart once more if prompted.
+
+3)  Check Hyper-V (Optional, but may be required for some Windows editions)
+
+    In an elevated PowerShell, run:
+
+Enable-WindowsOptionalFeature -Online -FeatureName Hyper-V -All
+
+Restart again if prompted.
+
+
+-> https://learn.microsoft.com/en-us/windows/wsl/install-manual#step-4---download-the-linux-kernel-update-package
+
+WSL2 Linux kernel update package for x64 machines   ( download wsl_update_x64.msi )
+
+
+
+-> Confirm Installation    
+
+lsb_release -a
+
+
+-> Make WSL 2 the default (recommended)
+
+wsl --set-default-version 2
+
+
+C:\Users\navee>wsl
+nbarre@nbarre:/mnt/c/Users/navee$ ls -al
+
+nbarre@nbarre:/mnt/c/Users/navee$ ls /mnt
+c  wsl
+
+nbarre@nbarre:/mnt/c/Users/navee$ cd /mnt/c
+
+
+nbarre@nbarre:/mnt/c$ cd Users/
+nbarre@nbarre:/mnt/c/Users$ cd navee
+
+nbarre@nbarre:/mnt/c/Users/navee/OneDrive/Desktop$ pwd
+/mnt/c/Users/navee/OneDrive/Desktop
+nbarre@nbarre:/mnt/c/Users/navee/OneDrive/Desktop$ touch test.txt
+nbarre@nbarre:/mnt/c/Users/navee/OneDrive/Desktop$ rm -rf test.txt
+
+________________________________________________________________________________________
+-> Java Installation:
+
+->  sudo apt update
+sudo apt install openjdk-17-jdk
+
+When you install OpenJDK on an Ubuntu-based system via sudo apt install openjdk-17-jdk, the Java files are typically placed under:
+
+/usr/lib/jvm/java-17-openjdk-amd64/
+
+nbarre@nbarre:/usr/lib/jvm/java-1.17.0-openjdk-amd64$ pwd
+/usr/lib/jvm/java-1.17.0-openjdk-amd64
+
+
+-> 
+nbarre@nbarre:/usr/lib/jvm/java-1.17.0-openjdk-amd64$ which java
+/usr/bin/java
+
+
+-> However, note that Ubuntu’s alternatives system creates symlinks so that simply typing java or javac works regardless of which JDK is installed. Specifically:
+
+    Which java
+        Running which java will show /usr/bin/java.
+        That file is itself a symbolic link to /etc/alternatives/java.
+        In turn, /etc/alternatives/java points to /usr/lib/jvm/java-17-openjdk-amd64/bin/java.
+
+    Confirm the JDK path
+        You can verify the exact path by running:
+
+    update-alternatives --list java
+
+    This should list the currently installed Java binaries and show the path under /usr/lib/jvm.
+
+JAVA_HOME
+
+    If you need JAVA_HOME for scripts or environment variables, set:
+
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+
+Then add $JAVA_HOME/bin to your PATH if needed (though typically not required if you rely on the system’s existing java/javac symlinks).
+
+
+-> Summary
+
+    Install path: /usr/lib/jvm/java-17-openjdk-amd64/ (the main JDK directory).
+    Executable symlinks: /usr/bin/java → /etc/alternatives/java → /usr/lib/jvm/java-17-openjdk-amd64/bin/java.
+    Set JAVA_HOME if your applications or scripts specifically require it.
+________________________________________________________________________________________
+
+-> Tomcat Installation:
+
+1. Under https://tomcat.apache.org/download-10.cgi 
+
+Under 10.x "Core" downloads , right click on tar.gz and "Copy link address", https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.36/bin/apache-tomcat-10.1.36.tar.gz
+
+2. Download the Tomcat tarball to /tmp
+
+    Launch your WSL (Ubuntu) terminal.
+    Make sure you have wget installed:
+
+sudo apt update
+sudo apt install wget -y
+
+Change to a temporary directory (so you’re not cluttering /opt with the tarball):
+
+cd /tmp
+
+Use wget to download the Tomcat tarball (adjust the URL for your version):
+
+wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.36/bin/apache-tomcat-10.1.36.tar.gz
+
+
+nbarre@nbarre:/tmp$ sudo mkdir -p /opt/tomcat
+
+nbarre@nbarre:/tmp$ sudo tar xzf apache-tomcat-10.1.36.tar.gz -C /opt/tomcat
+------------------------------------------------------------------------------------------------
+
+nbarre@nbarre:/opt/tomcat$ cd tomcat
+nbarre@nbarre:/opt/tomcat/tomcat$ cd bin
+-bash: cd: bin: Permission denied
+
+
+FIX: 
+Option A: Make the directory world-executable
+
+Give all users the ability to enter that folder (common for shared install paths in /opt):
+
+sudo chmod +x /opt/tomcat/tomcat/bin
+
+Or, more typically, apply 755 recursively so all Tomcat subdirectories are readable/executable:
+
+sudo chmod -R 755 /opt/tomcat/tomcat
+
+    Note: This makes sense if you’re just doing a local dev install and need your non-root user to operate Tomcat.
+
+Option B: Change ownership to your user ( I used this option )
+
+If this Tomcat install is for your personal use, you might just make yourself the owner:
+
+sudo chown -R nbarre:nbarre /opt/tomcat/tomcat
+
+Then normal directory permissions (e.g., 700 or 755) will let you enter and run the scripts.
+------------------------------------------------------------------------------------------------
+-> 
+4. Start Tomcat
+
+    Change to Tomcat’s bin folder:
+
+cd /opt/tomcat/tomcat/bin
+
+Run the startup script:
+
+./startup.sh
+
+If you get a “Permission denied,” first make the scripts executable:
+
+sudo chmod +x *.sh
+./startup.sh
+
+Tomcat should now be running on port 8080.
+
+Verify by opening a browser in Windows and going to http://localhost:8080/.
+
+    If you see the Tomcat default page, it’s running fine.
+	
+------------------------------------------------------------------------------------------------
+
+-> nbarre@nbarre:/mnt/c/Users/navee/OneDrive/Desktop/Intellij_WS/greeting-app/target$ cd /mnt/c/Users/navee/OneDrive/Desktop/Intellij_WS/greeting-app/target
+nbarre@nbarre:/mnt/c/Users/navee/OneDrive/Desktop/Intellij_WS/greeting-app/target$ cp greeting-app-1.0-SNAPSHOT.jar /tmp
+
+
+------------------------------------------------------------------------------------------------
+
+cp /tmp/hello-spring-1.0-SNAPSHOT.jar /opt/tomcat/tomcat/webapps
+
+
+C:\Users\navee\OneDrive\Desktop\Cleanup\hello-spring\target
+
+cd /mnt/c/Users/navee/OneDrive/Desktop/Cleanup/hello-spring/target
+
+------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
