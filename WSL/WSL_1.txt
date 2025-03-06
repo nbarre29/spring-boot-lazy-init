@@ -1,0 +1,101 @@
+-> Where to Keep Your Spring Boot App?
+1) Your Home Directory (Best for Development)
+/home/your-user/spring-boot-app/
+
+
+cp -r /mnt/c/Users/navee/OneDrive/Desktop/Cleanup/hello-spring /home/nbarre
+
+nbarre@nbarre:~/hello-spring$ pwd
+/home/nbarre/hello-spring
+
+nbarre@nbarre:~/hello-spring$ mvn clean install
+nbarre@nbarre:~/hello-spring$ mvn spring-boot:run
+
+2) /opt/spring-boot/ (Best for Production)
+/opt/ is traditionally used for third-party applications.
+Store your application inside /opt/ and manage it like a service.
+
+sudo mkdir -p /opt/spring-boot/
+sudo cp myapp-0.0.1-SNAPSHOT.jar /opt/spring-boot/
+
+
+3) How to Run Spring Boot on Startup (Production)
+If you want your Spring Boot application to run automatically on system startup, create a systemd service.
+
+a) Create a Service File
+
+sudo nano /etc/systemd/system/spring-boot-app.service
+
+
+b) Add the following content:
+
+[Unit]
+Description=Spring Boot Application
+After=network.target
+
+[Service]
+User=your-user
+WorkingDirectory=/opt/spring-boot/
+ExecStart=/usr/bin/java -jar /opt/spring-boot/myapp-0.0.1-SNAPSHOT.jar
+SuccessExitStatus=143
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+
+
+c) Enable & Start the Service
+
+sudo systemctl daemon-reload
+sudo systemctl enable spring-boot-app
+sudo systemctl start spring-boot-app
+
+d) Check Service Status
+
+sudo systemctl status spring-boot-app
+
+Now, your Spring Boot application will automatically start on boot.
+
+
+🚀 Summary
+
+✅ Place it in /home/user/ for development or /opt/spring-boot/ for production.
+✅ Run manually using java -jar myapp.jar.
+✅ For automatic startup, create a systemd service.
+
+_______________________________________________________________________________________________________
+
+-> Install openJDK 8 and Set OpenJDK 8 as Default (If Needed)
+
+nbarre@nbarre:~/hello-spring$ cd /home/nbarre
+
+nbarre@nbarre:~$ sudo apt update
+
+nbarre@nbarre:~$ sudo apt install openjdk-8-jdk -y
+
+If multiple JDKs are installed, list available versions:
+
+nbarre@nbarre:~$ update-java-alternatives --list
+java-1.17.0-openjdk-amd64      1711       /usr/lib/jvm/java-1.17.0-openjdk-amd64
+java-1.8.0-openjdk-amd64       1081       /usr/lib/jvm/java-1.8.0-openjdk-amd64
+nbarre@nbarre:~$ sudo update-alternatives --config java
+There are 2 choices for the alternative java (providing /usr/bin/java).
+
+  Selection    Path                                            Priority   Status
+------------------------------------------------------------
+* 0            /usr/lib/jvm/java-17-openjdk-amd64/bin/java      1711      auto mode
+  1            /usr/lib/jvm/java-17-openjdk-amd64/bin/java      1711      manual mode
+  2            /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java   1081      manual mode
+
+Press <enter> to keep the current choice[*], or type selection number: 2
+update-alternatives: using /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java to provide /usr/bin/java (java) in manual mode
+
+nbarre@nbarre:~$ java -version
+openjdk version "1.8.0_442"
+OpenJDK Runtime Environment (build 1.8.0_442-8u442-b06~us1-0ubuntu1~22.04-b06)
+OpenJDK 64-Bit Server VM (build 25.442-b06, mixed mode)
+_______________________________________________________________________________________________________
+
+
+
