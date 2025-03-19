@@ -1,0 +1,20 @@
+# Define certificate store and certificate name
+$CertStoreLocation = "Cert:\LocalMachine\Root"
+$CertName = "radian-trusted-ssl"
+$ExportPath = "C:\temp\radian-trusted-ssl.cer"
+
+# Ensure the temp directory exists
+if (!(Test-Path "C:\temp")) {
+    New-Item -ItemType Directory -Path "C:\temp" | Out-Null
+}
+
+# Get the certificate
+$cert = Get-ChildItem -Path $CertStoreLocation | Where-Object { $_.Subject -like "*$CertName*" }
+
+if ($cert) {
+    # Export the certificate as Base64 encoded X.509 format
+    Export-Certificate -Cert $cert -FilePath $ExportPath -Type Cert
+    Write-Output "Certificate exported successfully to $ExportPath"
+} else {
+    Write-Output "Certificate '$CertName' not found in Trusted Root Certification Authorities."
+}
