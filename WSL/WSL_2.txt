@@ -1,0 +1,57 @@
+-> Internet connectivity issue
+
+nbarre@nbarre:~/hello-spring$ ping google.com
+ping: google.com: Temporary failure in name resolution
+
+
+Step 1: Check Network Connectivity
+
+Run the following inside WSL:
+
+ping -c 4 google.com
+
+    If you get a response (successful ping), your internet is working.
+    If it fails, check your DNS settings in Step 2.
+
+🛠 Step 2: Fix DNS Issues
+
+WSL sometimes struggles with DNS resolution. To manually set a reliable DNS:
+1) Open the DNS configuration file:
+
+sudo nano /etc/resolv.conf
+
+2) Replace its content with:
+
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+
+(These are Google’s public DNS servers.)
+3) Save and exit (CTRL + X, then Y, then ENTER).
+4) Prevent WSL from overwriting this file:
+
+sudo chattr +i /etc/resolv.conf
+
+Now, test again:
+
+ping -c 4 google.com
+
+-> 172.20.224.1 is not a Google DNS server. It is likely your local WSL virtual network gateway assigned by Windows.
+📌 Understanding 172.20.224.1 in WSL
+
+    WSL2 uses a virtualized network and assigns a private IP range like 172.20.x.x for internal communication between Windows and WSL.
+    172.20.224.1 is usually the default gateway for WSL2’s network, but it may not always work for DNS resolution.
+
+✅ Use Google’s Public DNS for Reliability
+
+To fix potential internet issues, replace 172.20.224.1 with Google’s Public DNS:
+1) Open the DNS Config File in WSL
+
+sudo nano /etc/resolv.conf
+
+2) Replace its content with:
+
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+
+    8.8.8.8 and 8.8.4.4 are Google’s public DNS servers.
+    These servers are faster and more reliable than local WSL-assigned DNS.

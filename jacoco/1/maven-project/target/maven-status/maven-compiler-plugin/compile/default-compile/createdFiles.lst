@@ -1,0 +1,4 @@
+org\example\MessageProcessor.class
+org\example\MessageService.class
+org\example\Main.class
+org\example\EmailService.class
