@@ -1,0 +1,87 @@
+-> it's 100% possible to interact with a Solr server hosted on AWS via HTTP REST calls in your Spring Boot application, without using SolrJ.
+
+Solr exposes a RESTful HTTP API, and Spring Boot gives you tools like RestTemplate or WebClient to call any external HTTP service—including Solr.
+
+
+
+✅ What You Need to Do
+1. Ensure Solr on AWS is accessible
+
+    Make sure the Solr server is reachable over HTTP/HTTPS.
+
+    Solr should be exposed with a public IP/DNS or through a load balancer.
+
+    The correct port (default 8983) should be open in security groups/firewall.
+
+    If it's secured (e.g., via basic auth or API gateway), you'll need to include those credentials in your calls.
+
+2. Use Spring Boot’s HTTP Clients to call Solr
+
+You can use either:
+
+    RestTemplate (classic & simple)
+
+    WebClient (reactive and preferred for newer apps)
+
+🔧 Example with RestTemplate
+a. Create a config class (optional)
+
+@Configuration
+public class RestTemplateConfig {
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+}
+
+b. Make a GET request (query Solr)
+
+@Autowired
+private RestTemplate restTemplate;
+
+public void querySolr() {
+    String solrUrl = "http://your-solr-host:8983/solr/your-core/select?q=name:john&wt=json";
+    ResponseEntity<String> response = restTemplate.getForEntity(solrUrl, String.class);
+    System.out.println(response.getBody());
+}
+
+🔄 Add or Update Document (POST)
+
+public void addDocument() {
+    String solrUrl = "http://your-solr-host:8983/solr/your-core/update?commit=true";
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+
+    String jsonDoc = """
+    [
+      {
+        "id": "123",
+        "name": "John Doe",
+        "email": "john@example.com"
+      }
+    ]
+    """;
+
+    HttpEntity<String> request = new HttpEntity<>(jsonDoc, headers);
+
+    ResponseEntity<String> response = restTemplate.postForEntity(solrUrl, request, String.class);
+    System.out.println(response.getBody());
+}
+
+🔐 If Auth is Required
+
+Just set auth headers:
+
+headers.setBasicAuth("username", "password");
+
+Or use AWS IAM roles and signed requests if you’re routing through an API Gateway.
+📌 Summary
+
+    ✅ You don’t need SolrJ. HTTP is enough.
+
+    ✅ Use RestTemplate or WebClient to talk to Solr.
+
+    ✅ Solr exposes endpoints like /select, /update, /schema, etc.
+
+    ✅ You need to ensure network access to Solr on AWS.
