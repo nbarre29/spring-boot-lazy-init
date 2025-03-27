@@ -1,87 +1,47 @@
--> it's 100% possible to interact with a Solr server hosted on AWS via HTTP REST calls in your Spring Boot application, without using SolrJ.
+What’s the Real Issue?
 
-Solr exposes a RESTful HTTP API, and Spring Boot gives you tools like RestTemplate or WebClient to call any external HTTP service—including Solr.
+Swagger UI is failing to load:
 
+GET /v3/api-docs/swagger-config → 404 Not Found
 
+Even though you're hosting your app at:
 
-✅ What You Need to Do
-1. Ensure Solr on AWS is accessible
+/api/swagger-ui/index.html
 
-    Make sure the Solr server is reachable over HTTP/HTTPS.
+So the default Swagger UI is still trying to load /v3/api-docs/swagger-config from the root, instead of /api/v3/api-docs/swagger-config.
 
-    Solr should be exposed with a public IP/DNS or through a load balancer.
+That’s why when you manually input /api/v3/api-docs.yaml, it works — but Swagger UI can't find the config on its own.
+✅ The Fix: Tell Springdoc to use the correct config path
 
-    The correct port (default 8983) should be open in security groups/firewall.
+Add the following line in your application.properties:
 
-    If it's secured (e.g., via basic auth or API gateway), you'll need to include those credentials in your calls.
+springdoc.swagger-ui.config-url=/api/v3/api-docs/swagger-config
 
-2. Use Spring Boot’s HTTP Clients to call Solr
+This will explicitly tell Swagger UI where to find the config.
 
-You can use either:
+Also, make sure you have this to support the /api context:
 
-    RestTemplate (classic & simple)
+server.servlet.context-path=/api
+springdoc.api-docs.path=/v3/api-docs
+springdoc.swagger-ui.path=/swagger-ui.html
 
-    WebClient (reactive and preferred for newer apps)
+So your complete config in application.properties should be:
 
-🔧 Example with RestTemplate
-a. Create a config class (optional)
+server.servlet.context-path=/api
+springdoc.api-docs.path=/v3/api-docs
+springdoc.swagger-ui.path=/swagger-ui.html
+springdoc.swagger-ui.config-url=/api/v3/api-docs/swagger-config
 
-@Configuration
-public class RestTemplateConfig {
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
-}
+🔄 Restart your app and test these URLs:
 
-b. Make a GET request (query Solr)
+    ✅ http://localhost:8081/api/swagger-ui/index.html
 
-@Autowired
-private RestTemplate restTemplate;
+    ✅ http://localhost:8081/api/v3/api-docs
 
-public void querySolr() {
-    String solrUrl = "http://your-solr-host:8983/solr/your-core/select?q=name:john&wt=json";
-    ResponseEntity<String> response = restTemplate.getForEntity(solrUrl, String.class);
-    System.out.println(response.getBody());
-}
+    ✅ http://localhost:8081/api/v3/api-docs/swagger-config
 
-🔄 Add or Update Document (POST)
+✅ Why This Works
 
-public void addDocument() {
-    String solrUrl = "http://your-solr-host:8983/solr/your-core/update?commit=true";
+Without config-url, Swagger UI defaults to /v3/api-docs/swagger-config — it ignores server.servlet.context-path. By adding springdoc.swagger-ui.config-url, we point it directly to the correct config path under /api.
 
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-
-    String jsonDoc = """
-    [
-      {
-        "id": "123",
-        "name": "John Doe",
-        "email": "john@example.com"
-      }
-    ]
-    """;
-
-    HttpEntity<String> request = new HttpEntity<>(jsonDoc, headers);
-
-    ResponseEntity<String> response = restTemplate.postForEntity(solrUrl, request, String.class);
-    System.out.println(response.getBody());
-}
-
-🔐 If Auth is Required
-
-Just set auth headers:
-
-headers.setBasicAuth("username", "password");
-
-Or use AWS IAM roles and signed requests if you’re routing through an API Gateway.
-📌 Summary
-
-    ✅ You don’t need SolrJ. HTTP is enough.
-
-    ✅ Use RestTemplate or WebClient to talk to Solr.
-
-    ✅ Solr exposes endpoints like /select, /update, /schema, etc.
-
-    ✅ You need to ensure network access to Solr on AWS.
+Let me know if you want to switch to YAML config or o
