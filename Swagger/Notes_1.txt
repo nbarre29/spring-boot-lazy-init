@@ -1,0 +1,64 @@
+To achieve the Swagger Authorize button with a lock icon and enable the Bearer Token Authentication popup, you need to configure Swagger/OpenAPI in your Spring Boot application using springdoc-openapi or springfox. The feature you see in the screenshot is done by adding security schemes in your Swagger config.
+
+Here’s how to achieve this using Springdoc OpenAPI (the recommended way):
+✅ Step 1: Add Maven Dependency
+
+If you're using springdoc-openapi:
+
+<dependency>
+    <groupId>org.springdoc</groupId>
+    <artifactId>springdoc-openapi-ui</artifactId>
+    <version>1.7.0</version>
+</dependency>
+
+✅ Step 2: Configure OpenAPI Bean with Bearer Auth
+
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.security.SecurityScheme.Type;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class OpenAPIConfig {
+
+    @Bean
+    public OpenAPI customOpenAPI() {
+        final String securitySchemeName = "bearerAuth";
+
+        return new OpenAPI()
+            .info(new Info().title("Lending PPE API").version("v1"))
+            .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
+            .components(new io.swagger.v3.oas.models.Components()
+                .addSecuritySchemes(securitySchemeName,
+                    new SecurityScheme()
+                        .name(securitySchemeName)
+                        .type(Type.HTTP)
+                        .scheme("bearer")
+                        .bearerFormat("JWT")));
+    }
+}
+
+✅ Step 3: Annotate Your Controller or Method (Optional)
+
+If you want to apply authentication to specific endpoints:
+
+@SecurityRequirement(name = "bearerAuth")
+@RestController
+@RequestMapping("/api")
+public class MyController {
+    @GetMapping("/secured")
+    public ResponseEntity<String> getSecured() {
+        return ResponseEntity.ok("Secured content");
+    }
+}
+
+🔐 What This Does:
+
+    Adds the lock icon to endpoints.
+
+    Enables the Authorize button in Swagger UI.
+
+    Clicking it will show the Bearer token input popup (as shown in your image).
