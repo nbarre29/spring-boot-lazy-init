@@ -1,0 +1,21 @@
+-> To clone a Git repository Studio Code, follow these steps:
+
+From the menu bar, Git -> Clone  (sometimes in the menu bar we may see VCS instead of Git, anyway we can do VCS -> Clone and it works )
+
+
+(sometimes in the menu bar we may see VCS instead of Git, anyway we can do VCS -> Get from Version Control... -> from drop down select Git as Version control , give the URL and the Directory where we want it to be downloaded. )
+
+
+-> After importing a maven project, if it is not recognized as a maven project.  right click on pom.xml -> "Add as Maven Project"
+
+
+-> you can rename all occurrences of a variable at once using the following keyboard shortcut: Shift + F6
+
+Place the cursor on the variable map and press the shortcut to rename it to desired value. This will automatically update all references to the variable.
+
+
+-> Check your IDE settings: Ensure that IntelliJ IDEA is configured to use JDK 17 for the project.  
+Go to File > Project Structure > Project and ensure the Project SDK is set to JDK 17.
+Go to File > Settings > Build, Execution, Deployment > Compiler > Java Compiler and ensure the target bytecode version is set to 17.
+
+

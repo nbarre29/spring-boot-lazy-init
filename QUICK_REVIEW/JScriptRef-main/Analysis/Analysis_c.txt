@@ -1,0 +1,68 @@
+__________________________________________________________________________________
+
+const loanExceptionsTransformed = loanExceptions.map((item) => ({
+  ...item,
+  ...loanExceptionTask?.find(
+    (expTask) => expTask.loanExceptionTaskId === item.loanExceptionTaskId
+  ),
+}));
+
+
+
+loanExceptions is presumably an array of objects.
+
+The map function is being used to iterate over each item in the loanExceptions array.
+
+For each item in the array, it is using an arrow function to create a new object. This new object is formed by spreading the properties of the current item using ...item.
+
+Additionally, it spreads the properties of another object obtained from loanExceptionTask?.find(...). This loanExceptionTask seems to be another array of objects, and it's finding the first object in that array where the loanExceptionTaskId property matches the item.loanExceptionTaskId property.
+
+The resulting object is essentially a combination of the properties from the original item and the properties from the matching loanExceptionTask object.
+
+Here's a brief breakdown of the code using an example:
+
+Suppose you have the following objects in the loanExceptions array:
+
+loanExceptions = [
+  { loanExceptionTaskId: 1, propertyA: "A" },
+  { loanExceptionTaskId: 2, propertyB: "B" },
+];
+
+And the loanExceptionTask array:
+loanExceptionTask = [
+  { loanExceptionTaskId: 1, taskA: "Task A" },
+  { loanExceptionTaskId: 2, taskB: "Task B" },
+];
+
+After running the provided code, the loanExceptions array will be transformed to:
+
+loanExceptions = [
+  { loanExceptionTaskId: 1, propertyA: "A", taskA: "Task A" },
+  { loanExceptionTaskId: 2, propertyB: "B", taskB: "Task B" },
+];
+
+----------------------------------------------------------------
+
+const loanExceptions = [
+  { loanExceptionTaskId: 1, propertyA: 'A' },
+  { loanExceptionTaskId: 2, propertyB: 'B' },
+];
+
+const loanExceptionTask = [
+  { loanExceptionTaskId: 1, taskA: 'Task A' },
+  { loanExceptionTaskId: 2, taskB: 'Task B' },
+];
+
+const loanExceptionsTransformed = loanExceptions.map((item) => ({
+  ...item,
+  ...loanExceptionTask?.find(
+    (expTask) => expTask.loanExceptionTaskId === item.loanExceptionTaskId
+  ),
+}));
+
+console.log(loanExceptionsTransformed);
+__________________________________________________________________________________
+
+
+
+

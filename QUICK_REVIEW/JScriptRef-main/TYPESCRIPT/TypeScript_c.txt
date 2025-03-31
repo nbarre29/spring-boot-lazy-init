@@ -1,0 +1,292 @@
+https://www.youtube.com/watch?v=3mDny9XAgic  (21:40)
+
+interface UserInterface {
+  id: number;
+  name: string;
+  age?: number;
+  greet(message: string): void;
+}
+
+const user: UserInterface = {
+  id: 2,
+  name: 'John',
+  greet(message) {
+    console.log(message);
+  },
+};
+
+user.greet('Hello');  //Hello
+
+---------------------------------------------------------------------------------------
+//use arrow function in greet method
+
+interface UserInterface {
+  id: number;
+  name: string;
+  age?: number;
+  greet: (message: string) => void;
+}
+
+const user: UserInterface = {
+  id: 2,
+  name: 'John',
+  greet: (message) => {
+    console.log(message);
+  },
+};
+
+user.greet('Hello'); //Hello
+
+console.log(user.name);
+---------------------------------------------------------------------------------------
+is greet in above code function or method?
+Property greet: The greet property is a function that is a part of the user object.
+Because greet is a function that is a property of the user object, it is considered a method of the user object.
+---------------------------------------------------------------------------------------	
+-> In JavaScript, the terms "function" and "method" are related but not identical.
+
+-> A function is a standalone block of code designed to perform a particular task. It is not associated with any object.
+
+Example of a function:
+
+function greet(message: string) {
+  console.log(message);
+}
+greet('Hello'); //  Hello
+
+-> A method is a function that is a property of an object. Methods are called on objects and can operate on data that belongs to the object.
+
+Example of a method:
+
+const user = {
+  name: 'John',
+  greet: function (message: string) {
+    console.log(message);
+  },
+};
+user.greet('Hello'); // Hello
+---------------------------------------------------------------------------------------
+const user = {
+  name: 'John',
+  greet: (message: string) => {
+    console.log(message);
+  },
+};
+user.greet('Hello'); // Hello
+---------------------------------------------------------------------------------------
+interface User {
+  name: string;
+  greet: (message: string) => void;
+}
+
+const user: User = {
+  name: 'John',
+  greet: (message: string) => {
+    console.log(message);
+  },
+};
+
+user.greet('Hello'); // Hello
+_______________________________________________________________________________________
+https://www.youtube.com/watch?v=3mDny9XAgic  (29:50)
+interface BusinessPartner {
+  name: string;
+  creditScore: number;
+}
+
+interface UserIdentity {
+  id: number;
+  email: string;
+}
+
+type Employee = BusinessPartner & UserIdentity;
+
+const signContract = (employee: Employee): void => {
+  console.log(
+    'Contract signed by ' + employee.name + ' with email: ' + employee.email
+  );
+};
+
+signContract({
+  name: 'Naveen',
+  creditScore: 800,
+  id: 34,
+  email: 'naveen@gmail.com',
+}); //Contract signed by Naveen with email: naveen@gmail.com
+
+_______________________________________________________________________________________
+
+https://www.youtube.com/watch?v=3mDny9XAgic  (32:50)
+
+enum LoginError {
+  Unauthorized = 'unauthorized',
+  NoUser = 'nouser',
+  WrongCredentials = 'wrongcredentials',
+  Internal = 'internal',
+}
+
+const printErrorMsg = (error: LoginError) => {
+  if (error === LoginError.Unauthorized) {
+    console.log('User not authorized');
+  } else if (error === LoginError.NoUser) {
+    console.log('No user was found with that username.');
+  } else if (error === LoginError.WrongCredentials) {
+    console.log('Wrong username/password combination');
+  } else {
+    console.log('Internal Error.');
+  }
+};
+
+printErrorMsg(LoginError.WrongCredentials);
+
+_______________________________________________________________________________________
+https://www.youtube.com/watch?v=3mDny9XAgic  (38:00)
+
+class StorageContainer<T> {
+  private contents: T[];
+
+  constructor() {
+    this.contents = [];
+  }
+
+  addItem(item: T): void {
+    this.contents.push(item);
+  }
+
+  getItem(idx: number): T | undefined {
+    return this.contents[idx];
+  }
+}
+
+const userNames = new StorageContainer<string>();
+userNames.addItem('naveen');
+userNames.addItem('kumar');
+console.log(userNames.getItem(0));
+
+const friendsCount = new StorageContainer<number>();
+friendsCount.addItem(23);
+friendsCount.addItem(46);
+console.log(friendsCount.getItem(0));
+
+_______________________________________________________________________________________
+https://www.youtube.com/watch?v=3mDny9XAgic  (44:20)
+interface Employee {
+  readonly employeeId: number;
+  readonly startDate: Date;
+  name: string;
+  department: string;
+}
+
+const employee: Employee = {
+  employeeId: 123,
+  startDate: new Date(),
+  name: 'Pedro',
+  department: 'Finance',
+};
+
+employee.name = 'Jessica';
+
+console.log(employee);
+
+_______________________________________________________________________________________
+https://www.youtube.com/watch?v=gieEQFIfgYc&t=8730s
+https://github.com/gitdagray/typescript-course
+
+//2:25:00
+interface Musician {
+  name: string;
+  instrument: string;
+  play(action: string): string;
+}
+
+class Guitarist implements Musician {
+  name: string;
+  instrument: string;
+  constructor(name: string, instrument: string) {
+    this.name = name;
+    this.instrument = instrument;
+  }
+  play(action: string) {
+    return `${this.name} ${action} the ${this.instrument}`;
+  }
+}
+
+const Page = new Guitarist('Jimmy', 'guitar');
+console.log(Page.play('strums')); //Jimmy strums the guitar
+
+---------------------------------------------------------------------------
+//2:30:00
+class Peeps {
+  static count: number = 0;
+
+  static get getCount(): number {
+    return Peeps.count;
+  }
+
+  public id: number;
+
+  constructor(public name: string) {
+    this.name = name;
+    this.id = ++Peeps.count;
+  }
+}
+
+const John = new Peeps('John');
+const Steve = new Peeps('Steve');
+const Amy = new Peeps('Amy');
+
+console.log(Amy.id); //3
+console.log(Steve.id); //2
+console.log(John.id); //1
+console.log(Peeps.count); //3
+_______________________________________________________________________________________
+https://www.youtube.com/watch?v=lPoFNPTRgnk  (Practical Typescript 5 - Type Guards) (3:00)
+
+type ValueType = string | number | boolean;
+
+let value: ValueType;
+const random = Math.random();
+value = random < 0.33 ? 'Hello' : random < 0.66 ? 123.456 : true;
+
+function checkValue(value: ValueType): void {
+  if (typeof value === 'string') {
+    console.log(value.toLocaleLowerCase());
+    return;
+  }
+
+  if (typeof value === 'number') {
+    console.log(value.toFixed(2));
+    return;
+  }
+  console.log(`boolean:  ${value}`);
+}
+
+checkValue(value);
+_______________________________________________________________________________________
+https://www.youtube.com/watch?v=gieEQFIfgYc&t=8730s  (Generics: 3:01:52)
+
+const stringEcho = (arg: string): string => arg;
+
+const inputString = 'Hello, World!';
+const echoedString = stringEcho(inputString);
+
+console.log(echoedString); // Output: Hello, World!
+---------------------------------------------------------------------------------------
+
+const echo = <T>(arg: T): T => arg;
+
+const inputString = 'Hello, World!';
+const echoedString = echo(inputString);
+
+console.log(echoedString); // Hello, World!
+
+---------------------------------------------------------------------------------------
+const echo = <T>(arg: T): T => arg;
+
+const inputNumber = 42;
+const echoedNumber = echo(inputNumber);
+
+console.log(echoedNumber); // 42
+
+_______________________________________________________________________________________
+

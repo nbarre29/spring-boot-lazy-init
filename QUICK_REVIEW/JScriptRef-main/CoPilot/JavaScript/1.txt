@@ -1,0 +1,344 @@
+( Parenthesis )
+{ Braces }
+[ Brackets ]
+_____________________________________________________________________________________
+-> https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
+The JSON.stringify() static method converts a JavaScript value to a JSON string, optionally replacing values if a replacer function is specified or optionally including only the specified properties if a replacer array is specified.
+---------------------------------------------------------------------------------
+a) This demonstrates how to use JSON.stringify() with a replacer function to modify values during the conversion process.
+
+const obj = {
+  name: 'John',
+  age: 30,
+  city: 'New York',
+};
+
+// Replacer function to replace values
+function replacer(key, value) {
+  if (typeof value === 'string') {
+    return value.toUpperCase();
+  }
+  return value;
+}
+
+const jsonString = JSON.stringify(obj, replacer, 2);
+console.log(jsonString);
+
+/* Output:
+ {
+    "name": "JOHN",
+    "age": 30,
+    "city": "NEW YORK"
+  } */
+---------------------------------------------------------------------------------
+
+b) use a replacer array instead of a replacer function, you can specify an array of property names that should be included in the JSON string.
+const obj = {
+  name: 'John',
+  age: 30,
+  city: 'New York',
+};
+
+// Define an array of property names to include in the JSON string
+const replacerArray = ['name', 'city'];
+
+const jsonString = JSON.stringify(obj, replacerArray, 2);
+console.log(jsonString);
+
+/*
+Output:
+{
+  "name": "John",
+  "city": "New York"
+}
+*/
+_____________________________________________________________________________________
+-> There are several ways to construct arrays in JavaScript. Here are the different methods with examples:
+1. Array Literals
+The most common and preferred way to create arrays.
+
+const arrayLiteral = [1, 2, 3, 4, 5];
+---------------------------------------------------------------------------------
+2. Array Constructor
+Using the Array constructor to create arrays.
+
+const arrayConstructor = new Array(1, 2, 3, 4, 5);
+---------------------------------------------------------------------------------
+4. Array.of() Method
+Creates an array from a variable number of arguments.
+
+const arrayOf = Array.of(1, 2, 3, 4, 5);
+---------------------------------------------------------------------------------
+5. Array.from() Method
+Creates an array from an iterable or array-like object.
+
+const arrayFrom = Array.from('hello'); // ['h', 'e', 'l', 'l', 'o']
+const arrayFromSet = Array.from(new Set([1, 2, 3, 4, 5])); // [1, 2, 3, 4, 5]
+---------------------------------------------------------------------------------
+6. Spread Operator
+Using the spread operator to create a new array from an existing iterable.
+
+const existingArray = [1, 2, 3];
+const newArray = [...existingArray, 4, 5]; // [1, 2, 3, 4, 5]
+---------------------------------------------------------------------------------
+9. Using push Method
+Creating an empty array and populating it using the push method.
+
+const arrayPush = [];
+arrayPush.push(1);
+arrayPush.push(2);
+arrayPush.push(3);
+---------------------------------------------------------------------------------
+10. Using concat Method
+Creating arrays and concatenating them.
+
+const array1 = [1, 2];
+const array2 = [3, 4];
+const concatenatedArray = array1.concat(array2); // [1, 2, 3, 4]
+---------------------------------------------------------------------------------
+10.1
+
+const array1 = [1, 2];
+const array2 = [3, 4];
+
+const array3 = [...array1, ...array2];
+console.log(array3); // Output: [1, 2, 3, 4]
+_____________________________________________________________________________________
+
+-> There are several ways to construct objects in JavaScript. Here are some common methods with examples:
+
+1. Object Literals
+The most common and straightforward way to create objects.
+const objLiteral = {
+    name: 'John',
+    age: 30,
+    city: 'New York'
+};
+---------------------------------------------------------------------------------
+2. Object Constructor
+Using the Object constructor to create an object.
+
+const objConstructor = new Object();
+objConstructor.name = 'John';
+objConstructor.age = 30;
+objConstructor.city = 'New York';
+
+console.log(objConstructor); // { name: 'John', age: 30, city: 'New York' }
+---------------------------------------------------------------------------------
+4. Constructor Function
+Using a constructor function to create objects.  ES6 Class syntax below is preferred.
+
+function Person(name, age, city) {
+  this.name = name;
+  this.age = age;
+  this.city = city;
+}
+
+const objConstructorFunction = new Person('John', 30, 'New York');
+
+console.log(objConstructorFunction); // Person { name: 'John', age: 30, city: 'New York' }
+---------------------------------------------------------------------------------
+5. ES6 Class Syntax
+Using ES6 classes to create objects.
+
+class Person {
+  constructor(name, age, city) {
+    this.name = name;
+    this.age = age;
+    this.city = city;
+  }
+}
+
+const objClass = new Person('John', 30, 'New York');
+
+console.log(objClass); // Person { name: 'John', age: 30, city: 'New York' }
+---------------------------------------------------------------------------------
+
+6. Factory Function
+Using a factory function to create objects.
+
+function createPerson(name, age, city) {
+  return {
+    name,
+    age,
+    city,
+  };
+}
+
+const objFactoryFunction = createPerson('John', 30, 'New York');
+console.log(objFactoryFunction); // { name: 'John', age: 30, city: 'New York' }
+---------------------------------------------------------------------------------
+6.1 Typescript
+
+interface Person {
+  name: string;
+  age: number;
+  city: string;
+}
+
+function createPerson(name: string, age: number, city: string): Person {
+  return {
+    name,
+    age,
+    city,
+  };
+}
+
+const objFactoryFunction = createPerson('John', 30, 'New York');
+console.log(objFactoryFunction); // { name: 'John', age: 30, city: 'New York' }
+---------------------------------------------------------------------------------
+6.2 Typescript + Arrow function
+
+interface Person {
+  name: string;
+  age: number;
+  city: string;
+}
+
+const createPerson = (name: string, age: number, city: string): Person => ({
+  name,
+  age,
+  city,
+});
+
+const objFactoryFunction = createPerson('John', 30, 'New York');
+console.log(objFactoryFunction); // { name: 'John', age: 30, city: 'New York' }
+
+---------------------------------------------------------------------------------
+7. Using Object.assign()
+Creating an object by copying properties from one or more source objects.
+
+const source1 = { name: 'John' };
+const source2 = { age: 30 };
+const source3 = { city: 'New York' };
+
+const objAssign = Object.assign({}, source1, source2, source3);
+console.log(objAssign); // { name: 'John', age: 30, city: 'New York' }
+---------------------------------------------------------------------------------
+7.1
+
+const source1 = { name: 'John' };
+const source2 = { age: 30 };
+const source3 = { city: 'New York' };
+
+const objAssign = Object.assign(source1, source2, source3);
+console.log(objAssign); // { name: 'John', age: 30, city: 'New York' }
+
+---------------------------------------------------------------------------------
+
+8. Using Spread Operator
+Creating an object by spreading properties from one or more source objects.
+
+const source1 = { name: 'John' };
+const source2 = { age: 30 };
+const source3 = { city: 'New York' };
+
+const objSpread = { ...source1, ...source2, ...source3 };
+console.log(objSpread); // { name: 'John', age: 30, city: 'New York' }
+---------------------------------------------------------------------------------
+
+9. Using JSON.parse() and JSON.stringify()
+Creating an object by parsing a JSON string.
+
+const jsonString = '{"name": "John", "age": 30, "city": "New York"}';
+const objFromJson = JSON.parse(jsonString);
+console.log(objFromJson); // { name: 'John', age: 30, city: 'New York' }
+---------------------------------------------------------------------------------
+
+10. Using Map and Object.fromEntries()
+Creating an object from a Map.
+
+const map = new Map([
+  ['name', 'John'],
+  ['age', 30],
+  ['city', 'New York'],
+]);
+
+const objFromMap = Object.fromEntries(map);
+console.log(objFromMap); // { name: 'John', age: 30, city: 'New York' }
+
+_____________________________________________________________________________________
+
+-> https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
+The destructuring assignment syntax is a JavaScript expression that makes it possible to unpack values from arrays, or properties from objects, into distinct variables.
+---------------------------------------------------------------------------------
+-> A simple example demonstrating destructuring assignment to unpack properties from an object
+
+const book = {
+  title: 'The Great Gatsby',
+  author: 'F. Scott Fitzgerald',
+  year: 1925,
+  genre: 'Novel',
+};
+
+// Destructuring assignment to unpack properties from the book object
+const { title, author, year, genre } = book;
+
+console.log(title); // The Great Gatsby
+console.log(author); // F. Scott Fitzgerald
+console.log(year); // 1925
+console.log(genre); // Novel
+---------------------------------------------------------------------------------
+-> A simple example demonstrating destructuring assignment to unpack properties from an array
+
+let a, b, rest;
+[a, b] = [10, 20];
+
+console.log(a); //10
+console.log(b);  //20
+
+[a, b, ...rest] = [10, 20, 30, 40, 50];
+
+console.log(rest);   // [30, 40, 50]
+
+---------------------------------------------------------------------------------
+->
+2. Rest Operator in Array Destructuring
+The rest operator can be used to collect the remaining elements of an array into a new array.
+
+const [first, second, ...rest] = [1, 2, 3, 4, 5];
+console.log(first); // 1
+console.log(second); // 2
+console.log(rest); // [3, 4, 5]
+---------------------------------------------------------------------------------
+
+3. Rest Operator in Object Destructuring
+The rest operator can be used to collect the remaining properties of an object into a new object.
+
+const person = {
+  name: 'Alice',
+  age: 25,
+  city: 'New York',
+  country: 'USA',
+};
+
+const { name, age, ...rest } = person;
+console.log(name); // Alice
+console.log(age); // 25
+console.log(rest); // { city: 'New York', country: 'USA' }
+
+_____________________________________________________________________________________
+
+-> https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters
+
+The rest parameter syntax allows a function to accept an indefinite number of arguments as an array
+
+
+//The rest parameter syntax allows a function to accept an indefinite number of arguments as an array.
+//spread operator is used to expand the array elements into individual arguments
+
+function sum(...args) {    // rest operator
+  let total = 0;
+  for (const a of args) {
+    total += a;
+  }
+  return total;
+}
+
+const numbers = [1, 2, 3, 4];
+
+console.log(sum(...numbers)); // 10    // spread operator
+
+_____________________________________________________________________________________
+
+

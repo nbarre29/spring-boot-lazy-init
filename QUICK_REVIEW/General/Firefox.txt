@@ -1,0 +1,3 @@
+-> To look for any saved username/password
+
+about:logins in the Firefox address bar.

@@ -1,0 +1,69 @@
+If you're moving the logic from a stored procedure to a Node.js repository layer and want to replace the use of a temp table with an array of objects, here is how you can structure your repository logic:
+
+
+import * as sql from 'mssql';
+
+const config: sql.config = {
+  user: 'your_username',
+  password: 'your_password',
+  server: 'your_server',
+  database: 'your_database',
+  options: {
+    encrypt: true, // Use this if you're on Windows Azure
+  },
+};
+
+interface DataSourceObject {
+  DataSourceTypeID: number;
+  DatasourceType: string;
+  DocumentName: string;
+  VersionType: string;
+}
+
+const arrayOfObjects: DataSourceObject[] = [
+  { DataSourceTypeID: 1, DatasourceType: 'Type1', DocumentName: 'Doc1', VersionType: 'Version1' },
+  { DataSourceTypeID: 2, DatasourceType: 'Type2', DocumentName: 'Doc2', VersionType: 'Version2' },
+  // Add more objects as needed
+];
+
+async function insertArrayOfObjects() {
+  const pool = new sql.ConnectionPool(config);
+  await pool.connect();
+
+  try {
+    const transaction = new sql.Transaction(pool);
+    await transaction.begin();
+
+    const request = new sql.Request(transaction);
+
+    // Insert data from the array into the target table
+    for (const obj of arrayOfObjects) {
+      await request.query(`
+        INSERT INTO YourTargetTable (DataSourceTypeID, DatasourceType, DocumentName, VersionType)
+        VALUES (${obj.DataSourceTypeID}, '${obj.DatasourceType}', '${obj.DocumentName}', '${obj.VersionType}')
+      `);
+    }
+
+    // Commit the transaction
+    await transaction.commit();
+  } catch (err) {
+    console.error('Error:', err);
+    // Rollback the transaction in case of an error
+    await transaction.rollback();
+  } finally {
+    pool.close();
+  }
+}
+
+// Example usage
+insertArrayOfObjects()
+  .then(() => {
+    console.log('Array of objects inserted successfully');
+  })
+  .catch(err => {
+    console.error('Error:', err);
+  });
+
+
+
+Replace 'YourTargetTable' with the actual name of the table where you want to insert the data. This code uses a transaction to ensure that either all the insertions succeed, or none of them do. Adjust the code based on your specific needs and database schema.

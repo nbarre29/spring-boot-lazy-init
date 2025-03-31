@@ -1,0 +1,313 @@
+//program that demonstrates filtering elements in an array based on various conditions and transformations:
+// Define an array of objects
+interface Person {
+  name: string;
+  age: number;
+  gender: string;
+}
+
+const people: Person[] = [
+  { name: "Alice", age: 25, gender: "female" },
+  { name: "Bob", age: 32, gender: "male" },
+  { name: "Charlie", age: 18, gender: "male" },
+  { name: "David", age: 40, gender: "male" },
+  { name: "Eve", age: 27, gender: "female" },
+];
+
+// Filter the array based on multiple conditions
+const filteredPeople = people
+  .filter((person) => person.age >= 25) // Filter people older than 25
+  .filter((person) => person.gender === "female"); // Filter females
+
+// Transform the filtered array into a new array with specific properties
+const transformedData = filteredPeople.map((person) => ({
+  name: person.name,
+  ageCategory: person.age < 30 ? "Young" : "Old",
+}));
+
+// Output the filtered and transformed data
+console.log("Filtered and Transformed Data:");
+console.log(transformedData);
+
+
+
+We can also add type for const transformedData:  { name: string; ageCategory: string }[]
+or as below
+const transformedData: Array<{ name: string; ageCategory: string }>
+
+---------------------------------------------------------------
+//convert the code into an exportable class module and write a Jest test case,
+// Utils.ts
+
+interface Person {
+  name: string;
+  age: number;
+  gender: string;
+}
+export class PersonFilter {
+  private people: Person[];
+
+  constructor(people: Person[]) {
+    this.people = people;
+  }
+
+  filterAndTransform(): { name: string; ageCategory: string }[] {
+    const filteredPeople = this.people
+      .filter((person) => person.age >= 25)
+      .filter((person) => person.gender === "female");
+
+    const transformedData = filteredPeople.map((person) => ({
+      name: person.name,
+      ageCategory: person.age < 30 ? "Young" : "Old",
+    }));
+
+    return transformedData;
+  }
+}
+---------------------------------------------------------------
+//Utils.test.ts
+
+
+import { PersonFilter } from "../app/Utils";
+
+describe("PersonFilter", () => {
+  const people = [
+    { name: "Alice", age: 25, gender: "female" },
+    { name: "Bob", age: 32, gender: "male" },
+    { name: "Charlie", age: 18, gender: "male" },
+    { name: "David", age: 40, gender: "male" },
+    { name: "Eve", age: 27, gender: "female" },
+  ];
+
+  it("should filter and transform the data correctly", () => {
+    const personFilter = new PersonFilter(people);
+    const transformedData = personFilter.filterAndTransform();
+
+    const expectedTransformedData = [
+      { name: "Alice", ageCategory: "Young" },
+      { name: "Eve", ageCategory: "Young" },
+    ];
+
+    expect(transformedData).toEqual(expectedTransformedData);
+  });
+});
+
+
+__________________________________________________________________________
+
+// Define an interface for a product.
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  category: string;
+}
+
+// Define an array of products.
+const products: Product[] = [
+  { id: 1, name: "Product A", price: 10, category: "Electronics" },
+  { id: 2, name: "Product B", price: 20, category: "Food" },
+  { id: 3, name: "Product C", price: 30, category: "Clothing" },
+  { id: 4, name: "Product D", price: 40, category: "Electronics" },
+  { id: 5, name: "Product E", price: 50, category: "Food" },
+];
+
+// Filter the products based on price and category.
+const filteredProducts = products.filter((product) => {
+  // Filter out products that are more than $30.
+  if (product.price > 30) {
+    return false;
+  }
+
+  // Filter out products that are not in the "Electronics" or "Food" categories.
+  if (product.category !== "Electronics" && product.category !== "Food") {
+    return false;
+  }
+
+  // Return true to include the product in the filtered array.
+  return true;
+});
+
+// Transform the filtered products into an array of product names.
+const productNames = filteredProducts.map((product) => product.name);
+
+// Print the array of product names.
+console.log(productNames); // [ 'Product A', 'Product B' ]
+---------------------------------------------------------------
+We can simplify the filter function from above code by combining the conditions into a single return statement. This approach makes the logic clearer and more concise:
+This version of the filter function directly checks if the product's price is less than or equal to 30 and if the product's category is either 'Electronics' or 'Food' in a single return statement.
+
+// Filter the products based on price and category.
+const filteredProducts = products.filter(
+  (product) =>
+    product.price <= 30 &&
+    (product.category === 'Electronics' || product.category === 'Food')
+);
+
+---------------------------------------------------------------
+//convert the code into an exportable class module and write a Jest test case,
+// Utils.ts
+
+export class ProductFilter {
+  private products: Product[];
+
+  constructor(products: Product[]) {
+    this.products = products;
+  }
+
+  filterAndTransform(): string[] {
+    const filteredProducts = this.products.filter((product) => {
+      // Filter out products that are more than $30.
+      if (product.price > 30) {
+        return false;
+      }
+
+      // Filter out products that are not in the "Electronics" or "Food" categories.
+      if (product.category !== "Electronics" && product.category !== "Food") {
+        return false;
+      }
+
+      // Return true to include the product in the filtered array.
+      return true;
+    });
+
+    const productNames = filteredProducts.map((product) => product.name);
+
+    return productNames;
+  }
+}
+
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  category: string;
+}
+---------------------------------------------------------------
+//Utils.test.ts
+import { ProductFilter } from "../app/Utils";
+
+describe("ProductFilter", () => {
+  const products = [
+    { id: 1, name: "Product A", price: 10, category: "Electronics" },
+    { id: 2, name: "Product B", price: 20, category: "Food" },
+    { id: 3, name: "Product C", price: 30, category: "Clothing" },
+    { id: 4, name: "Product D", price: 40, category: "Electronics" },
+    { id: 5, name: "Product E", price: 50, category: "Food" },
+  ];
+
+  it("should filter and transform the products correctly", () => {
+    const productFilter = new ProductFilter(products);
+    const productNames = productFilter.filterAndTransform();
+
+    const expectedProductNames = ["Product A", "Product B"];
+
+    expect(productNames).toEqual(expectedProductNames);
+    expect(productNames.length).toBe(2);
+    expect(productNames[0]).toBe("Product A");
+    expect(productNames[1]).toBe("Product B");
+  });
+});
+
+
+__________________________________________________________________________
+
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  category: string;
+}
+
+export class ProductFilter {
+  private products: Product[];
+
+  constructor(products: Product[]) {
+    this.products = products;
+  }
+
+  filterAndTransform(): string[] {
+    const filteredProducts = this.products.filter((product) => {
+      // Filter out products that are more than $30.
+      if (product.price > 30) {
+        return false;
+      }
+
+      // Filter out products that are not in the "Electronics" or "Food" categories.
+      if (product.category !== "Electronics" && product.category !== "Food") {
+        return false;
+      }
+
+      // Return true to include the product in the filtered array.
+      return true;
+    });
+
+    const productNames = filteredProducts.map((product) => product.name);
+
+    return productNames;
+  }
+}
+
+const products: Product[] = [
+  { id: 1, name: "Product A", price: 10, category: "Electronics" },
+  { id: 2, name: "Product B", price: 20, category: "Food" },
+  { id: 3, name: "Product C", price: 30, category: "Clothing" },
+  { id: 4, name: "Product D", price: 40, category: "Electronics" },
+  { id: 5, name: "Product E", price: 50, category: "Food" },
+];
+
+const productFilter = new ProductFilter(products);
+console.log(productFilter.filterAndTransform());    //[ 'Product A', 'Product B' ]
+
+---------------------------------------------------------------
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  category: string;
+}
+
+export class ProductFilter {
+  private products: Product[];
+
+  constructor(products: Product[]) {
+    this.products = products;
+  }
+
+  filterAndTransform(): Array<{ NAME: string; PRICE: number }> {
+    const filteredProducts = this.products.filter((product) => {
+      // Filter out products that are more than $30.
+      if (product.price > 30) {
+        return false;
+      }
+
+      // Filter out products that are not in the "Electronics" or "Food" categories.
+      if (product.category !== "Electronics" && product.category !== "Food") {
+        return false;
+      }
+
+      // Return true to include the product in the filtered array.
+      return true;
+    });
+
+    const productNames = filteredProducts.map((product) => {
+      return { NAME: product.name, PRICE: product.price };
+    });
+
+    return productNames;
+  }
+}
+
+const products: Product[] = [
+  { id: 1, name: "Product A", price: 10, category: "Electronics" },
+  { id: 2, name: "Product B", price: 20, category: "Food" },
+  { id: 3, name: "Product C", price: 30, category: "Clothing" },
+  { id: 4, name: "Product D", price: 40, category: "Electronics" },
+  { id: 5, name: "Product E", price: 50, category: "Food" },
+];
+
+const productFilter = new ProductFilter(products);
+console.log(productFilter.filterAndTransform()); //[ { NAME: 'Product A', PRICE: 10 }, { NAME: 'Product B', PRICE: 20 } ]
+
+__________________________________________________________________________
+

@@ -1,0 +1,148 @@
+-> demonstrate how to use the 'throw' keyword to throw both built-in and custom exceptions in Java.
+
+1) Throwing a Built-in Exception
+
+package com.naveen.examples;
+
+public class ThrowExample {
+    public static void main(String[] args) {
+        try {
+            checkAge(15);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void checkAge(int age) {
+        if (age < 18) {
+            throw new IllegalArgumentException("Age must be 18 or older.");
+        }
+    }
+}
+
+// Age must be 18 or older.
+
+---------------------------------------------------------------------------------
+2) Throwing a Custom Exception
+
+
+public class CustomExceptionExample {
+    public static void main(String[] args) {
+        try {
+            validateNumber(-1);
+        } catch (InvalidNumberException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void validateNumber(int number) throws InvalidNumberException {
+        if (number < 0) {
+            throw new InvalidNumberException("Number must be non-negative.");
+        }
+    }
+}
+
+class InvalidNumberException extends Exception {
+    public InvalidNumberException(String message) {
+        super(message);
+    }
+}
+
+//Output: Number must be non-negative.
+_____________________________________________________________________________________
+
+-> Here are some common coding practices in Java:  
+1) Use Meaningful Names: Choose descriptive and meaningful names for variables, methods, and classes.  
+// Bad
+int a;
+
+// Good
+int age;
+---------------------------------------------------------------------------------
+2) Follow Naming Conventions: Use camelCase for variables and methods, PascalCase for classes, and UPPER_CASE for constants.  
+// Variable
+int userAge;
+
+// Method
+public void calculateAge() {}
+
+// Class
+public class User {}
+
+// Constant
+public static final int MAX_AGE = 100;
+---------------------------------------------------------------------------------
+3) Keep Methods Short and Focused: Each method should perform a single task or functionality.  
+// Bad
+public void processUser() {
+    // multiple tasks
+}
+
+// Good
+public void validateUser() {}
+public void saveUser() {}
+---------------------------------------------------------------------------------
+4) Use Comments Wisely: Write comments to explain why something is done, not what is done.  
+// Bad
+int age = 25; // setting age to 25
+
+// Good
+// Age is set to 25 as a default value
+int age = 25;
+---------------------------------------------------------------------------------
+5) Avoid Magic Numbers: Use constants instead of hardcoding numbers.  
+// Bad
+int maxUsers = 100;
+
+// Good
+public static final int MAX_USERS = 100;
+int maxUsers = MAX_USERS;
+---------------------------------------------------------------------------------
+6) Handle Exceptions Properly: Use try-catch blocks to handle exceptions and provide meaningful messages.  
+// Bad
+try {
+    // code
+} catch (Exception e) {
+    e.printStackTrace();
+}
+
+// Good
+try {
+    // code
+} catch (IOException e) {
+    System.out.println("File not found: " + e.getMessage());
+}
+---------------------------------------------------------------------------------
+7) Use Proper Access Modifiers: Restrict access to class members using private, protected, and public keywords.  
+// Bad
+public int age;
+
+// Good
+private int age;
+---------------------------------------------------------------------------------
+8)Use StringBuilder for String Concatenation: For multiple string concatenations, use StringBuilder instead of +.  
+// Bad
+String result = "Hello" + " " + "World";
+
+// Good
+StringBuilder result = new StringBuilder();
+result.append("Hello").append(" ").append("World");
+---------------------------------------------------------------------------------
+9) Follow DRY Principle: Don't Repeat Yourself. Avoid code duplication by reusing code through methods or classes.  
+// Bad
+public void printUserDetails(String name, int age) {
+    System.out.println("Name: " + name);
+    System.out.println("Age: " + age);
+}
+
+public void printAdminDetails(String name, int age) {
+    System.out.println("Name: " + name);
+    System.out.println("Age: " + age);
+}
+
+// Good
+public void printDetails(String name, int age) {
+    System.out.println("Name: " + name);
+    System.out.println("Age: " + age);
+}
+_____________________________________________________________________________________

@@ -1,0 +1,208 @@
+-> Examples Using the Rest Operator
+Example 1: Function Parameters
+The rest operator allows a function to accept an indefinite number of arguments as an array.
+
+function sum(...numbers: number[]): number {
+  return numbers.reduce((acc, curr) => acc + curr, 0);
+}
+
+console.log(sum(1, 2, 3)); // Output: 6
+console.log(sum(4, 5, 6, 7)); // Output: 22
+
+Explanation: The ...numbers syntax collects all arguments passed to the function into an array named numbers.
+---------------------------------------------------------------------------------
+Example 2: Array Destructuring
+The rest operator can be used to collect the remaining elements of an array into a new array.
+
+const [first, second, ...rest] = [1, 2, 3, 4, 5];
+console.log(first); // Output: 1
+console.log(second); // Output: 2
+console.log(rest); // Output: [3, 4, 5]
+
+Explanation: The ...rest syntax collects all remaining elements after the first two into a new array named rest.
+---------------------------------------------------------------------------------
+Example 3: Object Destructuring
+The rest operator can be used to collect the remaining properties of an object into a new object.
+
+const person = { name: 'John', age: 30, city: 'New York', country: 'USA' };
+const { name: personName, age, ...rest } = person;
+console.log(personName); // Output: John
+console.log(age); // Output: 30
+console.log(rest); // Output: { city: 'New York', country: 'USA' }
+
+Explanation: The ...rest syntax collects all remaining properties after name and age into a new object named rest.
+---------------------------------------------------------------------------------
+4. Concatenating Strings
+
+function concatenate(...strings: string[]): string {
+  return strings.join(' ');
+}
+
+console.log(concatenate('Hello', 'world!')); // Output: 'Hello world!'
+console.log(concatenate('TypeScript', 'is', 'awesome!')); // Output: 'TypeScript is awesome!'
+---------------------------------------------------------------------------------
+5. Merging Arrays
+
+function mergeArrays<T>(...arrays: T[][]): T[] {
+  return arrays.flat();
+}
+
+console.log(mergeArrays([1, 2], [3, 4], [5, 6])); // Output: [1, 2, 3, 4, 5, 6]
+console.log(mergeArrays(['a', 'b'], ['c', 'd'])); // Output: ['a', 'b', 'c', 'd']
+---------------------------------------------------------------------------------
+5.1 Merging Arrays
+
+function mergeArrays<T>(...arrays: T[][]): T[] {
+  return arrays.reduce((acc, arr) => acc.concat(arr), []);
+}
+console.log(mergeArrays([1, 2], [3, 4], [5, 6])); // Output: [1, 2, 3, 4, 5, 6]
+console.log(mergeArrays(['a', 'b'], ['c', 'd'])); // Output: ['a', 'b', 'c', 'd']
+---------------------------------------------------------------------------------
+
+6. Filtering Even Numbers
+
+function filterEvenNumbers(...numbers: number[]): number[] {
+  return numbers.filter((num) => num % 2 === 0);
+}
+
+console.log(filterEvenNumbers(1, 2, 3, 4, 5, 6)); // Output: [2, 4, 6]
+console.log(filterEvenNumbers(7, 8, 9, 10)); // Output: [8, 10]
+---------------------------------------------------------------------------------
+7. Combining Objects
+
+function combineObjects(...objects: object[]): object {
+  return Object.assign({}, ...objects);
+}
+
+const obj1 = { a: 1 };
+const obj2 = { b: 2 };
+const obj3 = { c: 3 };
+
+console.log(combineObjects(obj1, obj2, obj3)); // Output: { a: 1, b: 2, c: 3 }
+_____________________________________________________________________________________
+
+-> example demonstrating the differences between undefined and null
+
+// Uninitialized variable
+let uninitializedVar: string | undefined;
+console.log(uninitializedVar); // Output: undefined
+
+// Optional parameter
+function greet(name?: string) {
+  console.log(`Hello, ${name || 'Guest'}`);
+}
+greet(); // Output: Hello, Guest
+greet('Alice'); // Output: Hello, Alice
+
+// Optional property
+interface Person {
+  name: string;
+  age?: number;
+}
+const person: Person = { name: 'John' };
+console.log(person.age); // Output: undefined
+
+// Default function return value
+function doNothing() {}
+console.log(doNothing()); // Output: undefined
+
+// Explicitly indicating no value
+let emptyVar: string | null = null;
+console.log(emptyVar); // Output: null
+
+// Resetting or clearing values
+let data: string | null = 'Some data';
+data = null;
+console.log(data); // Output: null
+
+// Interfacing with APIs
+function fetchData(): string | null {
+  // Simulate fetching data
+  return Math.random() > 0.5 ? 'Data' : null;
+}
+const result = fetchData();
+if (result === null) {
+  console.log('No data available');
+} else {
+  console.log(`Fetched data: ${result}`);
+}
+
+
+Key Differences
+1) Initialization:
+
+a) undefined is the default value for uninitialized variables.
+b) null must be explicitly assigned to a variable.
+
+2) Type:
+
+a) typeof undefined returns "undefined".
+b) typeof null returns "object".
+
+3) Usage:
+
+a) Use undefined to indicate that a variable has not been assigned a value.
+b) Use null to explicitly indicate that a variable has no value or to reset a variable
+_____________________________________________________________________________________
+-> code with comments explaining the use of null and undefined
+
+interface Person {
+  name: string;
+  age?: number; // Optional property (can be undefined)
+  address: string | null; // Nullable property (can be null)
+}
+
+function greet(person: Person) {
+  console.log(`Hello, ${person.name}!`);
+
+  // Check if age is provided (not undefined)
+  if (person.age !== undefined) {
+    console.log(`You are ${person.age} years old.`);
+  } else {
+    console.log('Age is not provided.');
+  }
+
+  // Check if address is not null
+  if (person.address !== null) {
+    console.log(`You live at ${person.address}.`);
+  } else {
+    console.log('Address is not provided.');
+  }
+}
+
+const person1: Person = {
+  name: 'John Doe',
+  age: 30,
+  address: '123 Main St',
+};
+
+const person2: Person = {
+  name: 'Jane Smith',
+  address: null,
+};
+
+greet(person1);
+greet(person2);
+
+/*
+Output:
+Hello, John Doe!
+You are 30 years old.
+You live at 123 Main St.
+Hello, Jane Smith!
+Age is not provided.
+Address is not provided.
+*/
+
+provided code is a good use case to demonstrate the differences between null and undefined in TypeScript. It shows how optional properties and nullable properties can be handled in a TypeScript interface and how to check for their presence in a function.
+
+Key Points Demonstrated:
+1) Optional Property (age):
+The age property is optional, meaning it can be undefined if not provided.
+The code checks if age is provided and logs a message accordingly.
+
+2) Nullable Property (address):
+The address property can be either a string or null.
+The code checks if address is not null and logs a message accordingly
+_____________________________________________________________________________________
+

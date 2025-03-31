@@ -1,0 +1,378 @@
+->
+
+const object = { a: 1, b: 2, c: 3 };
+
+In the given JavaScript object:
+
+
+    a, b, and c are called properties or keys of the object.
+    1, 2, and 3 are called values associated with those properties.
+
+So, the complete structure consists of key-value pairs where:
+
+    Keys (or properties): a, b, c
+    Values: 1, 2, 3
+
+This follows the general object notation in JavaScript, where objects store data in key-value pairs.
+___________________________________________________________________________
+
+->
+1. JavaScript Object
+
+    A JavaScript object is a collection of key-value pairs.
+    Keys can be strings (or symbols), and values can be of any data type (string, number, array, function, other objects, etc.).
+	
+	
+const jsObject = {
+  name: 'Alice',
+  age: 25,
+  greet: function () {
+    console.log('Hello!');
+  },
+};
+console.log(jsObject.name); // Accessing a property: "Alice"
+jsObject.greet(); // Calling a method: "Hello!"
+
+
+2. JSON (JavaScript Object Notation)
+
+    JSON is a text-based format for exchanging data.
+    It's a string representation of an object, designed to be lightweight and easy to parse.
+    Used for data storage and transfer, especially between a client and server (e.g., via HTTP requests).
+
+Rules of JSON:
+
+    Keys must be strings enclosed in double quotes ("").
+    Values can only be one of the following types:
+        Strings, numbers, booleans, arrays, objects, or null.
+    JSON cannot include methods or special objects like undefined, Date, Map, etc.
+
+Example:
+const jsonString = '{"name": "Alice", "age": 25}';
+console.log(jsonString); // A string, not an object!
+
+
+3. Key Differences Between JavaScript Objects and JSON:
+
+    Type:
+        JavaScript Object: An object.
+        JSON: A string.
+
+    Purpose:
+        JavaScript Object: Used for general programming in JavaScript.
+        JSON: Used for data interchange between systems.
+
+    Keys:
+        JavaScript Object: Can be strings or symbols.
+        JSON: Must be strings enclosed in double quotes ("").
+
+    Values:
+        JavaScript Object: Can be any valid JavaScript value (e.g., strings, numbers, functions, objects, etc.).
+        JSON: Limited to JSON-supported types (e.g., strings, numbers, booleans, arrays, objects, or null).
+
+    Methods/Functions:
+        JavaScript Object: Can include methods (functions).
+        JSON: Does not allow functions.
+	
+		
+->  The JavaScript object below cannot be directly converted to JSON as-is because JSON does not support functions. JSON is strictly for serializing data, so it can only handle key-value pairs where the values are strings, numbers, arrays, objects, booleans, or null.
+
+ const jsObject = {
+  name: 'Alice',
+  age: 25,
+  greet: function () {
+    console.log('Hello!');
+  },
+};
+
+const jsonString = JSON.stringify(jsObject);
+console.log(jsonString);
+// Output: {"name":"Alice","age":25}
+
+The attempt to convert above object to a JSON string using JSON.stringify(), the greet function is ignored.
+JSON is a text-based data format that doesn't support non-serializable values like functions, undefined, or symbols. These types are automatically skipped during serialization.
+___________________________________________________________________________
+
+->  // Create a Map
+const myMap = new Map<string, number>();
+
+// Add key-value pairs
+myMap.set('apple', 10);
+myMap.set('banana', 20);
+myMap.set('cherry', 30);
+
+// Iterate and print the values
+console.log('Printing values in the Map:');
+myMap.forEach((value, key) => {
+  console.log(`Key: ${key}, Value: ${value}`);
+});
+
+// Another way to iterate using a for...of loop
+console.log('\nUsing for...of loop to print values:');
+for (const [key, value] of myMap) {
+  console.log(`Key: ${key}, Value: ${value}`);
+}
+
+---------------------------------------------------------------------------
+// Create a Map and initialize
+const myMap = new Map<string, number>([
+  ['apple', 10],
+  ['banana', 20],
+  ['cherry', 30],
+]);
+
+___________________________________________________________________________
+
+-> // Create and initialize a Set with numbers
+const mySet = new Set<number>([1, 2, 3, 4, 5]);
+
+// Use forEach to iterate over the Set
+console.log('Iterating over the Set:');
+mySet.forEach((value) => {
+  console.log(value);
+});
+___________________________________________________________________________
+
+-> const person: { [key: string]: string | number } = {
+  name: 'John',
+  age: 30,
+};
+
+for (const key in person) {
+  //   console.log(key, person[key]);
+  console.log(`key: ${key}, value: ${person[key]}`);
+}
+___________________________________________________________________________
+
+-> Nullish Coalescing Operator (??)
+
+// Function to demonstrate Nullish Coalescing Operator (??)
+function getDisplayName(name?: string | null): string {
+  return name ?? 'Guest';
+}
+
+// Test cases
+console.log(getDisplayName('Alice')); // Output: "Alice"
+console.log(getDisplayName(null)); // Output: "Guest" (since null is nullish)
+console.log(getDisplayName(undefined)); // Output: "Guest" (since undefined is nullish)
+console.log(getDisplayName()); // Output: "Guest" ( getDisplayName is invoked without any arguments, so name is undefined
+console.log(getDisplayName('')); // Output: "" (Empty string is NOT nullish, so it is used as-is)
+
+
+// Another Example: Using ?? with objects
+interface UserSettings {
+  theme?: string | null;
+}
+
+const defaultTheme = 'light';
+const userSettings: UserSettings = { theme: null };
+
+const appliedTheme = userSettings.theme ?? defaultTheme;
+
+console.log(appliedTheme); // Output: "light" (because theme is null)
+
+--------------------------------------------------------------------------
+-> Basic Usage
+
+const personName: string | null = null;
+const displayName = personName ?? 'Guest';
+
+console.log(displayName); // Output: "Guest"
+
+--------------------------------------------------------------------------
+-> With Optional Chaining
+
+interface User {
+  name: string;
+  address?: {
+    street: string;
+    city: string;
+  };
+}
+
+const user: User = { name: 'John' };
+const userCity = user.address?.city ?? 'N/A';
+console.log(userCity); // Output: "N/A"
+
+Used Optional Chaining (?.) to safely access city without causing an error.
+Used Nullish Coalescing (??) to provide a default "N/A" if city is null or undefined.
+--------------------------------------------------------------------------
+-> In Function Arguments
+
+function greet(name: string | null): string {
+  return `Hello, ${name ?? 'friend'}!`;
+}
+
+console.log(greet(null)); // Output: "Hello, friend!"
+___________________________________________________________________________
+
+-> Optional chaining (?.)
+
+interface User {
+  id: number;
+  name: string;
+  address?: {
+    street: string;
+    city: string;
+  };
+}
+
+const users = new Map<number, User>();
+
+users.set(1, { id: 1, name: 'Alice' });
+users.set(2, {
+  id: 2,
+  name: 'Bob',
+  address: { street: 'Main St', city: 'Anytown' },
+});
+
+// Using optional chaining
+const aliceAddress = users.get(1)?.address?.street; // Will be undefined
+const bobAddress = users.get(2)?.address?.street; // Will be "Main St"
+
+console.log(aliceAddress); // Output: undefined
+console.log(bobAddress); // Output: Main St
+--------------------------------------------------------------------------
+-> Accessing Nested Properties Safely
+
+interface User {
+  name: string;
+  address?: {
+    street: string;
+    city?: string;
+  };
+}
+
+const user: User = { name: 'John' };
+
+// Without optional chaining:
+// This would throw an error if user.address or user.address.city is undefined
+const city1 = user.address.city;
+
+// With optional chaining:
+const city2 = user.address?.city; // city2 will be undefined
+
+console.log(city2); // Output: undefined
+
+--------------------------------------------------------------------------
+-> If address is undefined, ?. prevents an error and returns "Unknown".
+
+interface User {
+  name: string;
+  address?: {
+    street: string;
+    city: string;
+  };
+}
+
+const user: User = { name: 'Alice' };
+
+console.log(user.address?.city ?? 'Unknown'); // Output: "Unknown"
+--------------------------------------------------------------------------
+-> Optional Chaining with Map Objects
+
+const map = new Map<string, number>();
+map.set('age', 25);
+
+console.log(map.get('age')?.toString() ?? 'Not available'); // Output: "25"
+console.log(map.get('height')?.toString() ?? 'Not available'); // Output: "Not available"
+
+Safely accesses Map values, avoiding undefined.toString() errors.
+--------------------------------------------------------------------------
+
+-> 
+
+const users: { name: string }[] | null = null;
+
+console.log(users?.[0]?.name ?? 'No users available'); // Output: "No users available"
+
+In tsconfig.json if 
+"strictNullChecks": true /* Enable strict null checks. */,
+
+Then we will get the error:
+Property 'name' does not exist on type 'never'
+
+Fix 1: Use a Type Assertion
+
+Since we know that users is either an array of objects with name or null, we can help TypeScript with a type assertion:
+
+
+const users: { name: string }[] | null = null;
+
+console.log(  (users as { name: string }[] | null)?.[0]?.name ?? 'No users available');   // Output: "No users available"
+
+
+Why it works?
+
+    Explicitly tells TypeScript that users can be null or an array.
+    Prevents TypeScript from assuming users?.[0] is of type never.
+
+___________________________________________________________________________
+
+-> The as keyword is part of TypeScript. It is used for type assertions, which allow you to explicitly specify the type of a value when TypeScript cannot infer it correctly.
+
+let someValue: unknown = 'Hello, TypeScript!';
+let strLength: number = (someValue as string).length;
+
+console.log(strLength); // 18
+
+
+Key Points:
+
+    Type assertions don’t change the actual type of the value at runtime; they just help TypeScript with type checking.
+    They are different from type casting in other languages like Java or C# because they don’t perform runtime conversions.
+    They should be used cautiously, especially when working with unknown or any types, to avoid runtime errors.
+	
+--------------------------------------------------------------------	
+	
+-> The unknown keyword in TypeScript is a type that represents a value whose type is not known at the time of writing. It is safer than any because TypeScript enforces type checks before performing operations on an unknown value.
+Key Features of unknown:
+
+    Stricter than any – You cannot perform operations on an unknown type without first checking its type.
+    Safe Type Assignment – unknown can be assigned to any type, but cannot be assigned to anything other than unknown or any without a type check or assertion.
+    Useful for API Responses or Dynamic Data – When dealing with dynamic data where the exact type is not known upfront.
+
+	
+Example Usage
+✅ Safe Handling of unknown	
+	
+function processValue(value: unknown) {
+  if (typeof value === 'string') {
+    console.log(value.toUpperCase()); // Safe because we checked the type
+  } else if (typeof value === 'number') {
+    console.log(value.toFixed(2)); // Safe for numbers
+  } else {
+    console.log('Unknown type');
+  }
+}
+
+processValue('Hello'); // Output: HELLO
+processValue(42.567); // Output: 42.57
+processValue(true); // Output: Unknown type
+
+
+❌ Incorrect Usage of unknown
+
+let value: unknown = 'Hello';
+console.log(value.toUpperCase()); // ❌ Error: 'value' is of type 'unknown'.
+
+
+To fix this, you must narrow the type first (using typeof, assertions, or type guards).
+
+
+let value: unknown = 'Hello';
+
+if (typeof value === 'string') {
+  console.log(value.toUpperCase()); // HELLO
+}
+
+
+Best Practices
+
+    Use unknown when a variable’s type is unknown but you want TypeScript to enforce type safety.
+    Use any only when you need maximum flexibility and are sure about potential types.
+    Always narrow down unknown types before using them.
+	
+___________________________________________________________________________
+
+

@@ -1,0 +1,45 @@
+-> https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some
+
+const fruits = ['apple', 'banana', 'mango', 'guava'];
+
+function checkAvailability(arr, val) {
+  return arr.some((arrVal) => val === arrVal);
+}
+
+console.log(checkAvailability(fruits, 'kela')); //false
+console.log(checkAvailability(fruits, 'banana')); //true
+-----------------------------------------------------------
+//Typescript
+const fruits: string[] = ["apple", "banana", "mango", "guava"];
+
+function checkAvailability(arr: string[], val: string): boolean {
+  return arr.some((arrVal: string) => val === arrVal);
+}
+
+console.log(checkAvailability(fruits, "kela")); // Output: false
+console.log(checkAvailability(fruits, "banana")); // Output: true
+
+
+Inside the checkAvailability function, we use the Array.some() method to check if any element in the array arr is equal to the value val.
+The function returns a boolean value indicating whether the value val is present in the array arr.
+
+-----------------------------------------------------------
+use the includes() method instead of some() in above code
+const fruits: string[] = ["apple", "banana", "mango", "guava"];
+
+function checkAvailability(arr: string[], val: string): boolean {
+  return arr.includes(val);
+}
+
+console.log(checkAvailability(fruits, "kela")); // Output: false
+console.log(checkAvailability(fruits, "banana")); // Output: true
+-----------------------------------------------------------
+
+Both the some() method and the includes() method serve similar purposes, but they have slightly different behaviors:
+
+some() method: This method is more flexible because it allows you to specify a custom condition for checking the presence of an element in the array. You can provide a callback function to some() that evaluates each element of the array against a condition you define. This makes some() more versatile when you need to perform more complex checks.
+
+includes() method: This method is simpler and more straightforward. It directly checks if the array contains a specific value and returns a boolean indicating whether the value is found. It's concise and readable, especially when you only need to check for the presence of a specific value without any custom conditions.
+
+For simple cases like yours, where you're just checking for the presence of a value in an array, includes() is more concise and straightforward, so it might be considered "better" in terms of readability and simplicity.
+___________________________________________________________

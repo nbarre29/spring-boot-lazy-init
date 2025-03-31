@@ -1,0 +1,730 @@
+const array1 = [1, 4, 9, 16];
+
+// Pass a function to map
+const map1 = array1.map((x) => x * 2);
+
+console.log(map1); // Expected output: Array [2, 8, 18, 32]
+
+-----------------------------------------------------------
+const words = [
+  "spray",
+  "limit",
+  "elite",
+  "exuberant",
+  "destruction",
+  "present",
+];
+
+const result = words.map((word) => word.toUpperCase());
+
+console.log(result);
+-----------------------------------------------------------
+
+//Typescript
+const words: string[] = ["spray", "limit"];
+const result: string[] = words.map((word: string) => word.toUpperCase());
+console.log(result); //[ 'SPRAY', 'LIMIT' ]
+-----------------------------------------------------------
+
+//takes an array of objects and creates a new array containing the newly reformatted objects.
+
+const kvArray = [
+  { key: 1, value: 10 },
+  { key: 2, value: 20 },
+  { key: 3, value: 30 },
+];
+
+const reformattedArray = kvArray.map(({ key, value }) => ({ [key]: value }));
+
+console.log(reformattedArray); // [ { '1': 10 }, { '2': 20 }, { '3': 30 } ]
+console.log(kvArray); // [ { key: 1, value: 10 }, { key: 2, value: 20 }, { key: 3, value: 30 } ]
+-----------------------------------------------------------
+
+//Typescript
+interface KeyValue {
+  key: number;
+  value: number;
+}
+
+const kvArray: KeyValue[] = [
+  { key: 1, value: 10 },
+  { key: 2, value: 20 },
+  { key: 3, value: 30 },
+];
+
+const reformattedArray: { [key: number]: number }[] = kvArray.map(
+  ({ key, value }) => ({ [key]: value })
+);
+
+console.log(reformattedArray); // [ { '1': 10 }, { '2': 20 }, { '3': 30 } ]
+___________________________________________________________
+
+//uses filter() to create a filtered array that has all elements with values less than 10 removed.
+function isBigEnough(value) {
+  return value >= 10;
+}
+
+const filtered = [12, 5, 8, 130, 44].filter(isBigEnough);
+
+console.log(filtered);  //[ 12, 130, 44 ]
+-----------------------------------------------------------
+//in Typescript
+function isBigEnough(value: number): boolean {
+  return value >= 10;
+}
+
+const filtered: number[] = [12, 5, 8, 130, 44].filter(isBigEnough);
+
+console.log(filtered);  //[ 12, 130, 44 ]
+-----------------------------------------------------------
+//uses filter() to filter array content based on search criteria.
+const fruits = ["apple", "banana", "grapes", "mango", "orange"];
+
+/**
+ * Filter array items based on search criteria (query)
+ */
+function filterItems(arr, query) {
+  return arr.filter((el) => el.toLowerCase().includes(query.toLowerCase()));
+}
+
+console.log(filterItems(fruits, "ap")); // ['apple', 'grapes']
+console.log(filterItems(fruits, "an")); // ['banana', 'mango', 'orange']
+-----------------------------------------------------------
+//Typescript
+//uses filter() to filter array content based on search criteria.
+const fruits: string[] = ["apple", "banana", "grapes", "mango", "orange"];
+
+/**
+ * Filter array items based on search criteria (query)
+ */
+function filterItems(arr: string[], query: string): string[] {
+  return arr.filter((el) => el.toLowerCase().includes(query.toLowerCase()));
+}
+
+console.log(filterItems(fruits, "ap")); // ['apple', 'grapes']
+console.log(filterItems(fruits, "an")); // ['banana', 'mango', 'orange']
+___________________________________________________________
+//The Object.keys() method returns an array of a given object's own enumerable string-keyed property names.
+
+const object1 = {
+  a: "somestring",
+  b: 42,
+  c: false,
+};
+
+console.log(Object.keys(object1)); //[ 'a', 'b', 'c' ]
+-----------------------------------------------------------
+//The Object.keys() method in JavaScript is used to extract the keys (property names) from an object and return them as an array.
+const person = {
+  name: "John",
+  age: 30,
+  city: "New York",
+};
+
+const keys = Object.keys(person);
+keys.forEach((key) => {
+  console.log(key, person[key]);
+});
+
+//output
+name John
+age 30
+city New York
+-----------------------------------------------------------
+const person = {
+  name: "John",
+  age: 30,
+  city: "New York",
+};
+
+const keys = Object.keys(person);
+for (const key of keys) {
+  console.log(`${key}: ${person[key]}`);
+}
+
+//output
+name John
+age 30
+city New York
+-----------------------------------------------------------
+//You can use Object.keys() to check if an object contains a particular property.
+const student = {
+  name: "Alice",
+  age: 25,
+};
+
+const hasAge = Object.keys(student).includes("age");
+console.log(`Has age property: ${hasAge}`); //Has age property: true
+-----------------------------------------------------------
+//TypeScript
+const student: { name: string; age: number } = {
+  name: "Alice",
+  age: 25,
+};
+
+const hasAge: boolean = Object.keys(student).includes("age");
+console.log(`Has age property: ${hasAge}`); // Has age property: true
+-----------------------------------------------------------
+
+//Getting the Number of Properties in an Object:
+//If you need to count the number of properties in an object, you can use Object.keys().length.
+const car = {
+  make: "Toyota",
+  model: "Camry",
+  year: 2020,
+};
+
+const numProperties = Object.keys(car).length;
+console.log(`Number of properties: ${numProperties}`); //Number of properties: 3
+-----------------------------------------------------------
+
+//The Object.values() method returns an array of a given object's own enumerable string-keyed property values.
+
+const object1 = {
+  a: "somestring",
+  b: 42,
+  c: false,
+};
+
+console.log(Object.values(object1)); //[ 'somestring', 42, false ]
+-----------------------------------------------------------
+//Calculating the Sum of Object Values:
+const expenses = { rent: 1000, utilities: 200, groceries: 300 };
+const totalExpense = Object.values(expenses).reduce(
+  (acc, expense) => acc + expense,
+  0
+);
+console.log(totalExpense); //1500
+-----------------------------------------------------------
+//Typescript
+const expenses: { [key: string]: number } = {
+  rent: 1000,
+  utilities: 200,
+  groceries: 300,
+};
+
+const totalExpense: number = Object.values(expenses).reduce(
+  (acc, expense) => acc + expense,
+  0
+);
+
+console.log(totalExpense);
+-----------------------------------------------------------
+The reduce() method of Array instances executes a user-supplied "reducer" callback function on each element of the array, in order, passing in the return value from the calculation on the preceding element. The final result of running the reducer across all elements of the array is a single value.
+The first time that the callback is run there is no "return value of the previous calculation". If supplied, an initial value may be used in its place. Otherwise the array element at index 0 is used as the initial value and iteration starts from the next element (index 1 instead of index 0).
+
+
+const array1 = [1, 2, 3, 4];
+
+// 0 + 1 + 2 + 3 + 4
+const initialValue = 0;
+const sumWithInitial = array1.reduce(
+  (accumulator, currentValue) => accumulator + currentValue,
+  initialValue
+);
+
+console.log(sumWithInitial); //10
+
+The reducer walks through the array element-by-element, at each step adding the current array value to the result from the previous step (this result is the running sum of all the previous steps) — until there are no more elements to add.
+
+Syntax:
+reduce(callbackFn)
+reduce(callbackFn, initialValue)
+
+callbackFn
+A function to execute for each element in the array. Its return value becomes the value of the accumulator parameter on the next invocation of callbackFn. For the last invocation, the return value becomes the return value of reduce(). The function is called with the following arguments:
+
+accumulator
+The value resulting from the previous call to callbackFn. On the first call, its value is initialValue if the latter is specified; otherwise its value is array[0].
+
+currentValue
+The value of the current element. On the first call, its value is array[0] if initialValue is specified; otherwise its value is array[1].
+-----------------------------------------------------------
+//Typescript
+const array1: number[] = [1, 2, 3, 4];
+
+// 0 + 1 + 2 + 3 + 4
+const initialValue: number = 0;
+const sumWithInitial: number = array1.reduce(
+  (accumulator, currentValue) => accumulator + currentValue,
+  initialValue
+);
+
+console.log(sumWithInitial); //10
+
+___________________________________________________________
+//In TypeScript, you can define an object with a string index as follows:
+const myObject: { [key: string]: number } = {
+  one: 1,
+  two: 2,
+  three: 3,
+};
+//retrieve values using string keys:
+console.log(myObject["one"]); // 1
+console.log(myObject["two"]); // 2
+
+In this example, myObject is an object with string keys and numeric values. The type annotation { [key: string]: number } indicates that the keys should be strings, and the values should be numbers.
+-----------------------------------------------------------
+//In TypeScript, you can define an object with a numeric index as follows:
+const myObject: { [key: number]: number } = {
+  0: 10,
+  1: 20,
+  2: 30,
+};
+
+console.log(myObject[0]); // 10
+console.log(myObject[1]); // 20
+
+In this example, myObject is an object with numeric keys and numeric values. The type annotation { [key: number]: number } specifies that the keys should be numbers, and the values should also be numbers.
+
+This is useful when you need to create objects with numeric indices, which can be thought of as similar to arrays, but with arbitrary numeric keys.
+___________________________________________________________
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all
+
+The Promise.all() static method takes an iterable of promises as input and returns a single Promise. This returned promise fulfills when all of the input's promises fulfill.It rejects when any of the input's promises rejects, with this first rejection reason.
+
+const promise1 = Promise.resolve(3);
+const promise2 = 42;
+const promise3 = new Promise((resolve, reject) => {
+  setTimeout(resolve, 100, "foo");
+});
+
+Promise.all([promise1, promise2, promise3]).then((values) => {
+  console.log(values); //[ 3, 42, 'foo' ]
+});
+
+Here's the explanation of above code.
+promise1 is a resolved promise with a value of 3.
+promise2 is not a promise; it's just a regular value of 42.
+promise3 is a promise that resolves with the value 'foo' after a 100-millisecond delay.
+
+When you use Promise.all to wait for all these promises to resolve, it will wait for all of them, but it doesn't convert non-promise values into promises. Instead, it treats them as immediate values. So, the resulting values array will contain the resolved values of the promises or the immediate values if they are not promises.
+-----------------------------------------------------------
+//Typescript
+const promise1: Promise<number> = Promise.resolve(3);
+const promise2: number = 42;
+const promise3: Promise<string> = new Promise((resolve, reject) => {
+  setTimeout(resolve, 100, "foo");
+});
+
+Promise.all([promise1, Promise.resolve(promise2), promise3]).then(
+  (values: (number | string)[]) => {
+    console.log(values); // [ 3, 42, 'foo' ]
+  }
+);
+
+-----------------------------------------------------------
+
+If you want to rewrite the code to include a promise that gets rejected, you can modify it as follows:
+
+const promise1 = Promise.resolve(3);
+const promise2 = Promise.reject("Error: Something went wrong");
+const promise3 = new Promise((resolve, reject) => {
+  setTimeout(resolve, 100, "foo");
+});
+
+Promise.all([promise1, promise2, promise3])
+  .then((values) => {
+    console.log(values);
+  })
+  .catch((error) => {
+    console.error(error); //Error: Something went wrong
+  });
+  
+In this code, promise2 is a promise that gets rejected with the message "Error: Something went wrong." When you use Promise.all, it will wait for all the promises to settle (either resolve or reject). In this case, since promise2 is rejected, the catch block will be executed, and you'll see the error message:
+  
+-----------------------------------------------------------
+//Typescript
+const promise1: Promise<number> = Promise.resolve(3);
+const promise2: Promise<string> = Promise.reject("Error: Something went wrong");
+const promise3: Promise<string> = new Promise((resolve, reject) => {
+  setTimeout(resolve, 100, "foo");
+});
+
+Promise.all([promise1, promise2, promise3])
+  .then((values: (number | string)[]) => {
+    console.log(values);
+  })
+  .catch((error: string) => {
+    console.error(error); // Error: Something went wrong
+  });
+
+___________________________________________________________
+
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_objects/Function/bind
+
+const myModule = {
+  x: 42,
+  getX: function () {
+    return this.x;
+  },
+};
+
+const unboundGetX = myModule.getX;
+console.log(unboundGetX());  // undefined  // The function gets invoked at the global scope
+
+const boundGetX = unboundGetX.bind(myModule);
+console.log(boundGetX()); // Expected output: 42
+
+The myModule object is created with two properties: x and getX. The x property is a number with the value 42, and the getX property is a function that returns the value of the x property.
+
+The unboundGetX variable is assigned the getX method from the myModule object. This creates a new function that is a copy of the getX method, but it is not bound to any particular object.
+
+The unboundGetX() function is called. When a function is invoked without being bound to an object, the this keyword refers to the global object. In this case, the global object does not have an x property, so the unboundGetX() function returns undefined.
+
+The boundGetX variable is assigned the unboundGetX() function bound to the myModule object. This creates a new function that is a copy of the unboundGetX() function, but it is always bound to the myModule object.
+
+The boundGetX() function is called. When a function is invoked bound to an object, the this keyword refers to that object. In this case, the boundGetX() function is bound to the myModule object, so the this.x property refers to the x property of the myModule object. Therefore, the boundGetX() function returns the value 42.
+
+Summary:
+The bind() method is used to bind a function to a particular object. When a function is bound to an object, the this keyword refers to that object when the function is invoked. This can be useful for ensuring that a function is always invoked with the correct context.
+
+In the above example, the unboundGetX() function is not bound to any particular object. This means that when it is invoked, the this keyword refers to the global object. The global object does not have an x property, so the unboundGetX() function returns undefined.
+
+The boundGetX() function is bound to the myModule object. This means that when it is invoked, the this keyword refers to the myModule object. The myModule object has an x property with the value 42, so the boundGetX() function returns the value 42.
+
+___________________________________________________________
+In JavaScript, all class members are public
+https://stackoverflow.com/questions/40587873/naming-convention-for-class-properties-in-typescript
+
+The private modifier can only be used in Typescript files.
+
+https://www.typescriptlang.org/docs/handbook/2/classes.html#getters--setters
+
+https://google.github.io/styleguide/tsguide.html
+Do not use trailing or leading underscores for private properties or methods.
+
+___________________________________________________________
+
+const numbers = [1, 2, 2, 3, 4, 4, 5, 6, 6];
+
+const uniqueNumbers = numbers.filter(
+  (value, index, self) => self.indexOf(value) === index
+);
+
+console.log(uniqueNumbers); // Output: [1, 2, 3, 4, 5, 6]
+
+In this example, the numbers array contains some duplicate values. The filter method is used to create a new array, uniqueNumbers, which only contains unique values. The condition self.indexOf(value) === index ensures that only the first occurrence of each value is retained in the resulting array, effectively removing duplicates.
+
+The condition specified in the arrow function checks if the index of the current value (value) in the array is equal to the first index where that value appears (index). In other words, it retains only the first occurrence of each unique value while removing any duplicates.
+-----------------------------------------------------------
+//Typescript
+const numbers: number[] = [1, 2, 2, 3, 4, 4, 5, 6, 6];
+
+const uniqueNumbers: number[] = numbers.filter(
+  (value: number, index: number, self: number[]) =>
+    self.indexOf(value) === index
+);
+
+console.log(uniqueNumbers);
+
+added type annotations for the numbers array and the parameters of the callback function passed to the filter method. The types indicate that numbers is an array of numbers, and the parameters of the callback function are also numbers. This helps TypeScript provide better type checking and autocompletion support.
+-----------------------------------------------------------
+Certainly! Another way to obtain an array with unique values is to use a Set, which automatically removes duplicate values. Here's how you can rewrite the program using a Set:
+
+
+const numbers = [1, 2, 2, 3, 4, 4, 5, 6, 6];
+const uniqueNumbers = [...new Set(numbers)];
+console.log(uniqueNumbers); //[ 1, 2, 3, 4, 5, 6 ]
+
+In this version, the Set object is used to store only unique values, and then the spread operator (...) is used to convert the set back into an array. This results in an array with only the unique values from the original array numbers.
+-----------------------------------------------------------
+the spread operator is just one way to convert a Set back to an array. Another common method is to use the Array.from method. Here's how you can do it:
+
+const numbers = [1, 2, 2, 3, 4, 4, 5, 6, 6];
+const uniqueNumbers = Array.from(new Set(numbers));
+console.log(uniqueNumbers); //[ 1, 2, 3, 4, 5, 6 ]
+
+In this example, Array.from is used to create a new array from the Set, resulting in an array with only the unique values. Both the spread operator and Array.from are commonly used for this purpose, and you can choose the one that you find more readable or suitable for your coding style.
+___________________________________________________________
+
+let abc = "Naveen Kumar";
+abc = abc.replace(/\s/g, "");
+console.log(abc); //NaveenKumar
+
+abc = abc.replace(/\s/g, "");: This line replaces all occurrences of whitespace characters (spaces, tabs, or newline characters) in the string abc with an empty string ("").
+The regular expression \s matches any whitespace character, and the g flag ensures that all occurrences are replaced.
+
+
+___________________________________________________________
+
+const pattern = /\d/g;
+const input = "123 456 789";
+const matches = input.match(pattern);
+console.log(matches);
+// Output: [ '1', '2', '3', '4', '5', '6', '7', '8', '9' ]
+
+
+In this example:
+
+/ is the delimiter that marks the beginning and end of the regular expression.
+\d is a pattern that matches any digit (equivalent to [0-9]).
+g is the global flag, indicating that the pattern should be applied globally (i.e apply for all occurrences of a pattern )
+Without the /g flag, the match method would only find the first match.
+
+/g commonly used with methods like match, replace, and exec in JavaScript.
+-----------------------------------------------------------
+
+using /g with replace:
+
+const input = "apple orange apple banana apple";
+const pattern = /apple/g;
+
+// Replace all occurrences of "apple" with "fruit"
+const modifiedString = input.replace(pattern, "fruit");
+
+console.log(modifiedString);
+// Output: "fruit orange fruit banana fruit"
+-----------------------------------------------------------
+
+Using /g with exec:
+
+const input = "apple orange apple banana apple";
+const pattern = /apple/g;
+
+let match;
+while ((match = pattern.exec(input)) !== null) {
+  console.log(`Found "${match[0]}" at index ${match.index}`);
+}
+
+In this example, the /g flag is used with the exec method to find all occurrences of the pattern "apple" in the input string. The exec method is called in a loop, and each match is printed along with its starting index and the output will be as below.
+
+Output:
+Found "apple" at index 0
+Found "apple" at index 13
+Found "apple" at index 26
+
+
+___________________________________________________________
+
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/values
+
+const map1 = new Map();
+
+map1.set(0, "foo");
+map1.set(1, "bar");
+
+console.log(Array.from(map1.values())); // [ 'foo', 'bar' ]
+console.log(Array.from(map1.keys())); // [ 0, 1 ]
+
+___________________________________________________________
+
+function sortByName(users) {
+  return users.sort((userA, userB) => {
+    if (userA.name < userB.name) return -1;
+    if (userA.name > userB.name) return 1;
+    return 0;
+  });
+}
+
+const users = [
+  { name: "Kyle" },
+  { name: "Sally" },
+  { name: "John" },
+  { name: "Bob" },
+  { name: "Allan" },
+];
+
+const sortUsers = sortByName(users);
+console.log(sortUsers);
+
+Output:
+[
+  { name: 'Allan' },
+  { name: 'Bob' },
+  { name: 'John' },
+  { name: 'Kyle' },
+  { name: 'Sally' }
+]
+
+-----------------------------------------------------------
+//Typescript
+
+interface User {
+  name: string;
+}
+
+function sortByName(users: User[]): User[] {
+  return users.sort((userA, userB) => {
+    if (userA.name < userB.name) return -1;
+    if (userA.name > userB.name) return 1;
+    return 0;
+  });
+}
+
+const users: User[] = [
+  { name: "Kyle" },
+  { name: "Sally" },
+  { name: "John" },
+  { name: "Bob" },
+  { name: "Allan" },
+];
+
+const sortUsers: User[] = sortByName(users);
+console.log(sortUsers);
+-----------------------------------------------------------
+//Typescript using arrow function
+interface User {
+  name: string;
+}
+
+const sortByName = (users: User[]): User[] =>
+  users.sort((userA, userB) =>
+    userA.name < userB.name ? -1 : userA.name > userB.name ? 1 : 0
+  );
+
+const users: User[] = [
+  { name: "Kyle" },
+  { name: "Sally" },
+  { name: "John" },
+  { name: "Bob" },
+  { name: "Allan" },
+];
+
+const sortUsers: User[] = sortByName(users);
+console.log(sortUsers);
+
+-----------------------------------------------------------
+
+class UserSorter {
+  private users: User[];
+
+  constructor(users: User[]) {
+    this.users = users;
+  }
+
+  sortByName(): User[] {
+    return this.users.sort((userA, userB) =>
+      userA.name < userB.name ? -1 : userA.name > userB.name ? 1 : 0
+    );
+  }
+}
+
+interface User {
+  name: string;
+}
+
+const users: User[] = [
+  { name: "Kyle" },
+  { name: "Sally" },
+  { name: "John" },
+  { name: "Bob" },
+  { name: "Allan" },
+];
+
+const userSorter = new UserSorter(users);
+const sortUsers: User[] = userSorter.sortByName();
+console.log(sortUsers);
+
+
+created a UserSorter class with a private users property.
+The class has a constructor that takes an array of User objects and initializes the users property.
+The sortByName method is part of the class and performs the sorting logic.
+An instance of the UserSorter class is created with the users array, and the sortByName method is called to get the sorted users.
+
+___________________________________________________________
+
+const abc = undefined;
+if (abc == null) {
+  console.log("hello");   //hello
+}
+
+In JavaScript, the == operator performs type coercion, which means it converts the operands to the same type before making the comparison. When you use ==, null and undefined are considered equal without type-checking.
+
+To strictly check for both value and type equality, you should use the === operator:
+
+In general, it is best to avoid using the == operator for equality comparisons in JavaScript. Instead, use the strict equality operator ===, which does not perform type coercion. The === operator will only return true if the two operands are equal in both value and type.
+___________________________________________________________
+
+-> For of iteration and destructuring
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
+
+const people = [
+  {
+    name: "Mike Smith",
+    family: {
+      mother: "Jane Smith",
+      father: "Harry Smith",
+      sister: "Samantha Smith",
+    },
+    age: 35,
+  },
+  {
+    name: "Tom Jones",
+    family: {
+      mother: "Norah Jones",
+      father: "Richard Jones",
+      brother: "Howard Jones",
+    },
+    age: 25,
+  },
+];
+
+for (const {
+  name: n,
+  family: { father: f },
+} of people) {
+  console.log(`Name: ${n}, Father: ${f}`);
+}
+
+Output:
+Name: Mike Smith, Father: Harry Smith
+Name: Tom Jones, Father: Richard Jones
+
+
+
+-----------------------------------------------------------
+//Typescript
+interface Person {
+  name: string;
+  family: {
+    mother?: string;
+    father?: string;
+    sister?: string;
+    brother?: string;
+  };
+  age: number;
+}
+
+const people: Person[] = [
+  {
+    name: "Mike Smith",
+    family: {
+      mother: "Jane Smith",
+      father: "Harry Smith",
+      sister: "Samantha Smith",
+    },
+    age: 35,
+  },
+  {
+    name: "Tom Jones",
+    family: {
+      mother: "Norah Jones",
+      father: "Richard Jones",
+      brother: "Howard Jones",
+    },
+    age: 25,
+  },
+];
+
+for (const {
+  name: n,
+  family: { father: f },
+} of people) {
+  console.log(`Name: ${n}, Father: ${f}`);
+}
+___________________________________________________________
+
+
+-----------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+

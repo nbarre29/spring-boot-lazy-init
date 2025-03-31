@@ -1,0 +1,85 @@
+https://www.youtube.com/watch?v=BNF4le5X1Ms  (How to edit pushed git commit message?)
+
+We can use gitbash or commandprompt to execute below commands
+
+git commit --amend
+ESC I
+edit the commit message
+ESC Shift + ZZ
+git push -f
+
+
+git rebase -i HEAD~2
+ESC I
+update the corresponding commit from "mock" to "edit"
+ESC Shift + ZZ
+git commit --amend
+ESC I
+edit the commit message
+ESC Shift + ZZ
+git rebase --continue
+git push -f
+----------------------------------------------------------------------------
+
+Naveen@DESKTOP-KG35CSG MINGW64 ~/Desktop/New folder (4)/spring-boot-lazy-init (refactor|REBASE 6/10)
+$ git rebase --abort
+
+_____________________________________________________________________________
+
+-> Shows which branch we are in. Here we are in refactor branch.
+
+Naveen@DESKTOP-KG35CSG MINGW64 ~/Desktop/New folder (4)/spring-boot-lazy-init (refactor)
+$ git branch
+  main
+* refactor
+
+
+-> To switch to a different branch. Shown below is how we switched from refactor to main branch.
+
+Naveen@DESKTOP-KG35CSG MINGW64 ~/Desktop/New folder (4)/spring-boot-lazy-init (refactor)
+$ git checkout main
+Switched to branch 'main'
+Your branch is up to date with 'origin/main'.
+
+Naveen@DESKTOP-KG35CSG MINGW64 ~/Desktop/New folder (4)/spring-boot-lazy-init (main)
+$ git branch
+* main
+  refactor
+  
+  
+-> I'm in origin/refactor branch and "git log" first gives the commits of refactor branch and then the main branch commits.
+
+Naveen@DESKTOP-KG35CSG MINGW64 ~/Desktop/New folder (4)/spring-boot-lazy-init (refactor)
+$ git log
+commit 9bd227fddb0e7973f1990b5720c58441545b0180 (HEAD -> refactor, origin/refactor)
+Author: Naveen B <naveen.dec29@gmail.com>
+Date:   Sat Nov 11 18:29:14 2023 -0500
+
+    [refactor] ::- ccommit2
+
+commit a372b4cfcd37eda5a4f6825f3ea3b2642b542e5a
+Author: Naveen B <naveen.dec29@gmail.com>
+Date:   Sat Nov 11 18:17:15 2023 -0500
+
+    [refactor] /-/- cccommit1
+
+commit bbb1edaaedddcca57a656c8b3a420beddad3cba8 (origin/main, origin/HEAD, main)
+Author: nbarre29 <52674500+nbarre29@users.noreply.github.com>
+Date:   Tue Sep 26 21:52:51 2023 -0400
+
+    Update README.md
+
+commit fff450c9f398bb8e6c58c15bcf20f64f205b33f2
+Author: Naveen B <naveen.dec29@gmail.com>
+Date:   Tue Sep 26 21:39:04 2023 -0400
+
+    test
+
+  
+_____________________________________________________________________________
+
+
+
+
+
+

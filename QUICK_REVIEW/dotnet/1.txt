@@ -1,0 +1,774 @@
+1. Class Names
+
+    Java: Class names use PascalCase. Each word in the class name starts with an uppercase letter. For example: MyClass, EmployeeDetails.
+    C#: Similarly, class names in C# also follow PascalCase. For example: MyClass, EmployeeDetails.
+
+2. Interface Names
+
+    Java: Interfaces also use PascalCase. Prefixing interfaces with I is discouraged (e.g., List, not IList). 
+    C#: Interface names are conventionally prefixed with I to distinguish them from classes (e.g., IList, IService).
+
+3. Method Names
+
+    Java: Method names use camelCase. The first word starts with a lowercase letter, and subsequent words are capitalized (e.g., calculateSum, getUserDetails).
+    C#: Method names use PascalCase, meaning all words start with an uppercase letter (e.g., CalculateSum, GetUserDetails).
+
+4. Variable Names
+
+    Java: Variables use camelCase, where the first word starts with a lowercase letter, and subsequent words are capitalized (e.g., totalAmount, userName).
+    C#: Variables also use camelCase in most cases (e.g., totalAmount, userName).
+
+5. Constant Names
+
+    Java: Constants traditionally use UPPERCASE_WITH_UNDERSCORES to separate words (e.g., MAX_VALUE, DEFAULT_TIMEOUT).
+    C#: Constants typically use PascalCase (e.g., MaxValue, DefaultTimeout). However, uppercase constants are acceptable in some teams.
+
+6. Field Names
+
+    Java: Instance fields generally use camelCase. Private fields may optionally be prefixed with _ (e.g., userName or _userName).
+    C#: Private fields are usually prefixed with _ and use camelCase (e.g., _userName).
+
+7. Enum Names
+
+    Java: Enum names use PascalCase for the enum itself. The values inside the enum are traditionally written in UPPERCASE_WITH_UNDERSCORES (e.g., Color.RED).
+    C#: Enum names also use PascalCase. However, the values inside the enum are written in PascalCase (e.g., Color.Red).
+
+8. Namespace or Package Names
+
+    Java: Package names are written in lowercase and use dots to separate hierarchical levels (e.g., com.company.project).
+    C#: Namespace names are written in PascalCase and use dots to separate levels (e.g., Company.Project.Module).
+
+9. File Names
+
+    Java: The file name must match the class name exactly and is case-sensitive (e.g., a class MyClass must be in a file named MyClass.java).
+    C#: The file name should match the class name, but it is not strictly enforced. It is case-insensitive (e.g., a class MyClass is typically in a file named MyClass.cs).
+
+10. Additional Notes
+
+    Java:
+        Emphasis is on following the Java Code Conventions provided by Sun Microsystems (later Oracle).
+        Focuses on readability and clarity with simple naming rules.
+    C#:
+        Guided by the Microsoft C# Coding Guidelines.
+        Places more emphasis on uniformity, especially with the use of PascalCase for public members.
+
+Key Differences Summary
+
+    Method Names: Java uses camelCase, whereas C# uses PascalCase.
+    Constants: Java prefers UPPERCASE_WITH_UNDERSCORES, while C# uses PascalCase.
+    Private Fields: Java optionally prefixes fields with _, while C# typically uses _ as a standard.
+    Namespaces/Packages: Java uses lowercase dot-separated names, while C# uses PascalCase dot-separated names.
+    Enum Values: Java enum members are in uppercase, while C# uses PascalCase.
+
+___________________________________________________________________________
+
+-> In Java, it is standard practice to make fields private and expose them through public getter and setter methods to maintain encapsulation.
+
+public class Employee {
+    private String name;
+    private int id;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+}
+---------------------------------------------------------------------------
+
+C# Equivalent Code
+
+public class Employee
+{
+    // Backing fields (optional, auto-properties can eliminate these)
+    private string name;
+    private int id;
+
+    // Property for 'name' with getter and setter
+    public string Name
+    {
+        get { return name; }
+        set { name = value; }
+    }
+
+    // Property for 'id' with getter and setter
+    public int ID
+    {
+        get { return id; }
+        set { id = value; }
+    }
+}
+
+---------------------------------------------------------------------------
+Using Auto-Implemented Properties (Simpler Approach)
+
+In C#, auto-implemented properties can simplify this even further. These properties automatically handle the backing field for you:
+
+public class Employee
+{
+    public string Name { get; set; } // Auto-implemented property for 'name'
+    public int ID { get; set; } // Auto-implemented property for 'id'
+}
+
+---------------------------------------------------------------------------
+Adding Encapsulation or Validation
+
+If you need to add validation or additional logic in the getter or setter, you can revert to the explicit property approach:
+
+public class Employee
+{
+    private string name;
+    private int id;
+
+    public string Name
+    {
+        get { return name; }
+        set
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                throw new ArgumentException("Name cannot be empty.");
+            name = value;
+        }
+    }
+
+    public int Id
+    {
+        get { return id; }
+        set
+        {
+            if (value <= 0)
+                throw new ArgumentException("Id must be greater than zero.");
+            id = value;
+        }
+    }
+}
+___________________________________________________________________________
+
+-> C# code is structured into namespaces, classes, methods, and other members. Here's a simple example:
+
+namespace MyApplication // Namespace declaration
+{
+    public class Program // Class declaration
+    {
+        public static void Main() // Entry point of the application
+        {
+            Console.WriteLine("Hello, World!"); // Outputs text to the console
+        }
+    }
+}
+
+Namespace: Groups related classes and provides a logical organization.
+Class: The blueprint for objects.
+Method: A block of code that performs a specific task.
+___________________________________________________________________________
+
+-> Recognize Key C# Features
+
+Familiarize yourself with these common elements in C# code:
+
+    Access Modifiers:
+        public, private, protected, internal: Define the visibility of classes, methods, and fields.
+    Properties:
+        Use get and set accessors for encapsulation:
+
+    public int Age { get; set; }
+
+Fields:
+
+    Variables defined inside a class:
+
+    private int _count;
+
+Methods:
+
+    Actions the class can perform:
+
+public void PrintName()
+{
+    Console.WriteLine("Name");
+}
+___________________________________________________________________________
+
+-> Identify Common Syntax Patterns
+
+    Using Statements:
+        At the top of the file, these import namespaces for functionality:
+
+    using System;
+    using System.Collections.Generic;
+
+Static Methods:
+
+    Can be called without creating an instance of a class:
+
+    Console.WriteLine("Hello");
+
+Object Initialization:
+
+var employee = new Employee { Name = "John", ID = 101 };
+___________________________________________________________________________
+
+-> Inheritance:
+
+    A class can inherit from another class using :.
+	
+public class Employee : Person
+{
+}
+___________________________________________________________________________
+
+-> Follow Common Practices
+
+    Use PascalCase for class and method names:
+
+public class MyClass
+{
+    public void MyMethod() { }
+}
+
+    camelCase for local variables and parameters:
+	
+int myNumber = 10;
+___________________________________________________________________________
+
+-> Common C# Constructs Cheat Sheet
+
+Feature		Syntax Example
+Class		public class MyClass { }
+Method		public void MyMethod() { }
+Property		public int Age { get; set; }
+Object Creation		var obj = new MyClass();
+Loops		for (int i = 0; i < 10; i++) { }
+Conditionals		if (x > 0) { } else { }
+Collection		List<int> list = new List<int>();
+
+___________________________________________________________________________
+//Give below prompts and ChatGPT and check for more.... 
+-> C# provides a variety of collections under the System.Collections and System.Collections.Generic namespaces to store and manipulate groups of objects. These collections are designed to handle different scenarios, such as dynamic sizing, key-value pairs, or specialized data structures.
+
+Here’s a list of commonly used collections in C#:
+
+
+-> Here is a comparison of collections in C# and Java presented in a tabular format:
+
+___________________________________________________________________________
+
+-> // example to demonstrate the usage of $ and { } in string interpolation
+string name = "John";
+string message = $"Hello {name}";
+Console.WriteLine(message);  // Output: Hello John
+Console.WriteLine(name);    // Output: John
+
+
+•	The $ before the string literal indicates that the string will be interpolated.
+•	{name} is replaced with the value of the name variable, which is "John".
+
+___________________________________________________________________________
+
+-> What is .cshtml?
+
+    .cshtml stands for C# HTML.
+    It is a file format that combines:
+        HTML: For defining the structure and layout of the page.
+        C# code: For dynamic content rendering and logic.
+
+Razor Pages use the Razor syntax, which allows embedding C# code within HTML seamlessly.
+
+
+Structure of a Razor Page
+
+1. A Razor Page typically consists of two files:
+
+    View File (PageName.cshtml)
+        Contains the HTML structure and Razor syntax.
+        Example: Index.cshtml
+		
+@page
+@model IndexModel
+<html>
+    <body>
+        <h1>Hello, @Model.Message!</h1>
+    </body>
+</html>
+
+2. Code-Behind File (PageName.cshtml.cs)
+
+    Contains the C# logic and data for the page.
+    Example: Index.cshtml.cs
+	
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+public class IndexModel : PageModel
+{
+    public string Message { get; set; }
+
+    public void OnGet()
+    {
+        Message = "Welcome to Razor Pages!";
+    }
+}
+
+How .cshtml Works in Razor Pages
+
+    The .cshtml file handles the presentation layer (HTML mixed with Razor syntax).
+    The .cshtml.cs file contains the page logic, which interacts with the model, processes requests, and sends data to the view.
+	
+	
+Where Razor Pages Fit in ASP.NET Core
+
+    Razor Pages are part of ASP.NET Core’s MVC architecture, but they are more focused on page-centric development.
+    Each Razor Page (.cshtml file) is a self-contained unit, including its own logic (.cshtml.cs file).
+	
+___________________________________________________________________________
+
+.NET API Browser:   an online resource that provides developers with a comprehensive way to explore and understand the .NET ecosystem
+
+https://learn.microsoft.com/en-us/dotnet/api/
+
+This resource includes:
+
+    Detailed descriptions of classes, methods, properties, and events.
+    Examples and usage guidelines.
+    API references for different .NET versions, including .NET Core, .NET Framework, ASP.NET, and more.
+	
+___________________________________________________________________________
+
+-> In C#, you can quickly create auto-implemented properties using shortcuts in Visual Studio 2022
+
+Shortcut for Auto-Implemented Properties in Visual Studio
+
+    Type prop and press Tab twice:
+        This generates a basic auto-implemented property template:
+
+public int MyProperty { get; set; }
+
+---------------------------------------------------------------------------
+using System;
+
+namespace NavConsoleApp
+{
+    class Person
+    {
+        private int age;
+
+        public int Age
+        {
+            get { return age; }
+            set { age = value; }
+        }
+    }
+
+    public class Program 
+    {
+        public static void Main(string[] args) // Entry point of the application
+        {
+            // Create an instance of the Person class
+            Person person = new Person();
+
+            // Set the property value
+            person.Age = 42;
+
+            // Get and print the property value
+            Console.WriteLine("The age of the person is: " + person.Age);
+        }
+    }
+}
+
+---------------------------------------------------------------------------
+Refactoring:
+
+-> Person class above can be simplified by using an auto-implemented property.
+class Person
+{
+    public int Age { get; set; }
+}
+
+Explanation
+
+    In the simplified version, the Age property uses auto-implemented properties introduced in C# 3.0.
+    The backing field (age) is automatically generated by the compiler, so you don't need to explicitly declare it.
+
+
+-> 
+// Create an instance of the Person class
+Person person = new Person();
+
+// Set the property value
+person.Age = 42;
+
+
+//above 2 lines of code can be simplified as below
+// Create an instance of the Person class and set the property value
+Person person = new Person { Age = 42 };
+
+
+This simplified version of the code is made possible by object initializers, which were introduced in C# 3.0 and are available starting with .NET Framework 3.5.
+
+Key Points About Object Initializers
+
+    They allow you to set properties (or fields) at the time of object creation without requiring an explicit constructor or multiple statements.
+    This approach improves readability and reduces boilerplate code.
+
+Advantages
+
+    More concise and readable code.
+    Ideal for scenarios involving immutable types or initializing multiple properties simultaneously.
+	
+Example of Object Initializers in Use:
+
+Person person = new Person { Name = "John", Age = 42, City = "New York" };
+
+This feature is widely used in modern C# programming for its elegance and simplicity.
+___________________________________________________________________________
+
+//equivalent Java code for the above C# example:
+class Person {
+    private int age;
+
+    // Getter for age
+    public int getAge() {
+        return age;
+    }
+
+    // Setter for age
+    public void setAge(int age) {
+        this.age = age;
+    }
+}
+
+public class Program {
+    public static void main(String[] args) {
+        // Create an instance of the Person class
+        Person person = new Person();
+
+        // Set the property value
+        person.setAge(42);       // same as writing person.Age = 42;
+
+        // Get and print the property value
+        System.out.println("The age of the person is: " + person.getAge());
+    }
+}
+
+Explanation:
+
+    Class Structure: Java uses getters and setters explicitly to provide access to private fields, unlike C#'s property syntax.
+    Access Modifiers: Both C# and Java use private for encapsulation.
+    Entry Point: Java's entry point is the main method in a public class, similar to Main in C#.
+    Console Output: Java uses System.out.println for printing to the console, whereas C# uses Console.WriteLine.
+---------------------------------------------------------------------------	
+//simplify the above code by using Java's record feature introduced in Java 14.
+public record Person(int age) {}
+
+public class Program {
+    public static void main(String[] args) {
+        // Create an instance of the Person record
+        Person person = new Person(42);
+
+        // Get and print the property value
+        System.out.println("The age of the person is: " + person.age());
+    }
+}
+___________________________________________________________________________
+
+-> 
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        Console.Write("What is your name? ");
+        string name = Console.ReadLine();
+        Console.WriteLine($"Hello {name}");
+
+
+    }
+}
+___________________________________________________________________________
+
+-> 
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        Console.WriteLine("Biggest Integer : {0}", int.MaxValue);
+        Console.WriteLine("Smallest Integer : {0}", int.MinValue);
+    }
+}
+
+
+The {0} is a format item in the string. It acts as a placeholder that gets replaced by the value provided after the format string (in this case, int.MaxValue). Here's a breakdown:
+
+    {0}: This specifies the first (zero-based) argument in the list after the format string. In this example, int.MaxValue is the first and only argument, so it replaces {0}.
+    If there were multiple placeholders, like {0}, {1}, {2}, etc., they would correspond to subsequent arguments provided in the method.
+	
+For example:
+
+Console.WriteLine("First: {0}, Second: {1}", 10, 20);
+Output:
+First: 10, Second: 20
+___________________________________________________________________________
+
+->
+public class Program
+{
+    public static void Main(string[] args)
+    {
+
+        // Compare strings and ignore case
+        // < 0 : str1 preceeds str2
+        // = : Zero
+        // > 0 : str2 preceeds str1
+        Console.WriteLine("Compare A to B : {0}",
+            String.Compare("A", "B", StringComparison.OrdinalIgnoreCase));
+
+        // Check if strings are equal
+        Console.WriteLine("A = a : {0}",
+            String.Equals("A", "a", StringComparison.OrdinalIgnoreCase));
+
+
+    }
+}
+
+Output:
+Compare A to B : -1
+A = a : True
+___________________________________________________________________________
+	
+-> 
+int age = 12;
+bool canDrive = age >= 16 ? true : false;
+Console.WriteLine(canDrive);
+___________________________________________________________________________
+
+-> while loop 
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        int i = 1;
+        while (i <= 10)
+        {
+            if(i % 2 == 0)
+            {
+                i++;
+                continue;
+            }
+            if(i == 9)
+            {
+                break;
+            }
+            Console.WriteLine(i);
+            i++;
+
+        }
+
+    }
+}
+
+Output:
+1
+3
+5
+7
+___________________________________________________________________________
+
+-> do while loop
+public class Program
+{
+    public static void Main(string[] args)
+    {
+
+        Random rnd = new Random();
+        int secretNumber = rnd.Next(1, 3);
+        Console.WriteLine(secretNumber);
+        int numberGuessed = 0;
+        Console.WriteLine("Random Num: ", secretNumber);
+
+        do
+        {
+            Console.WriteLine("Enter a number between 1 & 2 :");
+            numberGuessed = Convert.ToInt32(Console.ReadLine());
+
+        } while (secretNumber != numberGuessed);
+        Console.WriteLine("You guessed it it was {0}", secretNumber);        
+
+    }
+}
+___________________________________________________________________________
+
+-> 
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        DateTime awesomeDate = new DateTime(2024, 12, 30);
+        Console.WriteLine(awesomeDate.ToString());   //12/30/2024 12:00:00 AM
+        Console.WriteLine("Day of the Week : {0}", awesomeDate.DayOfWeek);  //Day of the Week : Monday
+        awesomeDate = awesomeDate.AddDays(4);
+        awesomeDate = awesomeDate.AddMonths(1);
+        awesomeDate = awesomeDate.AddYears(1);            
+        Console.WriteLine("Day of the Week : {0}", awesomeDate.Date);  //Day of the Week : 2/3/2026 12:00:00 AM
+
+        TimeSpan lunchTime = new TimeSpan(12, 30, 0);  // Creates a TimeSpan representing 12:30:00
+		Console.WriteLine(lunchTime.ToString());     // Outputs "12:30:00"
+        lunchTime = lunchTime.Subtract(new TimeSpan(0, 15, 0));
+        Console.WriteLine("New Time : {0}", lunchTime.ToString());  //New Time : 12:15:00
+
+    }
+}
+___________________________________________________________________________
+-> 
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace NavConsoleApp
+{
+
+    class Person
+    {
+        public string Name { get; set; }
+        public int Age { get; set; }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            List<Person> people = new List<Person>
+            {
+                new Person { Name = "John", Age = 25 },
+                new Person { Name = "Jane", Age = 30 },
+                new Person { Name = "Joe", Age = 20 }
+            };
+
+            var sortedByAge = people.OrderBy(p => p.Age);  // see how lambda expression is used here 
+
+            // display the sorted list
+            foreach (var person in sortedByAge)
+            {
+                Console.WriteLine($"{person.Name} is {person.Age} years old");
+            }
+        }
+    }
+
+
+}
+
+Output:
+Joe is 20 years old
+John is 25 years old
+Jane is 30 years old
+___________________________________________________________________________
+https://www.youtube.com/watch?v=dqheDZH_mNc
+-> LINQ + Lambda expressions
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace NavConsoleApp
+{
+
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var myNumbers = new List<int> { 0, 1, 1, 2, 3, 5, 8, 13, 21, 34 };
+
+            //var numbersOver5 = new List<int>();
+            //foreach (var number in myNumbers)
+            //{
+            //    if (number > 5)
+            //    {
+            //        numbersOver5.Add(number);
+            //    }
+            //}
+
+            //Console.WriteLine("Numbers over 5:");
+            //foreach (var number in numbersOver5)
+            //{
+            //    Console.WriteLine(number);
+            //}
+			
+
+            // Use LINQ to filter numbers greater than 5
+            var numbersOver5 = myNumbers.Where(n => n > 5).ToList();
+
+            Console.WriteLine("Numbers over 5:");
+            foreach (var number in numbersOver5)
+            {
+                Console.WriteLine(number);
+            }
+
+
+        }
+    }
+}
+
+--------------------------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace NavConsoleApp
+{
+
+    //Game class
+    public class Game
+    {
+        public string Name { get; set; }
+        public DateTime ReleaseDate { get; set; }
+        public int SteamScore { get; set; }
+    }
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var gameList = new List<Game>
+            {
+                new Game {Name = "Death Stranding", ReleaseDate = new DateTime(2019,11,8), SteamScore = 9},
+                new Game {Name = "Cyberpunk 2077", ReleaseDate = new DateTime(2020,12,10), SteamScore = 6},
+                new Game {Name = "The Witcher 3: Wild Hunt", ReleaseDate = new DateTime(2015,5,19), SteamScore = 10},
+                new Game {Name = "Red Dead Redemption 2", ReleaseDate = new DateTime(2019,11,5), SteamScore = 9},
+            };
+
+            bool allHave9ScoreOrMore = gameList.All(g => g.SteamScore >= 9);
+            Console.WriteLine($"All games have a score of 9 or more: {allHave9ScoreOrMore}");  // False
+
+
+            //IEnumerable<string> gameNames = gameList.Select(g => g.Name);
+            //Console.WriteLine("Game names:");
+            //foreach (var name in gameNames)
+            //{
+            //    Console.WriteLine(name);  // Output: Death Stranding, Cyberpunk 2077, The Witcher 3: Wild Hunt, Red Dead Redemption 2
+            //}
+
+
+            List<string> gameNames = gameList.Select(g => g.Name).ToList();
+
+            foreach (var name in gameNames)
+            {
+                Console.WriteLine(name);  // Output: Death Stranding, Cyberpunk 2077, The Witcher 3: Wild Hunt, Red Dead Redemption 2
+            }
+
+        }
+    }
+}
+___________________________________________________________________________
+
+    
+
+

@@ -1,0 +1,53 @@
+-> Type coercion in JavaScript:
+In JavaScript, when you use the subtraction (-), multiplication (*), or division (/) operators, both operands are implicitly converted to numbers (if they aren’t already) before the operation is performed. This is why:
+
+    5 - "5" becomes 5 - 5, which evaluates to 0.
+    5 * "5" becomes 5 * 5, which evaluates to 25.
+    5 / "5" becomes 5 / 5, which evaluates to 1.
+
+However, it's important to note that the addition operator (+) is special. If one of the operands is a string, it performs string concatenation rather than numeric addition:
+
+const x = 5;
+const y = "5";
+
+const z = x + y;
+console.log(z); // 55
+-------------------------------------------------------------------------------
+
+const x = 5;
+const y = "5";
+
+const z = x - y;
+console.log(z); // 0
+-------------------------------------------------------------------------------
+
+const x = 5;
+const y = "5";
+
+const z = x * y;
+console.log(z); // 25
+-------------------------------------------------------------------------------
+
+const x = 5;
+const y = "5";
+
+const z = x / y;
+console.log(z); // 1
+___________________________________________________________________________
+
+-> In JavaScript, console.log is essentially the same as window.console.log when running in a browser environment.
+Explanation:
+
+    In browsers, window is the global object.
+    The console object is a property of window.
+    Therefore, console.log is equivalent to window.console.log.
+
+Example:
+
+console.log("Hello, world!"); // Works
+window.console.log("Hello, world!"); // Also works
+
+Exception:
+
+If you're running JavaScript in environments like Node.js, there is no window object, but console.log still works because console is a global object there.
+___________________________________________________________________________

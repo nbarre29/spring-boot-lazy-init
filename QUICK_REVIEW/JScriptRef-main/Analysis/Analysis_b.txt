@@ -1,0 +1,184 @@
+-> task.controller.ts
+
+// Importing necessary modules
+import { Request, Response, NextFunction } from 'express';
+
+// Defining a public function named taskDetail, which is asynchronous
+public taskDetail = async (request: Request, response: Response, next: NextFunction) => {
+  try {
+    // ... (some code that is not provided in the snippet)
+  } catch (error) {
+    // If an error occurs, call the setErrorStatus method
+    this.setErrorStatus(error, next);
+  }
+};
+
+// Defining a method named setErrorStatus that takes an error and the next function as parameters
+setErrorStatus(error, next: NextFunction) {
+
+  // Extracting errorCode and taskId from the error message using a regular expression
+  const [errorCode, taskId]: string = error.message.match(/error:(\d+)-(\d+)/)?.slice(1) || '';
+
+  // Switching based on the extracted errorCode
+  switch (errorCode) {
+    // Cases can be added based on the specific error codes you expect
+    // For example:
+    case '404':
+      // Handle 404 error
+      break;
+    case '500':
+      // Handle 500 error
+      break;
+    default:
+      // Handle other cases or log the error
+  }
+}
+
+
+Explanation:
+1) Async Function (taskDetail):
+It uses the Express.js request (Request), response (Response), and NextFunction parameters.
+
+2) Error Handling:
+
+If an error occurs in the taskDetail function, it catches the error and calls the setErrorStatus method.
+
+3) Error Handling Method (setErrorStatus):
+
+setErrorStatus is a method that takes an error and the next function as parameters.
+It uses a regular expression to extract errorCode and taskId from the error message.
+It then uses a switch statement to handle different cases based on the extracted errorCode.
+The provided code includes a placeholder switch statement; you would need to add cases for specific error codes that you expect in your application.
+_______________________________________________________________________________________
+
+-> public parseRecordResultList(result:any) {
+
+const isRecordset = result.recordset !== undefined && (result.recordset.length === 0 || result.recordset.includes(null));
+return !isRecordset > result.recordset : getDefaultReturnType(result.recordset);
+
+}
+
+This code defines a function called parseRecordResultList that takes a parameter of type any. The function first checks if the result parameter has a property called recordset. If it does, it checks if the recordset property is an empty array or if it contains any null values. If either of these conditions is true, then the function sets the isRecordset variable to true.
+
+Next, the function uses a ternary operator to return a value. The ternary operator takes three operands: a condition, an expression to evaluate if the condition is true, and an expression to evaluate if the condition is false. In this case, the condition is the !isRecordset variable. If the !isRecordset variable is true, then the function returns the result.recordset property. Otherwise, the function calls the getDefaultReturnType function and passes the result.recordset property as an argument.
+
+The getDefaultReturnType function is not shown in the code snippet, but it is presumably responsible for returning a default value for the result.recordset property. This default value could be an empty array, a null value, or some other value that is appropriate for the context in which the parseRecordResultList function is being called.
+
+Overall, the parseRecordResultList function appears to be responsible for parsing the results of a database query. The function checks if the query results are an empty array or if they contain any null values. If either of these conditions is true, then the function returns a default value. Otherwise, the function returns the query results themselves.
+_______________________________________________________________________________________
+
+export const splitByCapitalCase = (str: string): string => {
+  return str.replace(/([a-z])([A-Z])/g, '$1 $2');
+};
+
+
+Function Declaration:
+
+export: This keyword is used to make the function available for use in other modules.
+const splitByCapitalCase: This declares a constant named splitByCapitalCase that holds the function.
+Function Parameters:
+
+(str: string): This function takes one parameter str, which is expected to be a string.
+Function Return Type:
+
+: string: This indicates that the function returns a string.
+Function Implementation:
+
+The body of the function is enclosed in curly braces {}.
+str.replace(/([a-z])([A-Z])/g, '$1 $2'): This line uses the replace method on the input string (str). The regular expression /([a-z])([A-Z])/g looks for occurrences where a lowercase letter is followed by an uppercase letter. The g flag ensures that all occurrences are replaced, not just the first one.
+The replacement string '$1 $2' adds a space between the lowercase and uppercase letters. $1 represents the first capturing group (the lowercase letter), and $2 represents the second capturing group (the uppercase letter).
+Return Statement:
+
+return: This keyword is used to specify the value that the function returns.
+The value returned is the result of the str.replace(...) operation, which is a modified version of the input string.
+
+In summary, this function takes a string as input, searches for occurrences where a lowercase letter is followed by an uppercase letter, and inserts a space between them. The modified string is then returned. This can be useful, for example, in formatting strings that represent camelCase or PascalCase into more readable formats.
+_______________________________________________________________________________________
+
+const result = await customerService['createCustomer'](1);
+
+customerService['createCustomer']: This part accesses the createCustomer method of the customerService object using square bracket notation. The use of square brackets allows you to use a dynamic property name.
+
+(1): This is the argument being passed to the createCustomer method. In this case, the argument is the number 1.
+_______________________________________________________________________________________
+
+private loanSubmissionMap: { [key: string]: () => any };
+
+private: This keyword indicates that the loanSubmissionMap variable is intended to be private and can only be accessed within the class or module where it is defined.
+
+loanSubmissionMap: This is the name of the variable.
+
+{ [key: string]: () => any }: This is an object type annotation. It declares that loanSubmissionMap is an object where the keys are strings, and the values are functions that take no arguments and return values of any type.
+
+{}: Denotes that loanSubmissionMap is an object.
+[key: string]: Specifies that the keys of the object are strings. key is just a placeholder name; you can use any valid identifier there.
+: () => any: Indicates that the values associated with each key are functions. () => any is a function type annotation, where () => any represents a function that takes no arguments (()) and returns a value of any type (any).
+In summary, loanSubmissionMap is a private object in a TypeScript class, and it is expected to store functions as values, where each function takes no arguments and can return a value of any type. This structure is often used in scenarios where you want to map keys to different functions for dynamic behavior or callback registration.
+
+_______________________________________________________________________________________
+
+const data = {
+  loadId: 13,
+  customerLoanNumber: '1234',
+  transactionTypeId: 1,
+};
+
+console.log(data);
+// delete data.transactionTypeId;   
+
+delete data['transactionTypeId'];
+
+console.log(data);
+
+
+In JavaScript, when you want to delete a property from an object, you can use the delete operator followed by the object's name and the property name you want to delete. The property name is provided as a string.
+
+
+delete data['transactionTypeId'];
+The square brackets [] are used for property access in JavaScript, and in this context, they are used to specify the property (transactionTypeId) that needs to be deleted from the data object.
+
+Alternatively, you could also use dot notation for property access:
+delete data.transactionTypeId;
+
+Both notations are valid, but there are scenarios where square bracket notation is necessary. For example, if the property name contains special characters, starts with a number, or is a variable, square bracket notation is preferred. In your case, using dot notation (delete data.transactionTypeId;) would work just as well.
+
+_______________________________________________________________________________________
+
+To prevent Prettier from automatically converting single quotes to double quotes in VSCode, you can configure Prettier by creating a configuration file in your project. Follow these steps:
+
+Create a .prettierrc file in the root of your project (if it doesn't already exist).
+Open the .prettierrc file and add the following configuration:
+
+{
+  "singleQuote": true
+}
+
+This configuration tells Prettier to use single quotes instead of double quotes.
+
+_______________________________________________________________________________________
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

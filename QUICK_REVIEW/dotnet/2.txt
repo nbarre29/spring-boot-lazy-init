@@ -1,0 +1,55 @@
+-> Steps to Create the Console App and open in Visual Studio Code
+
+Install dotnet
+Install Visual Studio Code Extensions: C# Dev Kit
+
+Steps to Create the Console App
+1. Create a New Folder
+
+Create a folder for your project and navigate to it:
+
+mkdir MyConsoleApp
+cd MyConsoleApp
+
+2. Initialize the Console Application
+
+Use the following command to create a new console application:
+
+dotnet new console
+
+This will generate the basic structure for a .NET console app:
+
+    Program.cs (Main entry point)
+    .csproj file (Project configuration)
+
+3. Open the Project in VS Code
+
+Launch Visual Studio Code in the current folder:
+
+code .
+
+4. Build and Run the Application
+
+    Open the integrated terminal in VS Code (Ctrl+`` ).
+    Use the following commands to build and run your application:
+
+dotnet build
+dotnet run
+
+
+-> .NET 6 uses C# 10 by default.
+
+int[] scores = [1, 2, 3, 4];
+
+The syntax using collection expressions, was introduced in C# 12, which comes with .NET 8.
+
+
+To achieve the same functionality in .NET 6 (C# 10), you can use the traditional syntax:
+Using Array Initialization:
+
+int[] scores = new int[] { 1, 2, 3, 4 };
+
+Or, if the type can be inferred:
+
+var scores = new int[] { 1, 2, 3, 4 };
+

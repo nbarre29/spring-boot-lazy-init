@@ -1,0 +1,484 @@
+-> The Array.find and Array.some methods in TypeScript serve different purposes:
+
+    Array.find: Returns the first element in the array that satisfies the provided testing function. If no elements match, it returns undefined.
+
+    Array.some: Tests whether at least one element in the array passes the provided testing function. It returns a boolean (true or false).
+
+Key Differences
+
+    Return Value:
+        find: Returns the element itself (or undefined if no match is found).
+        some: Returns true if a match is found, otherwise false.
+    Use Case:
+        Use find when you need the actual matching element.
+        Use some when you just need to check for the presence of a match.
+		
+
+Example 1: Searching for a User
+
+Use Case: Find a user object by email.
+
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+const users: User[] = [
+  { id: 1, name: 'Alice', email: 'alice@example.com' },
+  { id: 2, name: 'Bob', email: 'bob@example.com' },
+  { id: 3, name: 'Charlie', email: 'charlie@example.com' },
+];
+
+// Using find
+const user = users.find((user) => user.email === 'bob@example.com');
+console.log(user); // { id: 2, name: "Bob", email: "bob@example.com" }
+
+// Using some
+const exists = users.some((user) => user.email === 'bob@example.com');
+console.log(exists); // true
+
+
+Example 2: Checking Product Availability
+
+Use Case: Check if at least one product is in stock.
+
+interface Product {
+  id: number;
+  name: string;
+  inStock: boolean;
+}
+
+const products: Product[] = [
+  { id: 101, name: 'Laptop', inStock: false },
+  { id: 102, name: 'Phone', inStock: true },
+  { id: 103, name: 'Tablet', inStock: false },
+];
+
+// Using some
+const hasStock = products.some((product) => product.inStock);
+console.log(hasStock); // true
+
+// Using find
+const firstAvailableProduct = products.find((product) => product.inStock);
+console.log(firstAvailableProduct); // { id: 102, name: "Phone", inStock: true }
+
+
+Example 3: Validating Inputs
+
+Use Case: Validate if any input field is empty.
+
+const inputs = ['John', 'Doe', 'john.doe@example.com', ''];
+
+// Using some
+const hasEmptyField = inputs.some((input) => input.trim() === '');
+console.log(hasEmptyField); // true
+
+
+Example 4: Finding the Earliest Deadline
+
+Use Case: Retrieve the task with the closest deadline.
+
+interface Task {
+  id: number;
+  name: string;
+  deadline: Date;
+}
+
+const tasks: Task[] = [
+  { id: 1, name: 'Task A', deadline: new Date('2025-01-10') },
+  { id: 2, name: 'Task B', deadline: new Date('2025-01-05') },
+  { id: 3, name: 'Task C', deadline: new Date('2025-01-15') },
+];
+
+// Using find (after sorting by deadline)
+const earliestTask = tasks
+  .sort((a, b) => a.deadline.getTime() - b.deadline.getTime())
+  .find(() => true);
+console.log(earliestTask); // { id: 2, name: 'Task B', deadline: 2025-01-05T00:00:00.000Z }
+
+
+
+In the above case:
+.find(() => true);
+
+The callback function () => true always returns true, which means the find method will return the first element of the array because the condition is always satisfied.
+
+
+Here is the summary:
+
+    Scenario: Get the matching object
+        Use find: ✅
+        Use some: ❌
+
+    Scenario: Check if at least one matches
+        Use find: ❌
+        Use some: ✅
+
+    Scenario: Retrieve the first element after sorting
+        Use find: ✅
+        Use some: ❌
+___________________________________________________________________________
+
+-> 
+// Typescript example to find a task with closest deadline. the task object should have id, name, deadline, and priority.
+// the function should return the task object with the closest deadline.
+// if two tasks have the same deadline, the task with the higher priority should be returned.
+// if two tasks have the same deadline and priority, return the first task.
+// if the task list is empty, return null.
+
+interface Task {
+  id: number;
+  name: string;
+  deadline: Date;
+  priority: number;
+}
+
+function findClosestDeadlineTask(tasks: Task[]): Task | null {
+  if (tasks.length === 0) {
+    return null;
+  }
+
+  let closestTask = tasks[0];
+  for (let i = 1; i < tasks.length; i++) {
+    const task = tasks[i];
+    if (task.deadline < closestTask.deadline) {
+      closestTask = task;
+    } else if (task.deadline === closestTask.deadline) {
+      if (task.priority > closestTask.priority) {
+        closestTask = task;
+      }
+    }
+  }
+
+  return closestTask;
+}
+
+// test
+const tasks: Task[] = [
+  {
+    id: 1,
+    name: 'task1',
+    deadline: new Date('2021-06-01'),
+    priority: 1,
+  },
+  {
+    id: 2,
+    name: 'task2',
+    deadline: new Date('2021-06-02'),
+    priority: 2,
+  },
+  {
+    id: 3,
+    name: 'task3',
+    deadline: new Date('2021-06-02'),
+    priority: 1,
+  },
+  {
+    id: 4,
+    name: 'task4',
+    deadline: new Date('2021-06-03'),
+    priority: 3,
+  },
+];
+
+console.log(findClosestDeadlineTask(tasks)); // { id: 2, name: 'task2', deadline: 2021-06-02T00:00:00.000Z, priority: 2 }
+
+// test with empty list
+console.log(findClosestDeadlineTask([])); // null
+
+// test with one task
+console.log(
+  findClosestDeadlineTask([
+    {
+      id: 1,
+      name: 'task1',
+      deadline: new Date('2021-06-01'),
+      priority: 1,
+    },
+  ])
+); // { id: 1, name: 'task1', deadline: 2021-06-01T00:00:00.000Z, priority: 1 }
+
+// test with two tasks with the same deadline
+console.log(
+  findClosestDeadlineTask([
+    {
+      id: 1,
+      name: 'task1',
+      deadline: new Date('2021-06-01'),
+      priority: 1,
+    },
+    {
+      id: 2,
+      name: 'task2',
+      deadline: new Date('2021-06-01'),
+      priority: 2,
+    },
+  ])
+); // { id: 2, name: 'task2', deadline: 2021-06-01T00:00:00.000Z, priority: 2 }
+
+// test with two tasks with the same deadline and priority
+console.log(
+  findClosestDeadlineTask([
+    {
+      id: 1,
+      name: 'task1',
+      deadline: new Date('2021-06-01'),
+      priority: 1,
+    },
+    {
+      id: 2,
+      name: 'task2',
+      deadline: new Date('2021-06-01'),
+      priority: 1,
+    },
+  ])
+); // { id: 1, name: 'task1', deadline: 2021-06-01T00:00:00.000Z, priority: 1 }
+
+
+-------------------------------------------------------------------------------
+
+// From the above code for loop below can be replaced with enhanced for loop below
+for (let i = 1; i < tasks.length; i++) {
+    const task = tasks[i];
+    if (task.deadline < closestTask.deadline) {
+      closestTask = task;
+    } else if (task.deadline === closestTask.deadline) {
+      if (task.priority > closestTask.priority) {
+        closestTask = task;
+      }
+    }
+  }
+  
+ // enhanced for loop 
+ for (const task of tasks) {
+    if (task.deadline < closestTask.deadline) {
+      closestTask = task;
+    } else if (task.deadline === closestTask.deadline) {
+      if (task.priority > closestTask.priority) {
+        closestTask = task;
+      }
+    }
+  }
+___________________________________________________________________________
+->
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date
+The Date() constructor creates Date objects. When called as a function, it returns a string representing the current time.
+
+
+const now = new Date();
+console.log(now); // 2025-01-11T23:55:54.190Z
+
+const nowString = Date();
+console.log(nowString); // Sat Jan 11 2025 18:55:54 GMT-0500 (Eastern Standard Time)
+
+
+1. When Used as a Constructor (new Date())
+
+The Date constructor creates a new Date object, representing a specific point in time. By default, if no arguments are passed, it creates a Date object representing the current date and time (based on the system clock).
+
+
+2. When Used as a Function (Date())
+
+When Date is called as a function (i.e., without the new keyword), it does not create a Date object. Instead, it returns a string representation of the current date and time in the ISO format.
+The returned string is equivalent to calling new Date().toString().
+
+
+Key Differences between new Date() and Date()
+
+    Creates a Date object?
+        new Date(): Yes, it creates a Date object.
+        Date(): No, it does not create a Date object.
+
+    Return type:
+        new Date(): Returns a Date object.
+        Date(): Returns a string.
+
+    Use case:
+        new Date(): Used for manipulating and working with dates.
+        Date(): Used for quickly retrieving the current time as a string.
+		
+		
+Summary
+
+    Use new Date() to create a Date object for manipulating dates and times.
+    Use Date() (without new) when you just need the current date and time as a readable string, without needing to perform further date operations.
+	
+___________________________________________________________________________
+
+-> pass functions as arguments to another function
+
+function add(a: number, b: number): number {
+  return a + b;
+}
+
+function subtract(a: number, b: number): number {
+  return a - b;
+}
+
+function multiply(a: number, b: number): number {
+  return a * b;
+}
+
+function divide(a: number, b: number): number {
+  return a / b;
+}
+
+function calculator(
+  a: number,
+  b: number,
+  operation: (x: number, y: number) => number,
+): number {
+  return operation(a, b);
+}
+
+console.log(calculator(10, 5, add)); // 15
+console.log(calculator(10, 5, subtract)); // 5
+console.log(calculator(10, 5, multiply)); // 50
+console.log(calculator(10, 5, divide)); // 2
+
+
+
+The provided code demonstrates how to pass functions as arguments to another function in TypeScript. This technique is a powerful feature of JavaScript and TypeScript, allowing for higher-order functions and more flexible code.
+
+The code defines four basic arithmetic functions: add, subtract, multiply, and divide. Each of these functions takes two numbers as parameters and returns the result of the corresponding arithmetic operation. For example, the add function returns the sum of its two parameters, while the subtract function returns the difference.
+
+The calculator function is a higher-order function that takes three parameters: two numbers (a and b) and an operation function. The operation function itself takes two numbers and returns a number. Inside the calculator function, the operation function is called with a and b as arguments, and the result is returned.
+
+
+Function Signature:
+
+function calculator(
+  a: number,
+  b: number,
+  operation: (x: number, y: number) => number,
+): number {
+  return operation(a, b);
+}
+
+  1.  Parameters
+        a: number – A numerical value.
+        b: number – Another numerical value.
+        operation: (x: number, y: number) => number – A function (often called a “callback” or “higher-order function argument”) that takes two numbers (x and y) and returns a number. This is the “operation” you want to perform, such as addition, subtraction, etc.
+
+  2.  Return Type
+        : number after the parentheses indicates that calculator must return a number.
+
+  3.  What the Function Does
+
+return operation(a, b);
+
+    Inside calculator, it calls operation(a, b).
+    Essentially, calculator just delegates the calculation to whatever function you’ve passed in as operation.
+    That function (operation) is responsible for computing the result.
+    calculator then returns whatever result operation produces.
+-------------------------------------------------------------------------------
+
+-> Using Functions as Values
+
+https://www.udemy.com/course/react-the-complete-guide-incl-redux/learn/lecture/38345378#overview
+
+function handleTimeout() {
+  console.log('Timed out!');
+}
+
+function handleTimeout2() {
+  console.log('Timed out again!');
+}
+
+setTimeout(handleTimeout, 2000);
+setTimeout(handleTimeout2, 3000);
+setTimeout(() => {
+  console.log('Timed out 3!');
+}, 4000);
+
+
+
+Explanation:
+setTimeout(() => {
+  console.log('Timed out 3!');
+}, 4000);
+
+
+The provided code snippet demonstrates the use of the setTimeout function in TypeScript. The setTimeout function is a built-in JavaScript function that allows you to execute a piece of code after a specified delay. In this case, the delay is set to 4000 milliseconds, or 4 seconds
+
+-------------------------------------------------------------------------------
+
+-> 
+function greeeter(greetFn) {
+  greetFn();
+}
+
+greeeter(() => console.log('Hello'));
+
+
+Explanation:
+
+1.  Function Definition
+
+function greeeter(greetFn) {
+  greetFn();
+}
+
+    greeeter is a function that expects another function (greetFn) as its parameter.
+    Inside greeeter, it simply calls greetFn()—which means it executes whatever function is passed in.
+
+2. Passing an Arrow Function
+
+    greeeter(() => console.log('Hello'));
+
+        When calling greeeter, we provide an arrow function: () => console.log('Hello').
+        This arrow function, when executed, logs "Hello" to the console.
+
+    What Actually Happens
+        When greeeter is invoked, it receives the arrow function as greetFn.
+        It then calls greetFn(), which triggers console.log('Hello').
+        As a result, "Hello" is printed to the console.
+
+    Why This Pattern Is Useful
+        This pattern demonstrates the concept of higher-order functions: a function (greeeter) that takes another function (greetFn) as an argument.
+        It’s a common pattern in JavaScript for creating reusable utility functions or for handling callbacks and asynchronous operations.
+
+Essentially, this code passes a function (the arrow function) into greeeter, and greeeter executes that function, resulting in a console log of "Hello".
+
+-------------------------------------------------------------------------------
+
+-> Convert the above to TypeScript
+
+define the type of the greetFn parameter. In this case, greetFn is a function that takes no arguments and returns void.
+
+interface GreetFunction {
+  (): void;
+}
+
+function greeeter(greetFn: GreetFunction): void {
+  greetFn();
+}
+
+greeeter(() => console.log('Hello'));
+
+___________________________________________________________________________
+
+->  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
+
+let a = 1;
+let b = 3;
+
+[a, b] = [b, a];   // array destructuring
+
+console.log(a); // 3
+console.log(b); // 1
+
+Explanation:
+
+Destructuring Assignment
+
+    [a, b] = [b, a];
+
+        The expression on the right, [b, a], creates an array with the current values of b and a, which is [3, 1].
+        JavaScript then destructures this array, assigning the first element (3) to a and the second element (1) to b.
+
+
+This is a concise, idiomatic way to swap the values of two variables in JavaScript without using a temporary variable.
+___________________________________________________________________________

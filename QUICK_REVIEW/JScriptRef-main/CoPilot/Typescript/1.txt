@@ -1,0 +1,273 @@
+-> If the greeting parameter is provided, it will be used; otherwise, the default value 'Hello' is used. This is achieved using the logical OR (||) operator, which returns the first truthy value it encounters. The constructed greeting message is then returned by the function.
+
+const greet = (name: string, greeting?: string): string => {
+  return `${greeting || 'Hello'}, ${name}!`;
+};
+console.log(greet('John')); // Output: 'Hello, John!'
+console.log(greet('John', 'Hi')); // Output: 'Hi, John!'
+_____________________________________________________________________________________
+
+-> 
+interface Address {
+  doorNumber?: string;
+  streetName?: string;
+  city: string;
+  country?: string;
+}
+
+interface User {
+  name: string;
+  address?: Address;
+  getFullAddress?: () => string; // Add a method to the interface
+}
+
+const getUserCity = (user: User): string => {
+  return user.address?.city || 'Unknown city';
+};
+
+// Provide a user with a city and implement the method
+const user: User = {
+  name: 'John Doe',
+  address: {
+    doorNumber: '123',
+    streetName: 'Main St',
+    city: 'New York',
+    country: 'USA',
+  },
+  getFullAddress: function (): string {
+    const { doorNumber, streetName, city, country } = this.address || {};
+    return `${doorNumber ? doorNumber + ', ' : ''}${
+      streetName ? streetName + ', ' : ''
+    }${city}, ${country || ''}`
+      .trim()
+      .replace(/,\s*$/, '');
+  },
+};
+
+console.log(getUserCity(user)); // New York
+console.log(user.getFullAddress?.()); // 123, Main St, New York, USA
+---------------------------------------------------------------------------------
+
+-> To implement the above functionality using classes, you can define Address and User as classes and include the necessary methods within the User class.
+class Address {
+  doorNumber?: string;
+  streetName?: string;
+  city?: string;
+  country?: string;
+
+  constructor(
+    doorNumber?: string,
+    streetName?: string,
+    city?: string,
+    country?: string
+  ) {
+    this.doorNumber = doorNumber;
+    this.streetName = streetName;
+    this.city = city;
+    this.country = country;
+  }
+}
+
+class User {
+  name: string;
+  address?: Address;
+
+  constructor(name: string, address?: Address) {
+    this.name = name;
+    this.address = address;
+  }
+
+  getFullAddress(): string {
+    const { doorNumber, streetName, city, country } = this.address || {};
+    return `${doorNumber ? doorNumber + ', ' : ''}${
+      streetName ? streetName + ', ' : ''
+    }${city}, ${country || ''}`
+      .trim()
+      .replace(/,\s*$/, '');
+  }
+
+  static getUserCity(user: User): string {
+    return user.address?.city || 'Unknown city';
+  }
+}
+
+// Provide a user with a city and implement the method
+const address = new Address('123', 'Main St', 'New York', 'USA');
+const user = new User('John Doe', address);
+
+console.log(User.getUserCity(user)); // New York
+console.log(user.getFullAddress()); // 123, Main St, New York, USA
+_____________________________________________________________________________________
+
+-> 
+const person = {
+  name: 'Alice',
+  age: 25,
+  address: {
+    city: 'Wonderland',
+    country: 'Fantasy',
+  },
+};
+
+// Destructuring assignment
+const {
+  name,    // Cannot redeclare block-scoped variable 'name'.   lib.dom.d.ts(27609, 15): 'name' was also declared here.
+  age,
+  address: { city, country },
+} = person;
+
+console.log(name); 
+console.log(age); 
+console.log(city); 
+console.log(country); 
+---------------------------------------------------------------------------------
+-> above code fixed.
+const person = {
+  name: 'Alice',
+  age: 25,
+  address: {
+    city: 'Wonderland',
+    country: 'Fantasy',
+  },
+};
+
+// Destructuring assignment with renamed variables
+const {
+  name: personName,
+  age,
+  address: { city, country },
+} = person;
+
+console.log(personName); // Alice
+console.log(age); // 25
+console.log(city); // Wonderland
+console.log(country); // Fantasy
+_____________________________________________________________________________________
+
+-> javascript code that works fine but fails in Typescript
+function sum(x, y, z) {
+  return x + y + z;
+}
+
+const numbers = [1, 2, 3];
+
+console.log(sum(...numbers));
+
+---------------------------------------------------------------------------------
+
+The error occurs because TypeScript's strict typing system requires a tuple type (fixed-length array) when spreading into a function that expects a specific number of arguments.
+
+In your case, the function sum expects three arguments, but numbers is typed as an array of number[], which could have any length. To fix this, you can explicitly define numbers as a tuple with a specific length,
+
+
+function sum(x: number, y: number, z: number): number {
+  return x + y + z;
+}
+
+const numbers: number[] = [1, 2, 3];
+
+console.log(sum(...numbers));  // A spread argument must either have a tuple type or be passed to a rest parameter.
+
+---------------------------------------------------------------------------------
+//fix1
+function sum(x, y, z) {
+  return x + y + z;
+}
+
+const numbers: [number, number, number] = [1, 2, 3]; // Define as a tuple
+
+console.log(sum(...numbers));
+
+Explanation:
+const numbers: [number, number, number]: Declares numbers as a tuple with exactly three elements, each being a number. This ensures TypeScript understands that numbers can be spread into sum.
+
+---------------------------------------------------------------------------------
+//fix2 
+
+function sum(...args): number {
+  let total = 0;
+  for (const arg of args) {
+    total += arg;
+  }
+  return total;
+}
+
+const numbers: number[] = [1, 2, 3];
+
+console.log(sum(...numbers));
+---------------------------------------------------------------------------------
+
+//fix3
+function sum(arr: number[]): number {
+  return arr.reduce((a, b) => a + b, 0);
+}
+
+const numbers: number[] = [1, 2, 3];
+
+console.log(sum(numbers));
+
+_____________________________________________________________________________________
+
+-> Throwing errors explicitly helps make it easier to understand and handle errors when they occur. To "throw an error" means to generate an exception that halts the normal flow of code execution and transfers control to any error-handling mechanism (like a try...catch block). 
+
+// Function to divide two numbers, throwing an error if division by zero is attempted
+function divide(a: number, b: number): number {
+  if (b === 0) {
+    throw new Error('Division by zero is not allowed.');
+  }
+  return a / b;
+}
+
+try {
+  const result = divide(10, 0); // Will throw an error
+  console.log(result);
+} catch (error) {
+  if (error instanceof Error) {
+    console.error('Error occurred:', error.message); // Output: Error occurred: Division by zero is not allowed.
+  }
+}
+
+Key Points:
+1) Function with error throwing:
+The divide function checks if the second argument (b) is zero. If so, it throws an error using throw new Error("...").
+
+2) Error handling with try...catch:
+The try block runs the function and attempts to catch any errors thrown.
+The catch block catches the error, checks if it's an instance of the Error class, and handles it by logging the error message.
+
+Benefits:
+1) Explicit error messages: By throwing custom errors, the error becomes more descriptive, making debugging and troubleshooting easier.
+
+2) Controlled error handling: Errors can be caught and handled in the catch block, preventing the program from crashing and allowing for smoother user experiences.
+
+---------------------------------------------------------------------------------
+// Function to validate username length
+function validateUsername(username: string): void {
+  if (username.length < 3) {
+    throw new Error('Username must be at least 3 characters long.');
+  }
+  if (username.length > 20) {
+    throw new Error(
+      'Username must be less than or equal to 20 characters long.'
+    );
+  }
+  console.log('Username is valid!');
+}
+
+try {
+  const username = 'Jo'; // Invalid username: too short
+  validateUsername(username); // This will throw an error
+} catch (error) {
+  if (error instanceof Error) {
+    console.error('Validation Error:', error.message); // Handles the error   // Output: Validation Error: Username must be at least 3 characters long.
+  }
+}
+_____________________________________________________________________________________
+
+
+
+
+
+
+
+

@@ -1,0 +1,388 @@
+-> Sample SQL code for an MSSQL database that illustrates the parent-child-grandchild relationship, let's consider a simplified e-commerce database with three tables: Customers (parent), Orders (child), and OrderItems (grandchild). Below is an example of how these tables might be structured, along with sample SQL queries to demonstrate the relationship:
+
+
+CREATE DATABASE MyNewDatabase;
+
+use [MyNewDatabase]
+
+
+-- Create the Customers table (Parent)
+CREATE TABLE Customers (
+    CustomerID INT PRIMARY KEY,
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50)
+);
+
+-- Create the Orders table (Child) with a foreign key reference to Customers
+CREATE TABLE Orders (
+    OrderID INT PRIMARY KEY,
+    CustomerID INT,  -- Foreign key referencing Customers
+    OrderDate DATE,
+    TotalAmount DECIMAL(10, 2),
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+
+-- Create the OrderItems table (Grandchild) with foreign key references to Orders
+CREATE TABLE OrderItems (
+    OrderItemID INT PRIMARY KEY,
+    OrderID INT,  -- Foreign key referencing Orders
+    ProductName VARCHAR(100),
+    Quantity INT,
+    UnitPrice DECIMAL(10, 2),
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID)
+);
+
+-- Insert sample data into the Customers table
+INSERT INTO Customers (CustomerID, FirstName, LastName)
+VALUES (1, 'John', 'Doe'),
+       (2, 'Jane', 'Smith');
+
+-- Insert sample data into the Orders table
+INSERT INTO Orders (OrderID, CustomerID, OrderDate, TotalAmount)
+VALUES (101, 1, '2023-10-27', 150.00),
+       (102, 2, '2023-10-28', 200.00);
+
+-- Insert sample data into the OrderItems table
+INSERT INTO OrderItems (OrderItemID, OrderID, ProductName, Quantity, UnitPrice)
+VALUES (1001, 101, 'Product A', 2, 50.00),
+       (1002, 101, 'Product B', 3, 30.00),
+       (1003, 102, 'Product C', 1, 100.00);
+	   
+	   
+Customers (Parent): Contains information about customers.
+Orders (Child): Contains order information and includes a foreign key reference to the Customers table.
+OrderItems (Grandchild): Contains details of individual items within each order and includes a foreign key reference to the Orders table.
+
+
+The foreign key relationships establish the parent-child-grandchild hierarchy:
+
+Customers is the parent table.
+Orders is the child table, referencing Customers with the CustomerID foreign key.
+OrderItems is the grandchild table, referencing Orders with the OrderID foreign key.
+You can run SQL queries to retrieve data from these tables, join them to navigate the relationships, and ensure data integrity through these relationships. For example, you can retrieve all order items for a specific customer:
+
+
+
+SELECT o.CustomerID, c.FirstName, c.LastName, oi.ProductName
+FROM Customers c
+JOIN Orders o ON c.CustomerID = o.CustomerID
+JOIN OrderItems oi ON o.OrderID = oi.OrderID
+WHERE c.CustomerID = 1;
+
+--drop tables
+drop table Orders
+drop table Customers
+drop table OrderItems
+___________________________________________________________
+
+-> It is also possible for a database table to have a self-referential foreign key, which means that the foreign key references the primary key of the same table.
+
+In this example, we'll create a table named "Employee" with a self-referential foreign key to represent an employee hierarchy. Each employee can have a manager, and the manager is also an employee.
+
+-- Create the Employee table
+CREATE TABLE Employee (
+    EmployeeID INT PRIMARY KEY,
+    EmployeeName VARCHAR(50) NOT NULL,
+    ManagerID INT, -- Self-referential foreign key
+    CONSTRAINT FK_Manager FOREIGN KEY (ManagerID) REFERENCES Employee(EmployeeID)
+);
+
+-- Insert sample data
+INSERT INTO Employee (EmployeeID, EmployeeName, ManagerID)
+VALUES
+    (1, 'John', NULL),        -- John is the top-level manager
+    (2, 'Alice', 1),          -- Alice reports to John
+    (3, 'Bob', 1),            -- Bob reports to John
+    (4, 'Charlie', 2),        -- Charlie reports to Alice
+    (5, 'David', 3),          -- David reports to Bob
+    (6, 'Eva', 4);            -- Eva reports to Charlie
+
+-- Query the employee hierarchy
+-- Get the names of employees and their managers, this is also an example of self join
+SELECT
+    E1.EmployeeName AS Employee,
+    E2.EmployeeName AS Manager
+FROM Employee E1
+LEFT JOIN Employee E2 ON E1.ManagerID = E2.EmployeeID;
+
+-- Query to find employees without a manager (top-level managers)
+SELECT EmployeeName
+FROM Employee
+WHERE ManagerID IS NULL;
+
+--drop table
+drop table Employee
+___________________________________________________________
+
+-> An inner query in SQL is a subquery that is nested within another query (typically within the WHERE clause) to retrieve data based on the results of the inner query. Here's an example of using an inner query in Microsoft SQL Server (MSSQL):
+
+CREATE DATABASE MyNewDatabase;
+
+use [MyNewDatabase]
+
+
+-- Sample Employees table
+CREATE TABLE Employees (
+    EmployeeID INT PRIMARY KEY,
+    EmployeeName VARCHAR(50)
+);
+
+-- Sample Orders table
+CREATE TABLE Orders (
+    OrderID INT PRIMARY KEY,
+    EmployeeID INT, -- Foreign key referencing Employees
+    OrderDate DATE
+);
+
+-- Insert sample data into the Employees table
+INSERT INTO Employees (EmployeeID, EmployeeName)
+VALUES
+    (1, 'John'),
+    (2, 'Alice'),
+    (3, 'Bob'),
+    (4, 'Charlie');
+
+-- Insert sample data into the Orders table
+INSERT INTO Orders (OrderID, EmployeeID, OrderDate)
+VALUES
+    (101, 1, '2023-01-15'),
+    (102, 2, '2023-02-20'),
+    (103, 1, '2023-03-10'),
+    (104, 3, '2023-04-05');
+
+-- Query to find employees who have placed orders
+SELECT EmployeeName
+FROM Employees
+WHERE EmployeeID IN (
+    SELECT EmployeeID
+    FROM Orders
+);
+-----------------------------------------------------------
+-- rewrite the above query using an INNER JOIN, which is often more efficient than using a subquery.
+-- Query to find employees who have placed orders using INNER JOIN
+SELECT E.EmployeeName
+FROM Employees AS E
+INNER JOIN Orders AS O ON E.EmployeeID = O.EmployeeID;
+
+
+-- Query to find unique employees who have placed orders using INNER JOIN and DISTINCT
+SELECT DISTINCT E.EmployeeName
+FROM Employees AS E
+INNER JOIN Orders AS O ON E.EmployeeID = O.EmployeeID;
+___________________________________________________________
+
+-> Design a sample database in MSSQL and adding various types of constraints. 
+In this example, I'll create a simple database for managing books and authors. The database will have two tables: Authors and Books, and we'll add various constraints to ensure data integrity.
+
+
+--Create the Database
+CREATE DATABASE LibraryDB;
+
+--Use the Database
+USE LibraryDB;
+
+--Create the Authors Table
+CREATE TABLE Authors (
+    AuthorID INT PRIMARY KEY,
+    AuthorName VARCHAR(50) NOT NULL
+);
+
+--Create the Books table with various constraints:
+--BookID as the primary key.
+--Title with a unique constraint to ensure book titles are unique.
+--AuthorID as a foreign key referencing the Authors table to ensure that each book is associated with a valid author.
+--PublicationYear with a check constraint to ensure that the year is not in the future.
+--Price with a default constraint to set a default price for books.
+CREATE TABLE Books (
+    BookID INT PRIMARY KEY,
+    Title VARCHAR(100) UNIQUE NOT NULL,
+    AuthorID INT,
+    PublicationYear INT CHECK (PublicationYear <= YEAR(GETDATE())),
+    Price DECIMAL(10, 2) DEFAULT 20.00,
+    FOREIGN KEY (AuthorID) REFERENCES Authors(AuthorID)
+);
+
+
+-- Insert sample authors
+INSERT INTO Authors (AuthorID, AuthorName)
+VALUES
+    (1, 'Jane Doe'),
+    (2, 'John Smith'),
+    (3, 'Alice Johnson');
+
+-- Insert sample books
+INSERT INTO Books (BookID, Title, AuthorID, PublicationYear, Price)
+VALUES
+    (101, 'Sample Book 1', 1, 2022, 25.00),
+    (102, 'Sample Book 2', 2, 2021, 18.50),
+    (103, 'Sample Book 3', 1, 2022, 22.00);
+
+
+-- Attempt to insert a book with a duplicate title (should fail due to unique constraint)
+INSERT INTO Books (BookID, Title, AuthorID, PublicationYear)
+VALUES (104, 'Sample Book 1', 3, 2023);
+
+-- Attempt to insert a book with a future publication year (should fail due to the check constraint)
+INSERT INTO Books (BookID, Title, AuthorID, PublicationYear)
+VALUES (105, 'Sample Book 4', 2, 2025);
+
+-- Insert a book without specifying the price (default value should be used)
+INSERT INTO Books (BookID, Title, AuthorID, PublicationYear)
+VALUES (106, 'Sample Book 5', 1, 2023);
+
+-- Insert a book with a valid author
+INSERT INTO Books (BookID, Title, AuthorID, PublicationYear, Price)
+VALUES (107, 'Sample Book 6', 3, 2022, 19.99);
+
+-- Attempt to insert a book with an invalid author (should fail due to foreign key constraint)
+INSERT INTO Books (BookID, Title, AuthorID, PublicationYear, Price)
+VALUES (108, 'Sample Book 7', 4, 2023, 15.00);
+
+___________________________________________________________
+-> https://www.youtube.com/watch?v=MALaOQe5if4 ( Dynamic SQL 1 in 5 Minutes )
+
+We can just make use of the LibraryDB database from above example
+
+--Create the Database
+CREATE DATABASE LibraryDB;
+
+--Use the Database
+USE LibraryDB;
+
+--Create the Authors Table
+CREATE TABLE Authors (
+    AuthorID INT PRIMARY KEY,
+    AuthorName VARCHAR(50) NOT NULL
+);
+
+--Create the Books table with various constraints:
+--BookID as the primary key.
+--Title with a unique constraint to ensure book titles are unique.
+--AuthorID as a foreign key referencing the Authors table to ensure that each book is associated with a valid author.
+--PublicationYear with a check constraint to ensure that the year is not in the future.
+--Price with a default constraint to set a default price for books.
+CREATE TABLE Books (
+    BookID INT PRIMARY KEY,
+    Title VARCHAR(100) UNIQUE NOT NULL,
+    AuthorID INT,
+    PublicationYear INT CHECK (PublicationYear <= YEAR(GETDATE())),
+    Price DECIMAL(10, 2) DEFAULT 20.00,
+    FOREIGN KEY (AuthorID) REFERENCES Authors(AuthorID)
+);
+
+
+-- Insert sample authors
+INSERT INTO Authors (AuthorID, AuthorName)
+VALUES
+    (1, 'Jane Doe'),
+    (2, 'John Smith'),
+    (3, 'Alice Johnson');
+
+-- Insert sample books
+INSERT INTO Books (BookID, Title, AuthorID, PublicationYear, Price)
+VALUES
+    (101, 'Sample Book 1', 1, 2022, 25.00),
+    (102, 'Sample Book 2', 2, 2021, 18.50),
+    (103, 'Sample Book 3', 1, 2022, 22.00);
+
+
+
+DECLARE @Select NVARCHAR(50) = 'SELECT * '
+DECLARE @From NVARCHAR(50) = 'FROM Products'
+--PRINT( @Select + @From)
+EXEC ( @Select + @From)
+
+
+
+DECLARE @TableName NVARCHAR(50)
+SET @TableName = 'Products'
+EXEC ('SELECT * FROM ' + @TableName )
+
+
+DECLARE @Query NVARCHAR(50)
+DECLARE @TableName NVARCHAR(50)
+SET @Query = 'SELECT * FROM '
+SET @TableName = 'Products'
+EXEC (@Query + @TableName )
+
+
+--Use this dynamic statement into a PROC then call on the PROC
+CREATE PROC GeneralQuery @TableName NVARCHAR(50)
+AS 
+DECLARE @SQL NVARCHAR(1000)
+SET @SQL = 'SELECT * FROM ' + @TableName
+EXEC (@SQL)
+GO
+
+
+EXEC GeneralQuery Products
+EXEC GeneralQuery Categories
+
+___________________________________________________________
+-> Dynamic sql output parameter
+https://www.youtube.com/watch?v=na07ZODz-Gk (Dynamic sql output parameter)
+
+Create table Employees
+(
+     ID int primary key identity,
+     FirstName nvarchar(50),
+     LastName nvarchar(50),
+     Gender nvarchar(50),
+     Salary int
+)
+
+
+Insert into Employees values ('Mark', 'Hastings', 'Male', 60000)
+Insert into Employees values ('Steve', 'Pound', 'Male', 45000)
+Insert into Employees values ('Ben', 'Hoskins', 'Male', 70000)
+Insert into Employees values ('Philip', 'Hastings', 'Male', 45000)
+Insert into Employees values ('Mary', 'Lambeth', 'Female', 30000)
+Insert into Employees values ('Valarie', 'Vikings', 'Female', 35000)
+Insert into Employees values ('John', 'Stanmore', 'Male', 80000)
+
+
+--We want to write a dynamic sql statement that returns total number of male of female employees. If the gender value is specified as "Male", then the query should return total male --employees. Along the same lines, if the the value for gender is "Female", then we should get total number of female employees.
+--The following dynamic sql, will give us what we want. In this case, the query returns total number of "Male" employees. If you want the total number of female employees, simply set --@gender='Female'.
+Declare @sql nvarchar(max)
+Declare @gender nvarchar(10)
+Set @gender = 'Male'
+Set @sql = 'Select Count(*) from Employees where Gender=@gender'
+Execute sp_executesql @sql, N'@gender nvarchar(10)', @gender
+
+
+--At the moment we are not using output parameters. If you want the count of employees to be returned using an OUTPUT parameter, then we have to do a slight modification to the query --as shown below. The key here is to use the OUTPUT keyword in your dynamic sql. This is very similar to using OUTPUT parameters with a stored procedure.
+Declare @sql nvarchar(max)
+Declare @gender nvarchar(10)
+Declare @count int
+Set @gender = 'Male'
+Set @sql = 'Select @count = Count(*) from Employees where Gender=@gender'
+Execute sp_executesql @sql, N'@gender nvarchar(10), @count int OUTPUT', @gender, @count OUTPUT
+Select @count
+
+
+--Create a SP of the above
+Create procedure spEmployeesCount
+@gender nvarchar(10),
+@count int OUTPUT
+as 
+Begin
+		Declare @sql nvarchar(max)
+		Set @sql = 'Select @count = Count(*) from Employees where Gender=@gender'
+		Execute sp_executesql @sql, N'@gender nvarchar(10), @count int OUTPUT', @gender, @count OUTPUT
+		Select @count
+End
+
+
+--The OUTPUT parameter returns NULL, if you forget to use OUTPUT keyword.. The following query returns NULL, as we removed the OUTPUT keyword from @count parameter
+
+Declare @sql nvarchar(max)
+Declare @gender nvarchar(10)
+Declare @count int
+Set @gender = 'Male'
+Set @sql = 'Select @count = Count(*) from Employees where Gender=@gender'
+Execute sp_executesql @sql, N'@gender nvarchar(10), @count int OUTPUT', @gender, @count
+Select @count
+___________________________________________________________
+
+___________________________________________________________
+-----------------------------------------------------------

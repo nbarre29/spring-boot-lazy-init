@@ -1,0 +1,19 @@
+-> To see which local branches are still present, run:
+
+git branch
+
+
+-> You can delete local branches that are no longer useful. For each branch you want to remove:
+
+git branch -d branch-name
+
+
+-> create a branch without immediately switching to it 
+git branch <branch_name>
+
+-> to switch to the newly created branch
+git checkout <branch_name>
+
+
+-> create a new branch  and switch to it immediately.
+git checkout -b <branch_name>

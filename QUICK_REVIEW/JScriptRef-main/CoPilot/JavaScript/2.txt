@@ -1,0 +1,4 @@
+-> The npm init -y command initializes a new Node.js project by creating a package.json file with default values. The -y flag automatically answers "yes" to all the prompts, using the default settings. This is useful for quickly setting up a new project without manually entering each configuration option.
+
+-> npm install @types/node --save-dev
+installs the Node.js type definitions for development purposes.

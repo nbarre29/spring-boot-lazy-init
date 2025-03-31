@@ -1,0 +1,22 @@
+-> What are some common methods available for manipulating strings in Typescript?
+
+-> The slice() and substring() methods in JavaScript (and TypeScript) are used to extract parts of a string, but they have some differences in how they handle parameters and negative values. Provide a detailed comparison of the two methods with examples
+
+-> What are some common methods available for searching and replacing substrings within a string in JavaScript?
+
+-> What are some common methods available for splitting a string into an array of substrings in JavaScript?
+
+-> What are some common methods available for joining an array of substrings into a single string in JavaScript?
+
+-> What are some common methods available for removing whitespace from the beginning and end of a string in JavaScript?
+
+-> What are some common methods available for extracting a specific substring from a string in JavaScript?
+
+-> What are some common methods available for checking if a string contains a specific substring in JavaScript?
+
+-> What are some common methods available for counting the occurrences of a substring within a string in JavaScript?
+
+
+
+
+

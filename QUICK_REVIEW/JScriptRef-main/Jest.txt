@@ -1,0 +1,33 @@
+-> .toBe vs .toEqual in jest
+
+In Jest, both .toBe and .toEqual are used for making assertions in tests, but they are used in slightly different contexts.
+
+1) .toBe: This matcher is used for primitive value equality (e.g., numbers, strings, booleans). It checks if the actual value is exactly equal to the expected value using the strict equality (===) operator.
+
+test('toBe example', () => {
+  const value = 5;
+  expect(value).toBe(5); // Passes
+  expect(value).toBe('5'); // Fails, because it uses strict equality
+});
+
+
+In this example, the second expectation fails because value is a number, and strict equality is being used.
+
+2) .toEqual: This matcher is used for deep equality checks on objects and arrays. It recursively checks the equality of all fields or elements.
+
+test('toEqual example', () => {
+  const obj = { a: 1, b: { c: 2 } };
+  const copy = { ...obj };
+
+  expect(obj).toEqual(copy); // Passes, because it checks deep equality
+  expect(obj).toBe(copy);    // Fails, because it checks strict equality (they are different objects)
+});
+
+In this example, the second expectation fails because obj and copy are different objects, even though their contents are the same.
+
+In summary:
+Use .toBe for simple, primitive values when you want to check for exact equality.
+Use .toEqual for objects and arrays when you want to check for deep equality, i.e., when the contents of the objects or arrays are the same.
+
+______________________________________________________________________
+
