@@ -1,0 +1,172 @@
+the code in the image does intercept JWT bearer tokens sent from a frontend application. It's using:
+
+.oauth2ResourceServer(oauth2 -> oauth2
+    .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter()))
+)
+
+That tells Spring Security to:
+
+    Expect JWT tokens in Authorization: Bearer <token> headers.
+
+    Use a custom converter (jwtAuthConverter()) to extract roles/authorities from the token.
+
+So if your frontend sends a bearer token in each API call, this setup will:
+
+    Validate it against Microsoft Entra ID (Azure AD) using .fromIssuerLocation(...)
+
+    Authenticate the user and convert claims to Spring Security authorities.
+
+✅ Can it be converted to Reactive WebFlux?
+
+Yes, you can convert this to a Spring WebFlux (reactive) version using SecurityWebFilterChain and ReactiveJwtDecoder.
+
+Here’s how you'd write the equivalent reactive configuration:
+
+@Configuration
+@EnableWebFluxSecurity
+public class SecurityConfig {
+
+    @Bean
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+        return http
+            .csrf(ServerHttpSecurity.CsrfSpec::disable)
+            .authorizeExchange(exchanges -> exchanges
+                .pathMatchers("/api/v1/users/internal/authenticate/start").permitAll()
+                .pathMatchers("/api/**").authenticated()
+            )
+            .oauth2ResourceServer(oauth2 -> oauth2
+                .jwt(jwt -> jwt.jwtAuthenticationConverter(grantedAuthoritiesExtractor()))
+            )
+            .build();
+    }
+
+    @Bean
+    public ReactiveJwtDecoder jwtDecoder() {
+        return ReactiveJwtDecoders.fromIssuerLocation("https://login.microsoftonline.com/your-tenant-id/v2.0");
+    }
+
+    private Converter<Jwt, Mono<AbstractAuthenticationToken>> grantedAuthoritiesExtractor() {
+        JwtGrantedAuthoritiesConverter converter = new JwtGrantedAuthoritiesConverter();
+        converter.setAuthoritiesClaimName("roles");
+        converter.setAuthorityPrefix("ROLE_");
+
+        return new ReactiveJwtAuthenticationConverterAdapter(jwt -> {
+            JwtAuthenticationToken token = new JwtAuthenticationToken(jwt, converter.convert(jwt));
+            return Mono.just(token);
+        });
+    }
+}
+
+    Note: ReactiveJwtAuthenticationConverterAdapter is a utility adapter you might need to write if you want to plug in your own Converter<Jwt, Collection<GrantedAuthority>>.
+
+Let me know if you want help adapting the custom converter or wiring the reactive JWT auth completely — happy to assist!
+
+---------------------------------------------------------------------------------------------
+
+-> can you help adapting the custom converter or wiring the reactive JWT auth completely 
+
+Here's how you can fully adapt your custom JWT converter and wire it into a complete reactive JWT authentication setup using Spring Security + WebFlux.
+✅ Goal:
+
+    Use JWT bearer tokens from Azure AD (or similar).
+
+    Extract roles from a specific claim (like "roles").
+
+    Convert them into Spring Security authorities.
+
+    Fully reactive (Mono, Flux) — for WebFlux apps.
+
+🧠 Step-by-Step Explanation
+🔧 1. JWT Role Converter (Reactive Style)
+
+Create a custom ReactiveJwtAuthenticationConverter that extracts roles from the "roles" claim and sets the "ROLE_" prefix.
+
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.*;
+import reactor.core.publisher.Mono;
+
+public class CustomReactiveJwtAuthenticationConverter implements Converter<Jwt, Mono<AbstractAuthenticationToken>> {
+
+    private final JwtGrantedAuthoritiesConverter delegate = new JwtGrantedAuthoritiesConverter();
+
+    public CustomReactiveJwtAuthenticationConverter() {
+        // Set claim name and prefix if needed
+        delegate.setAuthoritiesClaimName("roles");
+        delegate.setAuthorityPrefix("ROLE_");
+    }
+
+    @Override
+    public Mono<AbstractAuthenticationToken> convert(Jwt jwt) {
+        Collection<GrantedAuthority> authorities = delegate.convert(jwt);
+        AbstractAuthenticationToken token = new JwtAuthenticationToken(jwt, authorities);
+        return Mono.just(token);
+    }
+}
+
+🔒 2. Security Configuration
+
+Now wire everything into SecurityWebFilterChain.
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.oauth2.jwt.*;
+import org.springframework.security.web.server.SecurityWebFilterChain;
+
+@Configuration
+@EnableWebFluxSecurity
+@EnableReactiveMethodSecurity
+public class SecurityConfig {
+
+    @Bean
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+        return http
+            .csrf(ServerHttpSecurity.CsrfSpec::disable)
+            .authorizeExchange(exchanges -> exchanges
+                .pathMatchers("/api/v1/users/internal/authenticate/start").permitAll()
+                .pathMatchers("/api/**").authenticated()
+            )
+            .oauth2ResourceServer(oauth2 -> oauth2
+                .jwt(jwt -> jwt.jwtAuthenticationConverter(new CustomReactiveJwtAuthenticationConverter()))
+            )
+            .build();
+    }
+
+    @Bean
+    public ReactiveJwtDecoder jwtDecoder() {
+        return ReactiveJwtDecoders.fromIssuerLocation("https://login.microsoftonline.com/your-tenant-id/v2.0");
+    }
+}
+
+🧪 Testing Tips
+
+    Your frontend must send the token as:
+
+Authorization: Bearer <jwt-token>
+
+The token must have a roles claim like:
+
+{
+  "sub": "abc",
+  "roles": ["ADMIN", "USER"]
+}
+
+After authentication, you can use Spring Security annotations like:
+
+    @PreAuthorize("hasRole('ADMIN')")
+
+Let me know if:
+
+    Your roles claim is named something else (e.g., "groups")
+
+    You're using scopes instead of roles
+
+    You need to support fallback for anonymous/guest access
+	
+	
+	
+	
