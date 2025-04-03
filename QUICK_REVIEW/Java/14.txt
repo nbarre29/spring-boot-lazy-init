@@ -1,3 +1,95 @@
+-> Example of Generic Class
+
+package org.example;
+
+public class Main {
+    public static void main(String[] args) {
+        // Create a Box for Integers
+        Box<Integer> integerBox = new Box<>();
+        integerBox.set(42);
+        System.out.println("Integer Box contains: " + integerBox.get());
+        
+        // Create a Box for Strings
+        Box<String> stringBox = new Box<>();
+        stringBox.set("Hello Generics!");
+        System.out.println("String Box contains: " + stringBox.get());
+    }
+}
+
+class Box<T> {
+    private T t;
+
+    public void set(T t) {
+        this.t = t;
+    }
+
+    public T get() {
+        return t;
+    }
+}
+
+Output:
+Integer Box contains: 42
+String Box contains: Hello Generics!
+
+Explanation:
+
+    We create two boxes, one for Integer and another for String.
+
+    Each box is used to store and retrieve data of its specific type (Integer or String), all verified at compile time
+	
+	
+-> Example of Generic method.
+
+package org.example;
+
+public class GenericMethodDemo {
+
+    // Generic method to print elements of an array
+    public static <E> void printArray(E[] inputArray) {
+        for (E element : inputArray) {
+            System.out.print(element + " ");
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        
+        // Arrays of different types
+        Integer[] intArray = { 1, 2, 3, 4, 5 };
+        Double[] doubleArray = { 1.1, 2.2, 3.3, 4.4 };
+        String[] stringArray = { "Hello", "Generic", "Methods" };
+        
+        // Call the generic method with different types
+        System.out.println("Array integerArray contains:");
+        printArray(intArray);
+
+        System.out.println("Array doubleArray contains:");
+        printArray(doubleArray);
+
+        System.out.println("Array stringArray contains:");
+        printArray(stringArray);
+    }
+}
+
+Output:
+Array integerArray contains:
+1 2 3 4 5 
+Array doubleArray contains:
+1.1 2.2 3.3 4.4 
+Array stringArray contains:
+Hello Generic Methods 
+
+
+Explanation:
+
+    The <E> before the return type void lets the compiler know this method is generic.
+
+    Any type used in place of E must be a reference type (for example, Integer, String, etc.), but you can handle arrays of any such type.
+
+    In the main method, we create different arrays—Integer[], Double[], and String[]—then call the same printArray method on each one.
+
+
 -> A simplified Java example demonstrating different ways of declaring generics, wildcards, and their bounds. Read through the comments carefully to understand each case.
 
 import java.util.ArrayList;
