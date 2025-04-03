@@ -23,4 +23,8 @@ Using a labeled break with for loops
 
 12) Integrate OKTA Single Sign-On (SSO) with your React frontend and Spring Boot backend using your company's Active Directory
 
+13) 
+
+14) Generics
+
 

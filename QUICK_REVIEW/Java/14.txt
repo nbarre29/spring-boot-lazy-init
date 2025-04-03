@@ -159,6 +159,72 @@ public class WildcardExample {
         // even though the underlying map might be modifiable if it was typed differently.
     }
 }
+----------------------------------------------------------------------------------------------------------------------
+-> Convert inner classes from above to lambda expressions.
+
+The EmailLogin and GoogleLogin classes can be converted to lambda expressions since they implement a functional interface (Login).
+
+Replace the inner classes with lambda expressions in the createLoginMap method.
+
+// Before
+map.put(LoginProvider.EMAIL, new EmailLogin());
+map.put(LoginProvider.GOOGLE, new GoogleLogin());
+
+// After
+map.put(LoginProvider.EMAIL, () -> System.out.println("Email login"));
+map.put(LoginProvider.GOOGLE, () -> System.out.println("Google login"));
+
+
+Complete Fixed Code:
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class WildcardExample {
+
+    // A simple interface to represent a Login type
+    interface Login {
+        void login();
+    }
+
+    // An enum for possible login providers
+    enum LoginProvider {
+        EMAIL, GOOGLE
+    }
+
+    // A method returning a map whose values are some subtype of Login
+    private static Map<LoginProvider, ? extends Login> createLoginMap() {
+        // In practice, you might build or fetch this map from somewhere else.
+        // For demonstration, we hardcode different Login types here.
+        // IMPORTANT: We'll actually create a concrete map with 'Login' as the value type
+        // and return it as 'Map<LoginProvider, ? extends Login>'.
+        Map<LoginProvider, Login> map = new HashMap<>();
+        map.put(LoginProvider.EMAIL, () -> System.out.println("Email login"));
+        map.put(LoginProvider.GOOGLE, () -> System.out.println("Google login"));
+        return map;
+    }
+
+    public static void main(String[] args) {
+        Map<LoginProvider, ? extends Login> loginMap = createLoginMap();
+
+        // We can read from the map and safely treat the values as Login:
+        Login emailLogin = loginMap.get(LoginProvider.EMAIL);
+        emailLogin.login();  // This will print "Email login"
+
+        Login googleLogin = loginMap.get(LoginProvider.GOOGLE);
+        googleLogin.login(); // This will print "Google login"
+
+        // But notice we CANNOT add new entries like this:
+        // loginMap.put(LoginProvider.EMAIL, new EmailLogin());
+        // ^ This will cause a compilation error, because ? extends Login
+        //   means the values might be any specific subtype of Login,
+        //   and the compiler won't let you insert something that might violate it.
+
+        // Also note that loginMap is effectively read-only from your code's perspective,
+        // even though the underlying map might be modifiable if it was typed differently.
+    }
+}
+
 ______________________________________________________________________________________________________________________
 
 
