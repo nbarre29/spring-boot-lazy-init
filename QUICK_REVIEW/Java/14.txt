@@ -1,0 +1,165 @@
+-> A simplified Java example demonstrating different ways of declaring generics, wildcards, and their bounds. Read through the comments carefully to understand each case.
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class GenericExamples {
+    
+    // 1. <T>: Simple generic type method
+    //    This method can take any type T and will treat 'param' as that T.
+    //    The type T is "fixed" once it's inferred or declared.
+    public static <T> void simpleGenericMethod(T param) {
+        System.out.println("simpleGenericMethod() received: " + param);
+    }
+
+    // 2. <?>: Unbounded wildcard
+    //    The parameter can be any List of any type, but you don't know what type that is.
+    //    In practice, you can only do operations valid for "List of unknown".
+    public static void unboundedWildcard(List<?> list) {
+        // You can read from it as Objects:
+        for (Object obj : list) {
+            System.out.println("Item in unbounded list: " + obj);
+        }
+        
+        // list.add(new Object()); // Not allowed, because we don't know the element type.
+    }
+
+    // 3. <? extends T>: Upper-bounded wildcard
+    //    The list's elements are some subclass (or the same) of T.
+    //    Typically used when you want to "read" from the structure.
+    //    You know the elements are at least T, so you can safely get them as T.
+    public static void upperBoundedWildcard(List<? extends Number> list) {
+        // We can read elements as Numbers safely
+        for (Number num : list) {
+            System.out.println("Number from list: " + num);
+        }
+        
+        // list.add(123); // Not allowed! Because the list could be a List<Double> internally.
+        // The compiler doesn’t let you add an Integer to a possibly-List<Double>.
+    }
+
+    // 4. <? super T>: Lower-bounded wildcard
+    //    The list’s elements are some supertype of T (could be T itself, or a parent class).
+    //    Typically used when you want to "write/insert" into the structure.
+    //    You know it’s safe to add T (or any subclass of T), but reading is not type-specific.
+    public static void lowerBoundedWildcard(List<? super Integer> list) {
+        // We can safely add Integer (or its subclass, if any) to the list,
+        // because we know the list can handle at least Integer.
+        list.add(100);
+        list.add(999);
+        
+        // Reading from the list only gives us Objects (we lose type specificity).
+        for (Object obj : list) {
+            System.out.println("Item in lower bounded wildcard list: " + obj);
+        }
+    }
+
+    public static void main(String[] args) {
+        
+        // 1. <T> (simple generic method) usage:
+        simpleGenericMethod("Hello");   // T is inferred as String
+        simpleGenericMethod(123);       // T is inferred as Integer
+        
+        // 2. <?> (unbounded wildcard)
+        List<String> stringList = new ArrayList<>();
+        stringList.add("alpha");
+        stringList.add("beta");
+        unboundedWildcard(stringList);  // Valid: it's a List of unknown type (in this case, String)
+
+        // 3. <? extends T> (upper bounded wildcard)
+        List<Integer> intList = new ArrayList<>();
+        intList.add(10);
+        intList.add(20);
+        upperBoundedWildcard(intList);  // Valid: Integer extends Number
+        // The method can read elements as Number, but cannot safely add new elements.
+
+        // 4. <? super T> (lower bounded wildcard)
+        List<Number> numberList = new ArrayList<>();
+        numberList.add(3.14);
+        numberList.add(42);
+        lowerBoundedWildcard(numberList);  // Valid: Number is a supertype of Integer
+        // The method can safely add Integers to the list (since Number is a super of Integer).
+    }
+}
+
+
+Explanation Recap
+
+    <T>: A simple generic type placeholder. It’s fixed when the method is called. For example, <T> void foo(T param) can take foo("aString") (where T is String) or foo(123) (where T is Integer).
+
+    <?>: An unbounded wildcard. It says “any type goes here, but I have no idea which type.” So you can only do operations valid for any possible type (like reading elements as Object).
+
+    <? extends T>: An upper-bounded wildcard. The generic type is “some subclass of T (or T itself).” This is often used for reading. In the example, List<? extends Number> ensures any element you get out is at least a Number, so reading them as Number is safe. But you cannot put arbitrary Number objects back in, because the list could be specifically a List<Integer> or a List<Double>.
+
+    <? super T>: A lower-bounded wildcard. The generic type is “some supertype of T (or T itself).” This is often used for writing. For example, List<? super Integer> means you can safely insert Integer (or any subclass, if that existed), but reading elements from it only yields Object because the collection could be a List<Object> in the worst case.
+	
+	
+Use the above patterns whenever you need more flexible APIs, depending on whether you want to consume values (write into a collection) or produce values (read from a collection).
+______________________________________________________________________________________________________________________
+
+-> import java.util.HashMap;
+import java.util.Map;
+
+public class WildcardExample {
+
+    // A simple interface to represent a Login type
+    interface Login {
+        void login();
+    }
+
+    // Some classes implementing the Login interface
+    static class EmailLogin implements Login {
+        @Override
+        public void login() {
+            System.out.println("Email login");
+        }
+    }
+
+    static class GoogleLogin implements Login {
+        @Override
+        public void login() {
+            System.out.println("Google login");
+        }
+    }
+
+    // An enum for possible login providers
+    enum LoginProvider {
+        EMAIL, GOOGLE
+    }
+
+    // A method returning a map whose values are some subtype of Login
+    private static Map<LoginProvider, ? extends Login> createLoginMap() {
+        // In practice, you might build or fetch this map from somewhere else.
+        // For demonstration, we hardcode different Login types here.
+        // IMPORTANT: We'll actually create a concrete map with 'Login' as the value type
+        // and return it as 'Map<LoginProvider, ? extends Login>'.
+        Map<LoginProvider, Login> map = new HashMap<>();
+        map.put(LoginProvider.EMAIL, new EmailLogin());
+        map.put(LoginProvider.GOOGLE, new GoogleLogin());
+        return map;
+    }
+
+    public static void main(String[] args) {
+        Map<LoginProvider, ? extends Login> loginMap = createLoginMap();
+
+        // We can read from the map and safely treat the values as Login:
+        Login emailLogin = loginMap.get(LoginProvider.EMAIL);
+        emailLogin.login();  // This will print "Email login"
+
+        Login googleLogin = loginMap.get(LoginProvider.GOOGLE);
+        googleLogin.login(); // This will print "Google login"
+
+        // But notice we CANNOT add new entries like this:
+        // loginMap.put(LoginProvider.EMAIL, new EmailLogin());
+        // ^ This will cause a compilation error, because ? extends Login
+        //   means the values might be any specific subtype of Login,
+        //   and the compiler won't let you insert something that might violate it.
+
+        // Also note that loginMap is effectively read-only from your code's perspective,
+        // even though the underlying map might be modifiable if it was typed differently.
+    }
+}
+______________________________________________________________________________________________________________________
+
+
+
