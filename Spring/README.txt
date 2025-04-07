@@ -69,5 +69,16 @@ https://stackoverflow.com/questions/11361331/how-to-download-sources-for-a-jar-w
 V1: using RestTemplate
 V2: using WebClient (Reactive Approach)
 
+20) Parse an Excel document and convert it into JSON.
+
+21) clinicalsapi
+This spring boot project works but i need to make some more enhancements.
+Udemy course: AI with GitHub Copilot for Java & Spring Boot Developers
+
+22) Upload File to AWS S3 Bucket
+V1: used AWS SDK V1
+V2: used AWS SDK V2
+V3: reads the bucket name from application.properties rather than hardcoding it.
+
 
  
