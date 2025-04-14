@@ -73,7 +73,8 @@ public class Mistakes {
 
 _____________________________________________________________________________________
 
--> 
+->  
+//bad code
 public class Mistakes {
     public static void main(String[] args) {
          System.out.println(ifs());
@@ -92,7 +93,7 @@ public class Mistakes {
     }
 }
 ------------------------------------------------------------------------------------
-// above is bad code 
+// better code 
 private static boolean ifs() {
         var bool = "a".equals("A");
 

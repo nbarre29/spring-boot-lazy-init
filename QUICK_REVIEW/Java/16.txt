@@ -1,0 +1,184 @@
+->
+public class Test {
+    public static void main(String[] args) {
+        double x = Double.valueOf("0.1").doubleValue();
+
+        double z = Double.parseDouble("0.1");
+
+        System.out.println("x = " + x);
+        System.out.println("z = " + z);
+    }
+}
+
+Output:
+x = 0.1
+z = 0.1
+
+The selected code demonstrates two different ways to convert a `String` to a `double` in Java. Both lines achieve the same result but use different methods, and one is generally preferred over the other.
+
+The first line uses the `Double.valueOf` method followed by the `doubleValue` method:
+
+```java
+double x = Double.valueOf("0.1").doubleValue();
+```
+
+Here, `Double.valueOf("0.1")` creates a `Double` object (a wrapper class for the primitive `double`), and the `doubleValue()` method is then called to extract the primitive `double` value from the `Double` object. While this works, it is less efficient because it involves creating an unnecessary `Double` object.
+
+The second line uses the `Double.parseDouble` method:
+
+```java
+double z = Double.parseDouble("0.1");
+```
+
+This method directly parses the `String` into a primitive `double` without creating a `Double` object, making it more efficient and straightforward. It is the preferred approach when you only need the primitive `double` value.
+
+In summary, both lines are correct, but the second line (`Double.parseDouble`) is more efficient and should be used in most cases.
+
+_____________________________________________________________________________________
+
+-> 
+
+import java.time.Instant;
+import java.time.format.DateTimeParseException;
+
+public class InstantValidator {
+
+    /**
+     * Checks if the given string is a valid ISO-8601 Instant.
+     *
+     * @param instantString The string to validate.
+     * @return true if the string is a valid Instant, false otherwise.
+     */
+    public static boolean isValidInstant(String instantString) {
+        if (instantString == null || instantString.trim().isEmpty()) {
+            return false;
+        }
+        try {
+            Instant.parse(instantString);
+            return true;
+        } catch (DateTimeParseException e) {
+            return false;
+        }
+    }
+
+    public static void main(String[] args) {
+        // Test cases
+        String validInstant = "2023-10-01T10:15:30Z";
+		
+        //the string uses a space (" ") instead of the required T separator,
+        // and it does not include the Z suffix to indicate UTC
+        String invalidInstant = "2023-10-01 10:15:30";
+		
+        String invalidInstantString = "invalid-instant";
+
+        System.out.println("Is valid: " + isValidInstant(validInstant)); // true
+        System.out.println("Is valid: " + isValidInstant(invalidInstant)); // false
+        System.out.println("Is valid: " + isValidInstant(invalidInstantString)); // false
+    }
+}
+
+Output:
+
+Is valid: true
+Is valid: false
+Is valid: false
+
+The `Instant` class was introduced in Java 8 as part of the `java.time` package (also known as the Java Date and Time API). It represents a specific moment on the timeline in UTC (Coordinated Universal Time) with nanosecond precision.
+
+### Benefits of the `Instant` Class:
+1. **Precision**: 
+   - `Instant` provides nanosecond precision, which is much more accurate compared to the millisecond precision of the older `Date` class.
+
+2. **Immutability**:
+   - `Instant` is immutable and thread-safe, making it suitable for use in concurrent applications without additional synchronization.
+
+3. **Better API Design**:
+   - The `java.time` package, including `Instant`, provides a more intuitive and consistent API compared to the older `java.util.Date` and `java.util.Calendar` classes.
+
+4. **Time Zone Independence**:
+   - `Instant` represents a point in time in UTC, making it independent of time zones. This simplifies working with timestamps in distributed systems.
+
+5. **Interoperability**:
+   - It can be easily converted to other date-time classes like `LocalDateTime`, `ZonedDateTime`, or `OffsetDateTime` for time zone-specific operations.
+
+6. **Arithmetic Operations**:
+   - `Instant` supports operations like adding or subtracting durations using methods like `plus()` and `minus()`, making it easier to perform time calculations.
+
+7. **Compatibility with Legacy Code**:
+   - It can be converted to and from the legacy `Date` class using `Date.from(Instant)` and `Date.toInstant()` methods, ensuring compatibility with older codebases.
+
+8. **ISO-8601 Support**:
+   - `Instant` supports parsing and formatting in the ISO-8601 standard, which is widely used in APIs and data exchange formats.
+
+### Example:
+```java
+import java.time.Instant;
+
+public class InstantExample {
+    public static void main(String[] args) {
+        // Current timestamp
+        Instant now = Instant.now();
+        System.out.println("Current Instant: " + now);
+
+        // Adding 10 seconds
+        Instant later = now.plusSeconds(10);
+        System.out.println("10 seconds later: " + later);
+
+        // Parsing an ISO-8601 string
+        Instant parsed = Instant.parse("2023-10-01T10:15:30Z");
+        System.out.println("Parsed Instant: " + parsed);
+    }
+}
+
+Output:
+Current Instant: 2025-04-14T23:41:06.675315400Z
+10 seconds later: 2025-04-14T23:41:16.675315400Z
+Parsed Instant: 2023-10-01T10:15:30Z
+
+```
+_____________________________________________________________________________________
+-> To convert an `Instant` to a different time zone, you need to use the `ZonedDateTime` class. An `Instant` represents a moment in time in UTC, and it is time-zone agnostic. To display or work with the same moment in a specific time zone, you can combine the `Instant` with a `ZoneId` to create a `ZonedDateTime`.
+
+Here’s how you can do it:
+
+1. Obtain the `Instant` (e.g., `Instant.now()`).
+2. Use the `ZoneId.of()` method to specify the desired time zone.
+3. Convert the `Instant` to a `ZonedDateTime` using the `atZone()` method.
+
+### Example Code:
+```java
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+
+public class TimeZoneConversionExample {
+    public static void main(String[] args) {
+        // Current Instant in UTC
+        Instant now = Instant.now();
+        System.out.println("Current Instant (UTC): " + now);
+
+        // Convert to a specific time zone (e.g., America/New_York)
+        ZoneId newYorkZone = ZoneId.of("America/New_York");
+        ZonedDateTime newYorkTime = now.atZone(newYorkZone);
+        System.out.println("Time in New York: " + newYorkTime);
+
+        // Convert to another time zone (e.g., Europe/London)
+        ZoneId londonZone = ZoneId.of("Europe/London");
+        ZonedDateTime londonTime = now.atZone(londonZone);
+        System.out.println("Time in London: " + londonTime);
+    }
+}
+
+Output:
+Current Instant (UTC): 2025-04-13T01:56:40.179911800Z
+Time in New York: 2025-04-12T21:56:40.179911800-04:00[America/New_York]
+Time in London: 2025-04-13T02:56:40.179911800+01:00[Europe/London]
+```
+
+### Explanation:
+1. **`Instant.now()`**: Retrieves the current timestamp in UTC.
+2. **`ZoneId.of("America/New_York")`**: Specifies the desired time zone.
+3. **`atZone()`**: Combines the `Instant` with the `ZoneId` to create a `ZonedDateTime` that represents the same moment in the specified time zone.
+
+This approach ensures that the same point in time is represented correctly in different time zones.
+_____________________________________________________________________________________
