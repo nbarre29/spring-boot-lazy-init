@@ -1,30 +1,43 @@
 -> Example of Generic Class
 
-package org.example;
-
-public class Main {
-    public static void main(String[] args) {
-        // Create a Box for Integers
-        Box<Integer> integerBox = new Box<>();
-        integerBox.set(42);
-        System.out.println("Integer Box contains: " + integerBox.get());
-        
-        // Create a Box for Strings
-        Box<String> stringBox = new Box<>();
-        stringBox.set("Hello Generics!");
-        System.out.println("String Box contains: " + stringBox.get());
-    }
-}
-
+/**
+ * A generic class that can hold a single object of any type.
+ *
+ * @param <T> the type of the object to be stored
+ */
 class Box<T> {
     private T t;
 
+    /**
+     * Sets the value of the box.
+     *
+     * @param t the value to set
+     */
     public void set(T t) {
         this.t = t;
     }
 
+    /**
+     * Retrieves the value stored in the box.
+     *
+     * @return the stored value
+     */
     public T get() {
         return t;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Create and use a Box for Integers
+        Box<Integer> integerBox = new Box<>();
+        integerBox.set(42);
+        System.out.println("Integer Box contains: " + integerBox.get());
+
+        // Create and use a Box for Strings
+        Box<String> stringBox = new Box<>();
+        stringBox.set("Hello Generics!");
+        System.out.println("String Box contains: " + stringBox.get());
     }
 }
 

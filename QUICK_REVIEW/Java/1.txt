@@ -1395,3 +1395,77 @@ public class OuterClass {
     }
 }
 ______________________________________________________________________________________________________
+
+-> java.util.function.Function<T, R> vs java.util.function.BiFunction<T, U, R>
+
+    Aspect:
+
+        Function<T, R>: Represents an operation on one input that produces a result.
+
+        BiFunction<T, U, R>: Represents an operation on two inputs that produces a result.
+
+    Purpose:
+
+        Function<T, R>: Used to represent an operation on one input that results in an output.
+
+        BiFunction<T, U, R>: Used for an operation on two inputs, producing a result.
+
+    Method Signature:
+
+        Function<T, R>: R apply(T t)
+
+        BiFunction<T, U, R>: R apply(T t, U u)
+
+    Generics:
+
+        Function<T, R>: 2 type parameters: input, result.
+
+        BiFunction<T, U, R>: 3 type parameters: first input, second input, result.
+
+    Key Default Methods:
+
+        Function<T, R>: andThen(Function) - chain unary functions.
+
+        BiFunction<T, U, R>: andThen(Function) - post-process the result of the bi-operation.
+
+    Typical Stream Use:
+
+        Function<T, R>: Commonly used with map to transform elements one-by-one.
+
+        BiFunction<T, U, R>: Rarely used inside streams (needs two separate elements), but common in collectors, Map.compute, reduce, etc.
+
+    Analogy:
+
+        Function<T, R>: "Mapper"
+
+        BiFunction<T, U, R>: "Combiner" / "Merger"
+		
+-----------------------------------------------------------------------------------------------------	
+1) Function - transform a single value
+import java.util.function.Function;
+
+public class Main {
+    public static void main(String[] args) {
+        Function<String, Integer> lengthFn = s -> s.length();
+		//Function<String, Integer> lengthFn = String::length;   // replace above lambda with method reference
+
+        int len = lengthFn.apply("ChatGPT"); // → 7
+        System.out.println("Length of 'ChatGPT': " + len);
+
+    }
+}
+-----------------------------------------------------------------------------------------------------
+2) BiFunction – combine two values
+
+import java.util.function.BiFunction;
+
+public class Main {
+    public static void main(String[] args) {
+        BiFunction<Integer, Integer, Integer> add = (a, b) -> a + b;
+
+        int sum = add.apply(3, 4); // → 7
+        System.out.println("Sum: " + sum);
+
+    }
+}
+-----------------------------------------------------------------------------------------------------
