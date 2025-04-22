@@ -332,5 +332,142 @@ public class WildcardExample {
 
 ______________________________________________________________________________________________________________________
 
+https://docs.oracle.com/javase/tutorial/java/generics/upperBounded.html
+
+import java.util.Arrays;
+import java.util.List;
+
+public class Main {
+
+    public static double sumOfList(List<? extends Number> list) {
+        double s = 0.0;
+        for (Number n : list)
+            s += n.doubleValue();
+        return s;
+    }
+
+    public static void main(String[] args) {
+
+        List<Integer> li = Arrays.asList(1, 2, 3);
+        System.out.println("sum = " + sumOfList(li));
+
+        List<Double> ld = Arrays.asList(1.2, 2.3, 3.5);
+        System.out.println("sum = " + sumOfList(ld));
+
+        List<Float> lf = Arrays.asList(1.2f, 2.3f, 3.5f);
+        System.out.println("sum = " + sumOfList(lf));
+
+    }
+}
+
+
+Output:
+sum = 6.0
+sum = 7.0
+sum = 7.0
+
+https://docs.oracle.com/en/java/javase/23/docs/api/java.base/java/lang/Integer.html
+https://docs.oracle.com/en/java/javase/23/docs/api/java.base/java/lang/Double.html
+https://docs.oracle.com/en/java/javase/23/docs/api/java.base/java/lang/Float.html
+https://docs.oracle.com/en/java/javase/23/docs/api/java.base/java/lang/Number.html
+______________________________________________________________________________________________________________________
+
+https://docs.oracle.com/javase/tutorial/java/generics/lowerBounded.html
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Main {
+
+    public static void addNumbers(List<? super Integer> list) {
+        for (int i = 1; i <= 10; i++) {
+            list.add(i);
+        }
+    }
+
+    public static void main(String[] args) {
+        List<Number> numberList = new ArrayList<>();
+
+        // Add numbers 1 to 10 using the lower-bounded wildcard method
+        addNumbers(numberList);
+
+        // Print the list
+        System.out.println("Numbers in the list: " + numberList);
+
+        // Sum the numbers
+        double sum = 0.0;
+        for (Object obj : numberList) {
+            if (obj instanceof Number) {
+                sum += ((Number) obj).doubleValue();
+            }
+        }
+
+        System.out.println("Sum of numbers: " + sum);
+    }
+}
+
+Output:
+Numbers in the list: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+Sum of numbers: 55.0
+
+
+Explanation:
+
+    List<Number> is used to match List<? super Integer>.
+
+    Numbers 1–10 are added.
+
+    The list is printed, and values are summed using safe type checks.
+
+----------------------------------------------------------------------------------------------------------------------
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Main {
+
+    public static void addIntegers(List<? super Integer> list) {
+        list.add(1);
+        list.add(2);
+        list.add(3);
+    }
+
+    public static double sumOfList(List<? super Integer> list) {
+        double sum = 0.0;
+        for (Object obj : list) {
+            if (obj instanceof Number) {
+                sum += ((Number) obj).doubleValue();
+            }
+        }
+        return sum;
+    }
+
+    public static void main(String[] args) {
+
+        List<Number> numberList = new ArrayList<>();
+        addIntegers(numberList);
+
+        System.out.println("sum = " + sumOfList(numberList));
+    }
+}
+
+
+### Adding Integers to a List
+The `addIntegers` method is designed to add a predefined set of integers (`1`, `2`, and `3`) to a list. The method uses a wildcard with the `super` keyword (`List<? super Integer>`) to allow the list to accept `Integer` values or any of its supertypes, such as `Number` or `Object`. This ensures flexibility in the types of lists that can be passed to the method.
+
+### Calculating the Sum of a List
+The `sumOfList` method calculates the sum of all numeric elements in a list. It accepts a `List<? super Integer>` as a parameter, iterates through its elements, and checks if each element is an instance of `Number`. If so, it casts the element to `Number` and adds its `doubleValue()` to the running total. This approach ensures that the method can handle lists containing numeric types beyond just `Integer`.
+
+### Main Method Execution
+The `main` method demonstrates the usage of the above methods. It creates a `List<Number>` to store numeric values, calls `addIntegers` to populate the list with integers, and then calculates the sum of the list using `sumOfList`. Finally, it prints the calculated sum to the console.
+
+### Key Points
+1. **Generics with Wildcards**: The use of `List<? super Integer>` allows flexibility in the types of lists that can be passed to the methods.
+2. **Type Checking**: The `sumOfList` method uses `instanceof` to ensure that only numeric elements are included in the sum.
+3. **Reusability**: The methods are designed to work with a variety of list types, making them reusable in different contexts.
+______________________________________________________________________________________________________________________
+
+
+
 
 
