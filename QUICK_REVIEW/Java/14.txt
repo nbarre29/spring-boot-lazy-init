@@ -338,7 +338,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Main {
-
+    // method that works on lists of Number and the subtypes of Number, such as Integer, Double, and Float, you would specify List<? extends Number>.
     public static double sumOfList(List<? extends Number> list) {
         double s = 0.0;
         for (Number n : list)
@@ -378,7 +378,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-
+    // allow the list to accept `Integer` values or any of its supertypes, such as `Number` or `Object`
     public static void addNumbers(List<? super Integer> list) {
         for (int i = 1; i <= 10; i++) {
             list.add(i);
