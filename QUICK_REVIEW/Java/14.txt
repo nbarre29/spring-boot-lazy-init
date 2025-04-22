@@ -467,6 +467,188 @@ The `main` method demonstrates the usage of the above methods. It creates a `Lis
 3. **Reusability**: The methods are designed to work with a variety of list types, making them reusable in different contexts.
 ______________________________________________________________________________________________________________________
 
+🔼 Upper-Bounded Wildcards (? extends T)
+
+✅ Use When: You only need to read from a collection (you don’t add to it).
+
+public void printNumbers(List<? extends Number> list) {
+    for (Number n : list) {
+        System.out.println(n);
+    }
+}
+
+📌 Why? You can guarantee that everything in the list is at least a Number, so you can read safely as Number, but you can't add anything except null.
+
+
+
+🔽 Lower-Bounded Wildcards (? super T)
+
+✅ Use When: You only need to write (add) elements to a collection.
+
+public void addIntegers(List<? super Integer> list) {
+    list.add(1);
+    list.add(2);
+}
+
+📌 Why? You can safely add Integer values, because the list accepts that type or its supertypes (e.g., Object, Number). But you can’t read elements as anything more specific than Object.
+
+----------------------------------------------------------------------------------------------------------------------
+
+🔼 ? extends T (Upper Bound Wildcard)
+
+    Direction: Used for reading or consuming data from a collection.
+
+    Can add elements?: ❌ No — you cannot add elements (except null) to the list, because the exact subtype is unknown at compile-time.
+
+    Can read elements as T?: ✅ Yes — you can safely read elements and treat them as type T.
+
+    Use this when: You want to iterate through or read elements from a list without modifying it.
+
+    Common scenario: Reading from a list like List<? extends Number> where you don’t care about the exact subtype but want to safely read numbers.
+	
+
+🔽 ? super T (Lower Bound Wildcard)
+
+    Direction: Used for writing or producing data into a collection.
+
+    Can add elements?: ✅ Yes — you can safely add elements of type T and its subclasses.
+
+    Can read elements as T?: ❌ No — you can only read elements as Object because the compiler doesn't know how specific the type is.
+
+    Use this when: You want to add or insert elements into a list.
+
+    Common scenario: Writing to a list like List<? super Integer> where you're only concerned with putting Integer values into it.
+	
+______________________________________________________________________________________________________________________
+
+🔼 ? extends Animal — Upper Bound (Read-Only)
+✅ Scenario: I want to read animals and make them speak.
+
+
+package org.example;
+
+public class Animal {
+    void speak() {
+        System.out.println("Animal speaks");
+    }
+}
+
+package org.example;
+
+public class Dog extends Animal {
+    void bark() {
+        System.out.println("Dog barks");
+    }
+}
+
+package org.example;
+
+public class Cat extends Animal {
+    void meow() {
+        System.out.println("Cat meows");
+    }
+}
+
+
+package org.example;
+
+import java.util.List;
+
+public class Main {
+
+    public static void makeAllSpeak(List<? extends Animal> animals) {
+        for (Animal a : animals) {
+            a.speak();  // ✅ Safe: they are at least Animals
+        }
+
+        // ❌ animals.add(new Dog()); // Compiler error
+    }
+
+
+    public static void main(String[] args) {
+
+        List<Dog> dogs = List.of(new Dog(), new Dog());
+        makeAllSpeak(dogs);  // ✅ OK because Dog extends Animal
+
+        List<Cat> cats = List.of(new Cat());
+        makeAllSpeak(cats);  // ✅ OK
+
+
+    }
+}
+
+Output:
+Animal speaks
+Animal speaks
+Animal speaks
+
+
+You can read, but cannot write to the list — Java doesn’t know the specific subtype at compile-time.
+
+______________________________________________________________________________________________________________________
+
+🔽 ? super Dog — Lower Bound (Write-Only)
+✅ Scenario: I want to add Dogs into a collection.
+
+package org.example;
+
+public class Animal {
+    void speak() {
+        System.out.println("Animal speaks");
+    }
+}
+
+package org.example;
+
+public class Dog extends Animal {
+    void bark() {
+        System.out.println("Dog barks");
+    }
+}
+
+package org.example;
+
+public class Cat extends Animal {
+    void meow() {
+        System.out.println("Cat meows");
+    }
+}
+
+package org.example;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Main {
+
+    public static void addSomeDogs(List<? super Dog> list) {
+        list.add(new Dog());  // ✅ Safe: list accepts Dog or its supertype
+        list.add(new Dog());
+
+        // Cannot call list.get(index) as Dog, only as Object
+        Object obj = list.get(0);  // ✅ Safe, but not specific
+        System.out.println("Object: " + obj);
+    }
+
+
+    public static void main(String[] args) {
+
+        List<Animal> animals = new ArrayList<>();
+        addSomeDogs(animals);  // ✅ Animal is a supertype of Dog
+
+        List<Object> objects = new ArrayList<>();
+        addSomeDogs(objects);  // ✅ Object is a supertype of Dog
+
+
+    }
+}
+
+Output:
+Object: org.example.Dog@776ec8df
+Object: org.example.Dog@4eec7777
+
+You can write Dog into the list, but you can’t read it back as a Dog — only as Object.
+______________________________________________________________________________________________________________________
 
 
 
