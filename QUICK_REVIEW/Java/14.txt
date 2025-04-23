@@ -54,7 +54,7 @@ Explanation:
 	
 -> Example of Generic method.
 
-package org.example;
+
 
 public class GenericMethodDemo {
 
@@ -525,7 +525,7 @@ ________________________________________________________________________________
 ✅ Scenario: I want to read animals and make them speak.
 
 
-package org.example;
+
 
 public class Animal {
     void speak() {
@@ -533,7 +533,7 @@ public class Animal {
     }
 }
 
-package org.example;
+
 
 public class Dog extends Animal {
     void bark() {
@@ -541,7 +541,7 @@ public class Dog extends Animal {
     }
 }
 
-package org.example;
+
 
 public class Cat extends Animal {
     void meow() {
@@ -550,7 +550,7 @@ public class Cat extends Animal {
 }
 
 
-package org.example;
+
 
 import java.util.List;
 
@@ -590,7 +590,7 @@ ________________________________________________________________________________
 🔽 ? super Dog — Lower Bound (Write-Only)
 ✅ Scenario: I want to add Dogs into a collection.
 
-package org.example;
+
 
 public class Animal {
     void speak() {
@@ -598,7 +598,7 @@ public class Animal {
     }
 }
 
-package org.example;
+
 
 public class Dog extends Animal {
     void bark() {
@@ -606,7 +606,7 @@ public class Dog extends Animal {
     }
 }
 
-package org.example;
+
 
 public class Cat extends Animal {
     void meow() {
@@ -614,7 +614,7 @@ public class Cat extends Animal {
     }
 }
 
-package org.example;
+
 
 import java.util.ArrayList;
 import java.util.List;
