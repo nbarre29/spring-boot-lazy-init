@@ -1,0 +1,139 @@
+-> 
+
+public enum Day {
+    MONDAY,
+    TUESDAY,
+    WEDNESDAY,
+    THURSDAY,
+    FRIDAY,
+    SATURDAY,
+    SUNDAY;
+
+    public boolean isWeekend() {
+        return this == SATURDAY || this == SUNDAY;
+    }
+}
+
+
+
+
+public class Main {
+    public static void main(String[] args) {
+        Day today = Day.FRIDAY;
+
+        System.out.println("Today is: " + today);
+
+        if (today.isWeekend()) {
+            System.out.println("It's the weekend! 🎉");
+        } else {
+            System.out.println("It's a weekday. Keep working! 💻");
+        }
+
+        // Loop through all values
+        System.out.println("\nAll Days:");
+        for (Day d : Day.values()) {
+            System.out.println(d + (d.isWeekend() ? " (weekend)" : " (weekday)"));
+        }
+    }
+}
+
+Output:
+Today is: FRIDAY
+It's a weekday. Keep working! 💻
+
+All Days:
+MONDAY (weekday)
+TUESDAY (weekday)
+WEDNESDAY (weekday)
+THURSDAY (weekday)
+FRIDAY (weekday)
+SATURDAY (weekend)
+SUNDAY (weekend)
+
+
+🧠 What This Shows:
+
+    Day is an enum with 7 constants.
+
+    It includes a method isWeekend() to demonstrate custom logic inside an enum.
+
+    Day.values() returns all constants — great for iteration.
+----------------------------------------------------------------------------------	
+	
+-> enum that associates a constant (like MON) with a custom value (like "Monday"). 
+
+
+
+public enum Day {
+    MON("Monday"),
+    TUE("Tuesday"),
+    WED("Wednesday"),
+    THU("Thursday"),
+    FRI("Friday"),
+    SAT("Saturday"),
+    SUN("Sunday");
+
+    private final String fullName;
+
+    // Constructor
+    Day(String fullName) {
+        this.fullName = fullName;
+    }
+
+    // Getter
+    public String getFullName() {
+        return fullName;
+    }
+
+    public boolean isWeekend() {
+        return this == SAT || this == SUN;
+    }
+}
+
+
+
+
+public class Main {
+    public static void main(String[] args) {
+        Day today = Day.MON;
+
+        System.out.println("Today is: " + today.getFullName());
+
+        if (today.isWeekend()) {
+            System.out.println("It's the weekend! 🎉");
+        } else {
+            System.out.println("It's a weekday. Keep grinding! 💼");
+        }
+
+        System.out.println("\nAll Days:");
+        for (Day d : Day.values()) {
+            System.out.println(d.name() + " → " + d.getFullName() + (d.isWeekend() ? " (weekend)" : " (weekday)"));
+        }
+    }
+}
+
+Output:
+
+Today is: Monday
+It's a weekday. Keep grinding! 💼
+
+All Days:
+MON → Monday (weekday)
+TUE → Tuesday (weekday)
+WED → Wednesday (weekday)
+THU → Thursday (weekday)
+FRI → Friday (weekday)
+SAT → Saturday (weekend)
+SUN → Sunday (weekend)
+
+
+🧠 Highlights:
+
+    You use MON("Monday") and associate a custom string with each enum.
+
+    You add a constructor and a getFullName() method to access it.
+
+    You can still use enum features like values(), name(), and comparison.
+	
+______________________________________________________________________________
+
