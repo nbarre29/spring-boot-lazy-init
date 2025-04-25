@@ -1,3 +1,4 @@
+
 -> 
 
 public enum Day {
@@ -136,4 +137,156 @@ SUN → Sunday (weekend)
     You can still use enum features like values(), name(), and comparison.
 	
 ______________________________________________________________________________
+
+-> Scenario: Represent a PaymentMethod enum
+
+Each payment method:
+
+    Has a label (e.g., "Credit Card")
+
+    Has a fee percentage
+
+    Implements a different way to calculate fees
+
+
+
+public enum PaymentMethod {
+    CREDIT_CARD("Credit Card", 2.5) {
+        @Override
+        public double calculateFee(double amount) {
+            return amount * (feePercentage / 100);
+        }
+    },
+    PAYPAL("PayPal", 3.0) {
+        @Override
+        public double calculateFee(double amount) {
+            return (amount * feePercentage / 100) + 0.30; // Fixed transaction fee
+        }
+    },
+    BANK_TRANSFER("Bank Transfer", 1.0) {
+        @Override
+        public double calculateFee(double amount) {
+            return Math.max(1.0, amount * (feePercentage / 100)); // Minimum $1 fee
+        }
+    };
+
+    private final String label;
+    protected final double feePercentage;
+
+    PaymentMethod(String label, double feePercentage) {
+        this.label = label;
+        this.feePercentage = feePercentage;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public abstract double calculateFee(double amount);
+
+    public static PaymentMethod fromLabel(String label) {
+        for (PaymentMethod method : values()) {
+            if (method.label.equalsIgnoreCase(label)) {
+                return method;
+            }
+        }
+        throw new IllegalArgumentException("Unknown payment method: " + label);
+    }
+}
+
+
+
+
+public class Main {
+    public static void main(String[] args) {
+        double amount = 100.00;
+
+        for (PaymentMethod method : PaymentMethod.values()) {
+            double fee = method.calculateFee(amount);
+            System.out.printf("%s → Fee for $%.2f = $%.2f%n", method.getLabel(), amount, fee);
+        }
+
+        // Use static lookup method
+        String input = "paypal";
+        PaymentMethod chosen = PaymentMethod.fromLabel(input);
+        System.out.println("\nChosen: " + chosen.getLabel() + ", Fee: $" + chosen.calculateFee(amount));
+    }
+}
+
+
+Output:
+Credit Card → Fee for $100.00 = $2.50
+PayPal → Fee for $100.00 = $3.30
+Bank Transfer → Fee for $100.00 = $1.00
+
+Chosen: PayPal, Fee: $3.3
+
+Key Takeaways:
+
+    Each constant overrides the abstract calculateFee() method differently.
+
+    You can associate custom behavior + data with each enum constant.
+
+    fromLabel(...) is a utility method to map strings to enums — useful when parsing config or user input.
+	
+______________________________________________________________________________
+-> some refactoring on PaymentMethod.java in above code:
+
+Since the enum constants (`CREDIT_CARD`, `PAYPAL`, `BANK_TRANSFER`) are essentially subclasses of the `PaymentMethod` enum, the `protected` modifier allows them to access the `feePercentage` field directly while still restricting access from outside the `PaymentMethod` class.
+
+If we want to make it `private`, we would need to provide a getter method for `feePercentage` and update the overridden methods to use the getter instead.
+
+This change ensures encapsulation by making the field `private` and accessing it through a getter, getFeePercentage()
+
+
+
+public enum PaymentMethod {
+    CREDIT_CARD("Credit Card", 2.5) {
+        @Override
+        public double calculateFee(double amount) {
+            return amount * (getFeePercentage() / 100);
+        }
+    },
+    PAYPAL("PayPal", 3.0) {
+        @Override
+        public double calculateFee(double amount) {
+            return (amount * getFeePercentage() / 100) + 0.30; // Fixed transaction fee
+        }
+    },
+    BANK_TRANSFER("Bank Transfer", 1.0) {
+        @Override
+        public double calculateFee(double amount) {
+            return Math.max(1.0, amount * (getFeePercentage() / 100)); // Minimum $1 fee
+        }
+    };
+
+    private final String label;
+    private final double feePercentage;
+
+    PaymentMethod(String label, double feePercentage) {
+        this.label = label;
+        this.feePercentage = feePercentage;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public double getFeePercentage() {
+        return feePercentage;
+    }
+
+    public abstract double calculateFee(double amount);
+
+    public static PaymentMethod fromLabel(String label) {
+        for (PaymentMethod method : values()) {
+            if (method.label.equalsIgnoreCase(label)) {
+                return method;
+            }
+        }
+        throw new IllegalArgumentException("Unknown payment method: " + label);
+    }
+}
+______________________________________________________________________________
+
 
