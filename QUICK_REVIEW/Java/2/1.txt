@@ -286,6 +286,110 @@ public class Main {
 }
 _____________________________________________________________________________________
 
+-> Implementing the Supplier<T> Interface
+https://dev.java/learn/lambdas/functional-interfaces/
+
+import java.util.function.Supplier;
+
+public class SupplierExample {
+    public static void main(String[] args) {
+        // Create a Supplier that returns a String
+        Supplier<String> supplier = () -> "Hello Duke!";
+
+        // Call get() method to retrieve the value
+        String message = supplier.get();
+
+        System.out.println(message);  // Hello Duke!
+    }
+}
+_____________________________________________________________________________________
+
+-> Implementing the Supplier<T> Interface
+https://dev.java/learn/lambdas/functional-interfaces/
+
+import java.util.Random;
+import java.util.function.Supplier;
+
+public class RandomSupplierExample {
+    public static void main(String[] args) {
+        // Create a Random object seeded with 314L
+        Random random = new Random(314L);
+
+        // Create a Supplier that returns random integers between 0 and 9
+        Supplier<Integer> newRandom = () -> random.nextInt(10);
+
+        // Generate and print 5 random numbers
+        for (int index = 0; index < 5; index++) {
+            System.out.println(newRandom.get() + " ");
+        }
+    }
+}
+
+Output:
+1 
+5 
+3 
+0 
+2 
+
+Random(314L) → You created a Random object with a fixed seed (314), meaning the random numbers will always be the same sequence every time you run the program (good for testing).
+----------------------------------------------------------------------------------
+-> Refactored above to avoid boxing / unboxing with the usage of IntSupplier interface
+
+import java.util.Random;
+import java.util.function.IntSupplier;
+
+public class RandomSupplierExample {
+    public static void main(String[] args) {
+        // Create a Random object seeded with 314L
+        Random random = new Random(314L);
+
+        IntSupplier newRandom = () -> random.nextInt(10);
+
+        for (int index = 0; index < 5; index++) {
+            System.out.println(newRandom.getAsInt() + " ");
+        }
+    }
+}
+
+The result of running this code is the same, but this time no boxing / unboxing occurred: this code is more performant than the previous one.
+
+_____________________________________________________________________________________
+
+-> Consuming Objects with Consumer<T>
+https://dev.java/learn/lambdas/functional-interfaces/
+
+A consumer does the opposite of the supplier: it takes an argument and does not return anything.
+
+import java.util.function.Consumer;
+
+public class RandomSupplierExample {
+    public static void main(String[] args) {
+
+        Consumer<String> printer = s -> System.out.println(s);
+
+        // Test the Consumer with some sample strings
+        printer.accept("Hello, World!");
+        printer.accept("Testing Consumer in Java.");
+        printer.accept("This is a test message.");
+    }
+}
+
+Output:
+Hello, World!
+Testing Consumer in Java.
+This is a test message.
+
+--------------
+Replace lambda with method reference:
+Consumer<String> printer = System.out::println;
+--------------
+
+_____________________________________________________________________________________
+
+
+
+
 
 
 
