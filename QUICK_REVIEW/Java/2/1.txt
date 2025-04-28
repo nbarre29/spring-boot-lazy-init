@@ -387,6 +387,91 @@ Consumer<String> printer = System.out::println;
 
 _____________________________________________________________________________________
 
+-> Mapping Objects to Other Objects with Function<T, R>
+https://dev.java/learn/lambdas/functional-interfaces/
+
+Represents a function that accepts one argument and produces a result.
+
+import java.util.function.Function;
+
+public class Main {
+    public static void main(String[] args) {
+        Function<String, Integer> toLength = s -> s.length();
+		// Function<String, Integer> toLength = String::length;  // replace lambda with method reference
+        String word = "Hello, world!";
+        Integer length = toLength.apply(word);
+        System.out.println("The length of the word \"" + word + "\" is: " + length);
+    }
+}
+
+Output:
+The length of the word "Hello, world!" is: 13
+
+What is happening with \"?
+
+    The backslash \ is the escape character in Java strings.
+    It tells Java: "The next character should be treated specially."
+    In this case, \" means: Insert a double quote " character inside the string, not end the string.
+
+✅ Otherwise, if you wrote a " without escaping, Java would get confused and think the string ends there.
+_____________________________________________________________________________________
+-> Testing Objects with Predicate<T>
+https://dev.java/learn/lambdas/functional-interfaces/
+A predicate is used to test an object. It is used for filtering streams in the Stream API.
+It takes an object and returns a boolean value.
+
+import java.util.function.Predicate;
+
+public class Main {
+    public static void main(String[] args) {
+        Predicate<String> length3 = s -> s.length() == 3;
+        String word = "cat";
+        boolean isOfLength3 = length3.test(word);
+        System.out.println("Is of length 3? " + isOfLength3);  // Is of length 3? true
+    }
+}
+
+_____________________________________________________________________________________
+
+-> Testing Two Elements with a BiPredicate
+https://dev.java/learn/lambdas/functional-interfaces/
+
+import java.util.function.BiPredicate;
+
+public class Main {
+    public static void main(String[] args) {
+        BiPredicate<String, Integer> isOfLength = (word, length) -> word.length() == length;
+        String word = "cat";
+        int length = 3;
+        boolean isWordOfLength3 = isOfLength.test(word, length);
+        System.out.println("Is the word '" + word + "' of length " + length + "? " + isWordOfLength3);   // Is the word 'cat' of length 3? true
+    }
+}
+_____________________________________________________________________________________
+-> Passing a Predicate to a Collection
+https://dev.java/learn/lambdas/functional-interfaces/
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
+
+public class Main {
+    public static void main(String[] args) {
+        List<String> immutableStrings =
+                List.of("one", "two", "three", "four", "five");
+        List<String> strings = new ArrayList<>(immutableStrings);
+        Predicate<String> isEvenLength = s -> s.length() % 2 == 0;
+        strings.removeIf(isEvenLength);
+        System.out.println("strings = " + strings);
+
+    }
+}
+
+Output:
+strings = [one, two, three]
+_____________________________________________________________________________________
+
+
 
 
 
