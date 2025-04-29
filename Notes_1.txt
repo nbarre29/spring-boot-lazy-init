@@ -1,93 +1,125 @@
-->
-In IBM Operational Decision Manager (ODM), a Condition and a Conditional Precondition play key roles in defining when a rule should be executed.
+-> 
 
-1. Condition in ODM Ruleset
+The image outlines three rules related to a mortgage lock request for a pricing engine, specifically for determining whether a lock request meets certain conditions. Let’s break down each rule and explain the terminology used:
+1. First Rule:
 
-A condition is part of the rule that evaluates to true or false. If the condition is true, the rule's actions are executed. Conditions are usually written in Business Action Language (BAL) or Decision Table format.
+PASS IF Lock Request is submitted and the current date/time is IN (Seller Settings - Lock Desk Hours) and NOT IN (Global Settings - Lock Desk Hours)
 
-Example of a Condition in a Rule
+    Lock Request: Refers to a request from a borrower to lock in the mortgage rate.
 
-if the customer age is greater than 18
-then approve the loan application;
+    Seller Settings - Lock Desk Hours: The time range during which the seller (the institution offering the loan) processes lock requests. It indicates when a lock request is accepted by the seller.
 
-Here, the condition is:
+    Global Settings - Lock Desk Hours: The time range for lock requests that is applicable globally, possibly across all sellers or systems.
 
-customer age is greater than 18
+    IN/NOT IN: These are logical conditions checking if the current date/time is within a certain range (Lock Desk Hours), and ensuring that it doesn’t overlap with the global restrictions (Global Settings).
 
-If this evaluates to true, the action (approve the loan application) is executed.
+AND the Sum of Commitment Loan Balance from the current date with lock date/time IN (Seller Settings - Lock Desk Hours)
 
+    Commitment Loan Balance: This refers to the total amount of money committed by the lender for the loan, or the outstanding loan balance.
 
-2. Conditional Precondition in ODM
+    Lock date/time: The date and time when the mortgage rate lock happens.
 
-A Conditional Precondition is used to ensure that certain data or conditions exist before the rule is even considered for evaluation. If the precondition is not met, the rule is not even checked.
+AND (Seller Settings - Overnight Commitment Limit = NULL)
 
-Example of a Conditional Precondition
+    Overnight Commitment Limit: This is a setting that likely limits how much the seller is willing to commit to overnight. If this is NULL, it means there's no overnight limit applied.
 
-Let's say we have a rule that applies only if a customer object exists. The precondition ensures that the rule does not execute if the customer is null.
+2. Second Rule:
 
+PASS IF Lock Request is submitted for a product ID where the Product-Automated Lock Approvals = ON
 
+    Product ID: Refers to the identifier of a specific mortgage product being requested for a lock.
 
-definitions:
-   set 'customer' to 'the customer record';
+    Automated Lock Approvals: Refers to whether automated systems are enabled to approve or reject lock requests for this product.
 
-preconditions:
-   the customer is not null;
+AND the Seller Settings - Automated Lock Approvals = ON
 
-if the customer age is greater than 18
-then approve the loan application;
+    Seller Settings - Automated Lock Approvals: This indicates if the seller allows automated lock approvals based on their internal settings. If set to ON, the system will automatically approve locks based on predefined criteria.
 
+AND the Global-Automated Lock Approvals = ON
 
-Here, the precondition ensures that the rule only executes if the customer is not null. If customer is null, the rule is not even evaluated.
+    Global-Automated Lock Approvals: Refers to the global setting for automated approvals of lock requests across all products, institutions, or systems involved.
 
+3. Third Rule:
 
-When to Use What?
+PASS IF Lock Request is requested for a product ID where the Product-Automated Exception Approvals = YES
 
-    Use conditions to specify when a rule should execute.
-    Use conditional preconditions to filter out irrelevant cases before rule execution, reducing unnecessary processing.
+    Product-Automated Exception Approvals: Refers to whether automated systems handle exceptions or special cases (e.g., edge cases where a typical rule doesn’t apply).
+
+    YES: This means the automated system is allowed to approve exceptions for this specific product.
+
+AND the Seller-Automated Exception Approvals = YES
+
+    Seller-Automated Exception Approvals: Similar to the above, this setting indicates if the seller has enabled automation to approve exceptions for their specific products.
+
+AND the Global-Automated Exception Approvals = YES
+
+    Global-Automated Exception Approvals: This refers to the global level of exception handling where automated systems can approve exceptions for all products across various institutions.
+
+AND [Eligibility Rules output indicates > 0 rules with Refer result]
+
+    Eligibility Rules output: This refers to the outcome of eligibility checks based on predefined rules.
+
+    Refer result: A result that typically indicates a further review or referral is required, often due to an edge case or exception.
+
+AND [Eligibility Rules output indicates 0 rules with FAIL result]
+
+    FAIL result: Refers to cases where the eligibility rules fail, meaning the request does not meet the necessary criteria and cannot proceed.
+
+*AND [Eligibility Rules output indicates need to define how sufficient exception overrides will be structured]
+
+    Exception Overrides: Refers to how exceptions to the standard rules are handled. If this rule is triggered, it indicates that there is a need to define clear guidelines for handling exceptions.
+
+Summary of Terminology Used:
+
+    Lock Request: Request to lock in an interest rate for a mortgage product.
+
+    Seller Settings: Rules or configurations set by the individual seller (lender) for handling lock requests.
+
+    Global Settings: Rules or configurations that apply across the entire system or multiple sellers.
+
+    Automated Lock Approvals: Whether lock approvals are automated or manual.
+
+    Commitment Loan Balance: The outstanding loan balance on a committed mortgage.
+
+    Eligibility Rules: The criteria used to determine if a lock request meets the necessary requirements.
 	
-___________________________________________________________________________________________
 	
--> 	
-Scenario: A rule determines loan eligibility based on credit score and income.
-Rule:  If creditScore > 750 AND income > 50000, then approve the loan.
+	
+-> 1) Commitment Loan Balance:
+
+Based on the first rule, the "Commitment Loan Balance" seems to be a specific balance associated with the loan at the time the lock request is submitted.
+The rule states that the lock request will PASS if the "Sum of Commitment Loan Balance from the current date/time" is less than or equal to the "Seller Settings - Lock Desk Hours" and NOT IN the "Global Settings - Lock Desk Hours".
+Alternatively, it passes if the "Sum of Commitment Loan Balance from the Aggregate Pipeline Data" is less than or equal to the "Seller Settings - Overnight Lock Limit".
+Therefore, the Commitment Loan Balance is the outstanding principal amount of the loan that the borrower is committing to lock the interest rate for. It's a key figure for determining eligibility and applying lock rules.
 
 
-Condition
+2) Aggregate Pipeline Data:
 
-    creditScore > 750
-    income > 50000
-    These conditions are combined using an AND operator to evaluate loan approval.
+The first rule refers to the "Sum of Commitment Loan Balance from the Aggregate Pipeline Data".
+This suggests that the "Aggregate Pipeline Data" is a collection or summary of data related to multiple loans that are currently in the pipeline (i.e., in various stages of processing).
+The system likely tracks the commitment loan balances for all these pipeline loans.
+The rule uses the sum of these balances, implying that there might be an overall limit or threshold being checked against the "Seller Settings - Overnight Lock Limit".
+In essence, Aggregate Pipeline Data provides a holistic view of the total loan volume and commitment amounts in the system at a given time.
 
-Conditional Precondition
 
-    Ensures that the rule applies only to applicants from the USA.
-    Precondition: applicantCountry == "USA"
+3) Overnight Lock Limit:
 
-Interpretation
+The first rule uses "Seller Settings - Overnight Lock Limit".
+This likely represents a specific limit or threshold set by the seller (the entity offering the mortgage) that applies to lock requests submitted or effective during "overnight" hours (outside of standard Lock Desk Hours).
+If the "Sum of Commitment Loan Balance from the Aggregate Pipeline Data" falls within this limit, the lock request might pass, even if it doesn't meet the criteria related to the standard Lock Desk Hours.
+Therefore, the Overnight Lock Limit is a special, potentially higher, threshold for the total commitment amount that can be locked outside of normal business hours.
 
-    If applicantCountry == "USA", the rule engine evaluates credit score and income.
-    If applicantCountry != "USA", the rule is skipped, and the loan application is ignored for this rule.
 
-Key Takeaways
+4) Global Automated Lock Approvals:
 
-    Condition: Controls when the rule executes.
-    Conditional Precondition: Controls whether the rule should be evaluated at all.
+The second rule checks "AND the Global - Automated Lock Approvals = ON".
+This indicates a system-wide or "global" setting that controls whether automated lock approvals are enabled.
+If this setting is "ON", it's one of the conditions that needs to be met for a lock request for a specific product ID to pass (along with the "Product-Automated Lock Approvals" and "Seller Settings-Automated Lock Approvals" being "ON").
+Global Automated Lock Approvals is a master switch that enables or disables the entire automated lock approval process across the system.
+5) Seller Settings - Automated Lock Approvals:
 
-This approach optimizes rule execution by filtering out unnecessary evaluations early.
-
-___________________________________________________________________________________________
-
-SELECT 
-    fk.name AS ForeignKey,
-    tp.name AS ParentTable,
-    cp.name AS ParentColumn,
-    tr.name AS ReferencedTable,
-    cr.name AS ReferencedColumn
-FROM sys.foreign_keys AS fk
-JOIN sys.foreign_key_columns AS fkc ON fk.object_id = fkc.constraint_object_id
-JOIN sys.tables AS tp ON fkc.parent_object_id = tp.object_id
-JOIN sys.columns AS cp ON fkc.parent_object_id = cp.object_id AND fkc.parent_column_id = cp.column_id
-JOIN sys.tables AS tr ON fkc.referenced_object_id = tr.object_id
-JOIN sys.columns AS cr ON fkc.referenced_object_id = cr.object_id AND fkc.referenced_column_id = cr.column_id
-ORDER BY ParentTable, ReferencedTable;
-
+The second rule also checks "AND the Seller Settings - Automated Lock Approvals = ON".
+This suggests a setting specific to the "seller" involved in the mortgage transaction. Different sellers might have different configurations for automated lock approvals.
+For a lock request for a particular product ID to be automatically approved, the automated lock approval must be enabled at the "seller settings" level, in addition to the "Product-Automated Lock Approvals" and the "Global - Automated Lock Approvals".
+Therefore, Seller Settings - Automated Lock Approvals provides a level of control over automated approvals that is specific to the entity selling the mortgage.
+In summary, these terms represent key data points and configuration settings that the mortgage lock request system uses to determine whether a lock request should be automatically approved or require further manual intervention. 
