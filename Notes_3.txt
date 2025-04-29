@@ -1,47 +1,196 @@
-What’s the Real Issue?
+To implement the rules in the image within a Spring-based Java application for a mortgage pricing engine, you'll need to break down the logic into distinct components. Here’s a step-by-step approach to how you can implement it:
+1. Define the Structure of Rules:
 
-Swagger UI is failing to load:
+The rules you have are quite conditional, so the first step is to define them in a structured format. You can use a combination of Java classes and methods to encapsulate these rules.
+2. Define Rule Classes:
 
-GET /v3/api-docs/swagger-config → 404 Not Found
+Each rule can be represented by a method or class that checks the conditions. You can encapsulate each rule in a service or utility class.
+Example Rule Class
 
-Even though you're hosting your app at:
+public class LockRequestRule {
+    
+    public boolean checkLockRequestCondition(LocalDateTime currentDateTime, 
+                                              SellerSettings sellerSettings, 
+                                              GlobalSettings globalSettings, 
+                                              AggregatePipelineData aggregateData) {
+        boolean isWithinLockHours = isWithinLockHours(currentDateTime, sellerSettings, globalSettings);
+        boolean isCommitmentBalanceValid = isCommitmentBalanceValid(aggregateData, sellerSettings);
+        boolean isOvernightLimitNull = sellerSettings.getOvernightCommitmentLimit() == null;
 
-/api/swagger-ui/index.html
+        return isWithinLockHours && isCommitmentBalanceValid && isOvernightLimitNull;
+    }
 
-So the default Swagger UI is still trying to load /v3/api-docs/swagger-config from the root, instead of /api/v3/api-docs/swagger-config.
+    private boolean isWithinLockHours(LocalDateTime currentDateTime, SellerSettings sellerSettings, GlobalSettings globalSettings) {
+        // Check if currentDateTime is in seller's lock desk hours but not in global lock desk hours
+        return sellerSettings.getLockDeskHours().contains(currentDateTime) &&
+               !globalSettings.getLockDeskHours().contains(currentDateTime);
+    }
 
-That’s why when you manually input /api/v3/api-docs.yaml, it works — but Swagger UI can't find the config on its own.
-✅ The Fix: Tell Springdoc to use the correct config path
+    private boolean isCommitmentBalanceValid(AggregatePipelineData aggregateData, SellerSettings sellerSettings) {
+        // Check if the sum of commitment loan balance is less than the overnight limit
+        return aggregateData.getCommitmentLoanBalance() < sellerSettings.getOvernightCommitmentLimit();
+    }
+}
 
-Add the following line in your application.properties:
+3. Define Configuration Classes:
 
-springdoc.swagger-ui.config-url=/api/v3/api-docs/swagger-config
+For each entity like SellerSettings, GlobalSettings, and AggregatePipelineData, create configuration classes to hold the data necessary for rule checks.
+Example Configuration Class
 
-This will explicitly tell Swagger UI where to find the config.
+public class SellerSettings {
+    private List<LocalDateTime> lockDeskHours;
+    private Double overnightCommitmentLimit;
+    private boolean automatedLockApprovals;
 
-Also, make sure you have this to support the /api context:
+    // Getters and Setters
+}
 
-server.servlet.context-path=/api
-springdoc.api-docs.path=/v3/api-docs
-springdoc.swagger-ui.path=/swagger-ui.html
+public class GlobalSettings {
+    private List<LocalDateTime> lockDeskHours;
+    private boolean automatedLockApprovals;
 
-So your complete config in application.properties should be:
+    // Getters and Setters
+}
 
-server.servlet.context-path=/api
-springdoc.api-docs.path=/v3/api-docs
-springdoc.swagger-ui.path=/swagger-ui.html
-springdoc.swagger-ui.config-url=/api/v3/api-docs/swagger-config
+public class AggregatePipelineData {
+    private Double commitmentLoanBalance;
 
-🔄 Restart your app and test these URLs:
+    // Getters and Setters
+}
 
-    ✅ http://localhost:8081/api/swagger-ui/index.html
+4. Service Layer for Rule Execution:
 
-    ✅ http://localhost:8081/api/v3/api-docs
+Create a service class to execute and evaluate the conditions based on user input or data provided to the engine.
+Example Service Class:
 
-    ✅ http://localhost:8081/api/v3/api-docs/swagger-config
+@Service
+public class MortgagePricingService {
 
-✅ Why This Works
+    private final LockRequestRule lockRequestRule;
 
-Without config-url, Swagger UI defaults to /v3/api-docs/swagger-config — it ignores server.servlet.context-path. By adding springdoc.swagger-ui.config-url, we point it directly to the correct config path under /api.
+    @Autowired
+    public MortgagePricingService(LockRequestRule lockRequestRule) {
+        this.lockRequestRule = lockRequestRule;
+    }
 
-Let me know if you want to switch to YAML config or o
+    public String processLockRequest(LocalDateTime currentDateTime, 
+                                      SellerSettings sellerSettings, 
+                                      GlobalSettings globalSettings, 
+                                      AggregatePipelineData aggregateData) {
+        boolean isLockRequestValid = lockRequestRule.checkLockRequestCondition(currentDateTime, 
+                                                                               sellerSettings, 
+                                                                               globalSettings, 
+                                                                               aggregateData);
+        
+        if (isLockRequestValid) {
+            return "PASS";
+        } else {
+            return "FAIL";
+        }
+    }
+}
+
+5. Automated Lock Approval Logic:
+
+For automated lock approvals and exception handling, you can implement additional checks for these conditions. Similar to the previous logic, create a class that checks conditions like the Product-Automated Lock Approvals and Global-Automated Lock Approvals.
+Example Automated Lock Approval Class:
+
+public class AutomatedLockApprovalRule {
+    
+    public boolean checkAutomatedLockApproval(SellerSettings sellerSettings, 
+                                              GlobalSettings globalSettings) {
+        return sellerSettings.isAutomatedLockApprovals() && globalSettings.isAutomatedLockApprovals();
+    }
+}
+
+6. Exception Handling and Eligibility Rules:
+
+For more complex rules like eligibility checks, you can implement rules that check for exception overrides or specific eligibility conditions.
+Example Eligibility Rule Class:
+
+public class EligibilityRules {
+    
+    public boolean checkEligibility(int rulesOutput, String ruleType) {
+        if ("Refer".equals(ruleType) && rulesOutput > 0) {
+            return true;  // Rule passes if there are more than 0 rules with 'Refer' result
+        } else if ("FAIL".equals(ruleType) && rulesOutput == 0) {
+            return true;  // Rule passes if no rules with 'FAIL' result
+        }
+        return false;
+    }
+}
+
+7. Connecting the Rules:
+
+Once you have these components defined, you can connect them in the service layer where the rules are evaluated, and based on the inputs (product ID, seller settings, global settings), the corresponding conditions are checked.
+
+8. Integration with Spring:
+
+Once the rules and service layer are in place, integrate these components with your existing Spring Boot application. You can expose these rule evaluations via REST controllers for integration with your front end or other services.
+Example Controller:
+
+@RestController
+@RequestMapping("/api/mortgage")
+public class MortgageController {
+
+    private final MortgagePricingService mortgagePricingService;
+
+    @Autowired
+    public MortgageController(MortgagePricingService mortgagePricingService) {
+        this.mortgagePricingService = mortgagePricingService;
+    }
+
+    @PostMapping("/processLockRequest")
+    public ResponseEntity<String> processLockRequest(@RequestBody LockRequest lockRequest) {
+        String result = mortgagePricingService.processLockRequest(
+            lockRequest.getCurrentDateTime(),
+            lockRequest.getSellerSettings(),
+            lockRequest.getGlobalSettings(),
+            lockRequest.getAggregatePipelineData()
+        );
+        return ResponseEntity.ok(result);
+    }
+}
+
+9. Testing:
+
+You should also write unit tests for each of these rules and service methods to ensure they are functioning as expected.
+Example Unit Test:
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class MortgagePricingServiceTest {
+
+    @Autowired
+    private MortgagePricingService mortgagePricingService;
+
+    @MockBean
+    private LockRequestRule lockRequestRule;
+
+    @Test
+    public void testProcessLockRequest() {
+        // Create mock inputs
+        SellerSettings sellerSettings = new SellerSettings();
+        GlobalSettings globalSettings = new GlobalSettings();
+        AggregatePipelineData aggregateData = new AggregatePipelineData();
+
+        // Define behavior of mock rule
+        Mockito.when(lockRequestRule.checkLockRequestCondition(
+            Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
+            .thenReturn(true);  // simulate rule pass
+
+        // Call service method
+        String result = mortgagePricingService.processLockRequest(
+            LocalDateTime.now(), sellerSettings, globalSettings, aggregateData);
+
+        // Assert result
+        assertEquals("PASS", result);
+    }
+}
+
+10. Enhancing the Rule Engine:
+
+As the complexity of rules increases, you might consider using a rule engine (like Drools) to dynamically define and evaluate rules in your application.
+Conclusion:
+
+You can implement these rules by structuring the logic in classes and utilizing Spring services to execute the rules. Each rule can be encapsulated in its own class, and Spring can manage the dependencies and service orchestration. You can enhance flexibility by allowing rules to be added or modified dynamically, depending on business needs.
