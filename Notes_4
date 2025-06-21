@@ -1,41 +1,28 @@
-1. First Rule:
+aws ec2 describe-instances \
+  --query "Reservations[*].Instances[*].[Tags[?Key=='Name']|[0].Value, InstanceId, State.Name]" \
+  --output table
 
-PASS IF Lock Request is submitted and Sum of Commitment Loan Balance from Aggregate Pipeline Data < Seller Settings-Aggregate Commitment Limit = NULL
 
-    Lock Request: A request made to lock in the mortgage interest rate.
 
-    Commitment Loan Balance: The total outstanding loan amount for which the lender has committed funds.
+To update your AWS CLI command to show all EC2 instances (regardless of state) along with their Name, Instance ID, and Instance State, use this:
 
-    Aggregate Pipeline Data: Refers to data aggregated from multiple sources in the system, possibly representing the total pipeline or portfolio of loans in the system.
 
-    Seller Settings-Aggregate Commitment Limit: A setting in the seller's configuration that specifies the maximum amount they are willing to commit for loans. If the sum of commitment loan balances is less than this limit, the lock request is valid.
 
-    NULL: This condition implies that if the "Aggregate Commitment Limit" is NULL (i.e., not set or undefined), the condition will still pass.
+✅ Output Explanation:
+Tags[?Key=='Name']|[0].Value → Gets the instance's "Name" tag (if available).
 
-    Explanation: This rule ensures that a lock request is allowed if the total commitment loan balance (from the aggregate data) is within the seller's allowed limits. If the seller has not set any limits (NULL), the request will pass.
+InstanceId → Displays the instance ID.
 
-2. Second Rule:
+State.Name → Shows the current state (e.g., running, stopped, pending, terminated).
 
-PASS IF Lock Request is submitted and Sum of Commitment Loan Balance from the current date [factors Global and Seller-Settings Lock Hours] from Aggregate Pipeline Data < Seller Settings-Daily Lock Limit OR Seller Settings-Daily Commitment Limit = NULL
+Optional: Filter specific states
+If you want only selected states (like running, stopped, pending, terminated), use:
 
-    Commitment Loan Balance (current date): The total loan amount for which the commitment is requested as of the current date.
+aws ec2 describe-instances \
+  --filters Name=instance-state-name,Values=running,stopped,pending,terminated \
+  --query "Reservations[*].Instances[*].[Tags[?Key=='Name']|[0].Value, InstanceId, State.Name]" \
+  --output table
 
-    Global and Seller-Settings Lock Hours: Refers to the time range or hours within which the seller processes lock requests. This factor can influence whether the lock request is valid, based on when it is submitted.
 
-    Aggregate Pipeline Data: Similar to the first rule, this refers to the aggregated data on loan commitments across the system.
 
-    Seller Settings-Daily Lock Limit: The maximum amount a seller is willing to lock in on a daily basis. If the sum of the commitment loan balances is less than this daily limit, the lock request passes.
 
-    Seller Settings-Daily Commitment Limit: This is a limit set by the seller that specifies how much total commitment they are willing to provide on a daily basis.
-
-    NULL: If the seller has not set a daily commitment limit, the rule will pass.
-
-    Explanation: This rule checks if a lock request is allowed based on the current commitment balance for the day. If the balance is less than the seller's daily limit, or if no daily limit is set (NULL), the lock request is allowed. The Global and Seller-Settings Lock Hours factor determines whether the request is within the allowed time for processing.
-
-Summary:
-
-    First Rule: Allows the lock request if the total commitment loan balance (from aggregate data) is within the seller's aggregate commitment limit, or if no such limit is defined.
-
-    Second Rule: Allows the lock request if the sum of the commitment loan balance (for the current day, factoring in lock hours) is within the seller's daily lock limit, or if no such limit is defined.
-
-These rules help in managing how much the seller is willing to commit for loan requests based on time, aggregated data, and daily limits.
