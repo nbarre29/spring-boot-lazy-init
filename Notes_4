@@ -1,28 +1,20 @@
-aws ec2 describe-instances \
-  --query "Reservations[*].Instances[*].[Tags[?Key=='Name']|[0].Value, InstanceId, State.Name]" \
-  --output table
-
-
-
-To update your AWS CLI command to show all EC2 instances (regardless of state) along with their Name, Instance ID, and Instance State, use this:
-
-
-
-✅ Output Explanation:
-Tags[?Key=='Name']|[0].Value → Gets the instance's "Name" tag (if available).
-
-InstanceId → Displays the instance ID.
-
-State.Name → Shows the current state (e.g., running, stopped, pending, terminated).
-
-Optional: Filter specific states
-If you want only selected states (like running, stopped, pending, terminated), use:
-
-aws ec2 describe-instances \
-  --filters Name=instance-state-name,Values=running,stopped,pending,terminated \
-  --query "Reservations[*].Instances[*].[Tags[?Key=='Name']|[0].Value, InstanceId, State.Name]" \
-  --output table
-
-
-
-
+-----BEGIN CERTIFICATE-----
+MIIDXTCCAkWgAwIBAgIJANUEoNdRsnWpMA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNV
+BAYTAklOMQswCQYDVQQIDAJUUzELMAkGA1UEBwwCUFIxEjAQBgNVBAoMCUNvbXBh
+bnlOYW1lMB4XDTE5MDkwNDA2MjQyNFoXDTI5MDkwMTA2MjQyNFowRTELMAkGA1UE
+BhMCSU4xCzAJBgNVBAgMAlRTMQswCQYDVQQHDAJQUjESMBAGA1UECgwJQ29tcGFu
+eU5hbWUwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC0M0uJ0nFG+xLR
+5tTnUIlEgdQhZOT6UZz0nEFQfbVoYoRY9dppcpgREki9LPasEOwP3KLNCLp3bb4L
+vqsIMzOwE1sG5d9e2U2MGUbyCGNpykAfNoM78OxMgRblWkSYOItu6pUv7PYO96Pv
+C4uU+ZgrKu7Mmvnt4YVYuOOPxxc8Jnvdf4HtwG6+ExYGeJPSzMRcog7Ul3t2nE4h
+Izuz+bphXxNQOym65gThtN3ox6B7ZgV0+QCUiSZaXMuX7y7h9HPmNpZaZtkiXRvD
+Xek8BxNgwhlvcZf2Y7OEdDOwUhwTAfmmVsbqEoZsZqD9AVX8gu0G9rPksNe8uFnk
+HLH2I0XHAgMBAAGjUDBOMB0GA1UdDgQWBBTI1Zb1RuZpZ2TG8KpQOqOqRSG7LDAf
+BgNVHSMEGDAWgBTI1Zb1RuZpZ2TG8KpQOqOqRSG7LDAMBgNVHRMEBTADAQH/MA0G
+CSqGSIb3DQEBCwUAA4IBAQBXn4WuXYklD7uLQlItA0dml4C1ORyDU9Fv0E6q0zB2
+33OaKZ2aAkaEP+4qQbsF2nbdi06D5KX/6D7TPfGLrQfRgRw1G5wrd8PS5Pb5cXJY
+qC6R19P9LfEcTtvCazscQotK5gKHsl3XXZhXYaz1GUp+/WQl5CmMNHZx9oq1bL6L
+JXDMygu8Qkm8/h0+GP9bLMdL1NPZChDp4D33TDwIt0ll5oLftM5DGVbhM2rzw0/+
+0e5id+QzBtZxLQ+n0KDPOar2MTNVwgdKeB5loFVYXbknD5rKxKhTL+oQ6Kh63M8H
+E4bUQ0daRMCTv5c4UOfu6Bv1Jt+3+eJpYVPZEtBbMA3+
+-----END CERTIFICATE-----
